@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/jonathan/Desktop/UDP server/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/UdpTx.dir/main.cpp.o -c \"/home/jonathan/Desktop/UDP server/main.cpp\"",
+  "file": "/home/jonathan/Desktop/UDP server/main.cpp"
+},
+{
+  "directory": "/home/jonathan/Desktop/UDP server/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/UdpTx.dir/UdpTX.cpp.o -c \"/home/jonathan/Desktop/UDP server/UdpTX.cpp\"",
+  "file": "/home/jonathan/Desktop/UDP server/UdpTX.cpp"
+}
+]

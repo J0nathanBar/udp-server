@@ -1,0 +1,3 @@
+/home/jonathan/Desktop/UDP server/out/build/CMakeFiles/UdpTx.dir
+/home/jonathan/Desktop/UDP server/out/build/CMakeFiles/edit_cache.dir
+/home/jonathan/Desktop/UDP server/out/build/CMakeFiles/rebuild_cache.dir

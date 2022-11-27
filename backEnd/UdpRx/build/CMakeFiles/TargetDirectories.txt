@@ -1,0 +1,3 @@
+/home/jonnyclient/Desktop/UdpRx/build/CMakeFiles/UdpRx.dir
+/home/jonnyclient/Desktop/UdpRx/build/CMakeFiles/edit_cache.dir
+/home/jonnyclient/Desktop/UdpRx/build/CMakeFiles/rebuild_cache.dir

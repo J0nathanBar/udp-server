@@ -1,0 +1,1 @@
+/usr/bin/c++ CMakeFiles/UdpRx.dir/Main.cpp.o CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o -o UdpRx 

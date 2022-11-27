@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/jonnyclient/Desktop/UdpRx/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/UdpRx.dir/Main.cpp.o -c /home/jonnyclient/Desktop/UdpRx/Main.cpp",
+  "file": "/home/jonnyclient/Desktop/UdpRx/Main.cpp"
+},
+{
+  "directory": "/home/jonnyclient/Desktop/UdpRx/build",
+  "command": "/usr/bin/g++   -g -o CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o -c /home/jonnyclient/Desktop/UdpRx/UdpReceiver.cpp",
+  "file": "/home/jonnyclient/Desktop/UdpRx/UdpReceiver.cpp"
+}
+]
