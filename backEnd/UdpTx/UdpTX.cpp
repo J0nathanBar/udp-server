@@ -6,7 +6,7 @@ UdpTX::UdpTX(std::string addr, int port) :
  _endpoint(boost::asio::ip::make_address(addr), port)
 {
   _socket.open(udp::v4());
-  writeData();
+ // writeData();
 }
 
 UdpTX::~UdpTX()

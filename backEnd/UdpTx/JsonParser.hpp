@@ -2,7 +2,7 @@
 #define JSONPARSER_HPP
 
 #pragma once
-#include<json.hpp>
+#include "json.hpp"
 #include<fstream>
 #include<iostream>
 
@@ -11,9 +11,11 @@ class JsonParser
 public:
     JsonParser();
     ~JsonParser();
-    void parse();
+    std::string parse(std::string path);
 
 private:
+
+
 
 };
 

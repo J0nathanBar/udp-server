@@ -2,16 +2,21 @@
 
 JsonParser::JsonParser()
 {
-    
-
 }
 
 JsonParser::~JsonParser()
 {
-
 }
-void JsonParser::parse(){
-std::ifstream input("/home/jonathan/Desktop/project/backEnd/nodeServer/message.json");
-if (!input) std::cerr << "Could not open the file!" << std::endl;
+std::string JsonParser::parse(std::string path)
+{
+    std::ifstream input(path);
+    if (!input)
+    {
+        std::cerr << "Could not open the file!" << std::endl;
+        return "";
+    }
 
+    nlohmann::json data = nlohmann::json::parse(input);
+    std::cout << data << std::endl;
+    return data.dump();
 }

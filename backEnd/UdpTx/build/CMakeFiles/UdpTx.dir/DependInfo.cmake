@@ -8,8 +8,11 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/jonathan/Desktop/UDP server/UdpTX.cpp" "CMakeFiles/UdpTx.dir/UdpTX.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/UdpTX.cpp.o.d"
-  "/home/jonathan/Desktop/UDP server/main.cpp" "CMakeFiles/UdpTx.dir/main.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/main.cpp.o.d"
+  "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/File.cpp" "CMakeFiles/UdpTx.dir/File.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/File.cpp.o.d"
+  "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/FileParser.cpp" "CMakeFiles/UdpTx.dir/FileParser.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/FileParser.cpp.o.d"
+  "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/JsonParser.cpp" "CMakeFiles/UdpTx.dir/JsonParser.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/JsonParser.cpp.o.d"
+  "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/UdpTX.cpp" "CMakeFiles/UdpTx.dir/UdpTX.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/UdpTX.cpp.o.d"
+  "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/main.cpp" "CMakeFiles/UdpTx.dir/main.cpp.o" "gcc" "CMakeFiles/UdpTx.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.

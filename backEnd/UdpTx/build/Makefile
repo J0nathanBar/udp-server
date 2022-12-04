@@ -57,18 +57,18 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/jonathan/Desktop/UDP server"
+CMAKE_SOURCE_DIR = /home/jonny/Desktop/project/udp-server/backEnd/UdpTx
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/jonathan/Desktop/UDP server/build"
+CMAKE_BINARY_DIR = /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
-	/usr/bin/cmake-gui -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/jonathan/Desktop/UDP server/build/CMakeFiles" "/home/jonathan/Desktop/UDP server/build//CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build/CMakeFiles /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "/home/jonathan/Desktop/UDP server/build/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -128,6 +128,78 @@ UdpTx: cmake_check_build_system
 UdpTx/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/build
 .PHONY : UdpTx/fast
+
+File.o: File.cpp.o
+.PHONY : File.o
+
+# target to build an object file
+File.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/File.cpp.o
+.PHONY : File.cpp.o
+
+File.i: File.cpp.i
+.PHONY : File.i
+
+# target to preprocess a source file
+File.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/File.cpp.i
+.PHONY : File.cpp.i
+
+File.s: File.cpp.s
+.PHONY : File.s
+
+# target to generate assembly for a file
+File.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/File.cpp.s
+.PHONY : File.cpp.s
+
+FileParser.o: FileParser.cpp.o
+.PHONY : FileParser.o
+
+# target to build an object file
+FileParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/FileParser.cpp.o
+.PHONY : FileParser.cpp.o
+
+FileParser.i: FileParser.cpp.i
+.PHONY : FileParser.i
+
+# target to preprocess a source file
+FileParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/FileParser.cpp.i
+.PHONY : FileParser.cpp.i
+
+FileParser.s: FileParser.cpp.s
+.PHONY : FileParser.s
+
+# target to generate assembly for a file
+FileParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/FileParser.cpp.s
+.PHONY : FileParser.cpp.s
+
+JsonParser.o: JsonParser.cpp.o
+.PHONY : JsonParser.o
+
+# target to build an object file
+JsonParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/JsonParser.cpp.o
+.PHONY : JsonParser.cpp.o
+
+JsonParser.i: JsonParser.cpp.i
+.PHONY : JsonParser.i
+
+# target to preprocess a source file
+JsonParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/JsonParser.cpp.i
+.PHONY : JsonParser.cpp.i
+
+JsonParser.s: JsonParser.cpp.s
+.PHONY : JsonParser.s
+
+# target to generate assembly for a file
+JsonParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpTx.dir/build.make CMakeFiles/UdpTx.dir/JsonParser.cpp.s
+.PHONY : JsonParser.cpp.s
 
 UdpTX.o: UdpTX.cpp.o
 .PHONY : UdpTX.o
@@ -186,6 +258,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... UdpTx"
+	@echo "... File.o"
+	@echo "... File.i"
+	@echo "... File.s"
+	@echo "... FileParser.o"
+	@echo "... FileParser.i"
+	@echo "... FileParser.s"
+	@echo "... JsonParser.o"
+	@echo "... JsonParser.i"
+	@echo "... JsonParser.s"
 	@echo "... UdpTX.o"
 	@echo "... UdpTX.i"
 	@echo "... UdpTX.s"

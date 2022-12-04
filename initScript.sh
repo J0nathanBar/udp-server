@@ -6,5 +6,4 @@ cd -
 cd backEnd/nodeServer/
 npm run dev 
 echo nodeJS-running
-read -n 1 
 
