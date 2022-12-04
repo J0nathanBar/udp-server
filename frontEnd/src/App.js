@@ -7,8 +7,10 @@ function App() {
   return (
     <div className="counter">
      
-    <Reciever/>
-     <TextForm />
+    <h1>Reciever</h1>
+    <TextForm name="RecvConf.json"/>
+    <h1>Transmitter</h1>
+     <TextForm name = "TransConf.json"/>
     </div>
     
   );

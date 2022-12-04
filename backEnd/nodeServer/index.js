@@ -11,14 +11,17 @@ const port = process.env.PORT || "5000";
 
 
 
-app.post("/api", (req, res) => {
-    //res.status(200).send("WHATABYTE: Food For Devs");
-    console.log(req.body)
-    res.json(req.body)
-    fs.writeFile("/home/jonathan/Desktop/project/backEnd/nodeServer/message.json", JSON.stringify(req.body), err=> {
+app.post("/api", ({body}, res) => {
+    const {filename, content} = body.a.attributes
+    console.log("filename: "+filename +" content: " +content)
+    console.log(body.a)
+    res.json(body)
+    fs.writeFile(`/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/${filename}`,JSON.stringify(content), err=> {   
+
         if(err){
             console.error(err);
         }
+        console.log("file written")
     })
 })
 app.listen(port, () => { console.log("Listening on port " + port) })
