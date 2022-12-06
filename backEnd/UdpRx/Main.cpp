@@ -15,6 +15,6 @@ int main()
 void init()
 {
     boost::asio::io_service context;
-    UdpReceiver r(42069, context);
+    UdpReceiver r(42068, context);
     context.run();
 }

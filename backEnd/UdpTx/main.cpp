@@ -11,16 +11,7 @@ void init();
 int main()
 {
 
-    //   init();
-    // boost::filesystem::path path("/home/jonny/Desktop/filestosend/duck.jpeg");
-    // boost::filesystem::ifstream f(path);
-    // std::stringstream stream;
-    // stream << f.rdbuf();
-    // boost::filesystem::ofstream strom;
-    // strom << stream.rdbuf();
- 
-    
-    
+    init();
 }
 
 //   File f("/home/jonny/Desktop/filestosend/duck.jpeg");

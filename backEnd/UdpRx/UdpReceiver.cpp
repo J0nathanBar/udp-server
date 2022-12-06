@@ -8,11 +8,12 @@ UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(por
 {
   std::cout << "starting server" << std::endl;
   _t = std::thread(&UdpReceiver::scanConf, this);
-  _t.detach();
+
   startReceive();
 }
 UdpReceiver::~UdpReceiver()
 {
+    _t.detach();
 }
 void UdpReceiver::startReceive()
 {
