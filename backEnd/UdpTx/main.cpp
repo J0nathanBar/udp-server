@@ -5,19 +5,20 @@
 #include "JsonParser.hpp"
 #include <boost/filesystem.hpp>
 #include "FileParser.hpp"
+#include <boost/algorithm/string.hpp>
 void waitForInput();
 void init();
 int main()
 {
-    File f("/home/jonny/Desktop/filestosend/duck.jpeg");
-    FileParser fp;
-    std::string data;
-    data = fp.serialize(&f);
-    File d;
-    fp.deSerialize(data, &d);
-    std::cout << d.getFileName() << std::endl;
+
+   init();
+
+  
+
+
 }
 
+//   File f("/home/jonny/Desktop/filestosend/duck.jpeg");
 void init()
 {
     boost::asio::io_context context;
@@ -26,6 +27,5 @@ void init()
     std::cout << "1" << std::endl;
     UdpTX tx(addr, port);
     std::cout << "runnign" << std::endl;
-    JsonParser j;
-    tx.sendData(j.parse(""));
+    tx.run();
 }

@@ -5,7 +5,8 @@
 #include "json.hpp"
 #include<fstream>
 #include<iostream>
-
+#include<boost/algorithm/string.hpp>
+#include<string.h>
 class JsonParser
 {
 public:

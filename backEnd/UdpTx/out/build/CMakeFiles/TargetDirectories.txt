@@ -1,3 +1,0 @@
-/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/out/build/CMakeFiles/UdpTx.dir
-/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/out/build/CMakeFiles/edit_cache.dir
-/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/out/build/CMakeFiles/rebuild_cache.dir

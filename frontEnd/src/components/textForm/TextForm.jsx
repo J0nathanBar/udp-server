@@ -41,7 +41,7 @@ const TextForm = (props) => {
   return (
     <div>
       <input type="text"
-        placeholder='insert string'
+        placeholder='insert file path'
 
         value={content}
         

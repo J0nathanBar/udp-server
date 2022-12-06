@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/UdpTx.dir/main.cpp.o CMakeFiles/UdpTx.dir/UdpTX.cpp.o CMakeFiles/UdpTx.dir/JsonParser.cpp.o CMakeFiles/UdpTx.dir/File.cpp.o CMakeFiles/UdpTx.dir/FileParser.cpp.o -o UdpTx  /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.74.0 
