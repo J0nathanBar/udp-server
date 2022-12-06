@@ -1,12 +1,12 @@
 #include "UdpTX.hpp"
 
 UdpTX::UdpTX(std::string addr, int port) : _resolver(_context),
-                                           _socket(_context),
-                                           _endpoint(boost::asio::ip::make_address(addr), port),
-                                           _run(false),
-                                           _path(""),
-                                           _currentPath(""),
-                                           _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json")
+_socket(_context),
+_endpoint(boost::asio::ip::make_address(addr), port),
+_run(false),
+_path(""),
+_currentPath(""),
+_confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json")
 {
   //_socket.open(udp::v4());
 }

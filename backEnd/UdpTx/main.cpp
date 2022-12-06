@@ -11,18 +11,23 @@ void init();
 int main()
 {
 
-   init();
-
-  
-
-
+    //   init();
+    // boost::filesystem::path path("/home/jonny/Desktop/filestosend/duck.jpeg");
+    // boost::filesystem::ifstream f(path);
+    // std::stringstream stream;
+    // stream << f.rdbuf();
+    // boost::filesystem::ofstream strom;
+    // strom << stream.rdbuf();
+ 
+    
+    
 }
 
 //   File f("/home/jonny/Desktop/filestosend/duck.jpeg");
 void init()
 {
     boost::asio::io_context context;
-    std::string addr = "192.168.239.216";
+    std::string addr = "192.168.8.38";
     int port = 42069;
     std::cout << "1" << std::endl;
     UdpTX tx(addr, port);

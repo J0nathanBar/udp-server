@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/jonnyclient/Desktop/UdpRx
+CMAKE_SOURCE_DIR = /home/jonny/Desktop/project/udp-server/backEnd/UdpRx
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/jonnyclient/Desktop/UdpRx/build
+CMAKE_BINARY_DIR = /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonnyclient/Desktop/UdpRx/build/CMakeFiles /home/jonnyclient/Desktop/UdpRx/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonnyclient/Desktop/UdpRx/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -128,6 +128,78 @@ UdpRx: cmake_check_build_system
 UdpRx/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/build
 .PHONY : UdpRx/fast
+
+File.o: File.cpp.o
+.PHONY : File.o
+
+# target to build an object file
+File.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/File.cpp.o
+.PHONY : File.cpp.o
+
+File.i: File.cpp.i
+.PHONY : File.i
+
+# target to preprocess a source file
+File.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/File.cpp.i
+.PHONY : File.cpp.i
+
+File.s: File.cpp.s
+.PHONY : File.s
+
+# target to generate assembly for a file
+File.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/File.cpp.s
+.PHONY : File.cpp.s
+
+FileParser.o: FileParser.cpp.o
+.PHONY : FileParser.o
+
+# target to build an object file
+FileParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/FileParser.cpp.o
+.PHONY : FileParser.cpp.o
+
+FileParser.i: FileParser.cpp.i
+.PHONY : FileParser.i
+
+# target to preprocess a source file
+FileParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/FileParser.cpp.i
+.PHONY : FileParser.cpp.i
+
+FileParser.s: FileParser.cpp.s
+.PHONY : FileParser.s
+
+# target to generate assembly for a file
+FileParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/FileParser.cpp.s
+.PHONY : FileParser.cpp.s
+
+JsonParser.o: JsonParser.cpp.o
+.PHONY : JsonParser.o
+
+# target to build an object file
+JsonParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/JsonParser.cpp.o
+.PHONY : JsonParser.cpp.o
+
+JsonParser.i: JsonParser.cpp.i
+.PHONY : JsonParser.i
+
+# target to preprocess a source file
+JsonParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/JsonParser.cpp.i
+.PHONY : JsonParser.cpp.i
+
+JsonParser.s: JsonParser.cpp.s
+.PHONY : JsonParser.s
+
+# target to generate assembly for a file
+JsonParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/JsonParser.cpp.s
+.PHONY : JsonParser.cpp.s
 
 Main.o: Main.cpp.o
 .PHONY : Main.o
@@ -186,6 +258,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... UdpRx"
+	@echo "... File.o"
+	@echo "... File.i"
+	@echo "... File.s"
+	@echo "... FileParser.o"
+	@echo "... FileParser.i"
+	@echo "... FileParser.s"
+	@echo "... JsonParser.o"
+	@echo "... JsonParser.i"
+	@echo "... JsonParser.s"
 	@echo "... Main.o"
 	@echo "... Main.i"
 	@echo "... Main.s"

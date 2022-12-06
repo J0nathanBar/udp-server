@@ -1,12 +1,27 @@
 [
 {
-  "directory": "/home/jonnyclient/Desktop/UdpRx/build",
-  "command": "/usr/bin/g++   -g -o CMakeFiles/UdpRx.dir/Main.cpp.o -c /home/jonnyclient/Desktop/UdpRx/Main.cpp",
-  "file": "/home/jonnyclient/Desktop/UdpRx/Main.cpp"
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/Main.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/Main.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/Main.cpp"
 },
 {
-  "directory": "/home/jonnyclient/Desktop/UdpRx/build",
-  "command": "/usr/bin/g++   -g -o CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o -c /home/jonnyclient/Desktop/UdpRx/UdpReceiver.cpp",
-  "file": "/home/jonnyclient/Desktop/UdpRx/UdpReceiver.cpp"
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/UdpReceiver.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/UdpReceiver.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/JsonParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/JsonParser.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/JsonParser.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/File.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/File.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/File.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/FileParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/FileParser.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/FileParser.cpp"
 }
 ]
