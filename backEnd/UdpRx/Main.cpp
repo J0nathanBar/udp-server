@@ -15,6 +15,10 @@ int main()
 void init()
 {
     boost::asio::io_service context;
+
+    //changed ports might do problems mush check
     UdpReceiver r(42068, context);
+    //check the ports!!!!!
+    
     context.run();
 }
