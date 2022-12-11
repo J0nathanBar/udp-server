@@ -11,9 +11,9 @@
 #include <string>
 #include <thread>
 
-#include "json.hpp"
-#include "FileParser.hpp"
-#include "JsonParser.hpp"
+#include"../SharedClasses/FileParser.hpp"
+#include"../SharedClasses/json.hpp"
+#include"../SharedClasses/JsonParser.hpp"
 
 using boost::asio::ip::udp;
 

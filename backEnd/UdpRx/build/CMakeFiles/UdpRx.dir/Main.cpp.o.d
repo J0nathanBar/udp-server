@@ -1123,8 +1123,8 @@ CMakeFiles/UdpRx.dir/Main.cpp.o: \
  /usr/include/boost/bind/bind_mf2_cc.hpp \
  /usr/include/boost/bind/placeholders.hpp /usr/include/boost/array.hpp \
  /usr/include/boost/swap.hpp /usr/include/boost/core/swap.hpp \
- /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/FileParser.hpp \
- /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/File.hpp \
+ /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/../SharedClasses/FileParser.hpp \
+ /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/../SharedClasses/ModifiedFile.hpp \
  /usr/include/boost/filesystem.hpp \
  /usr/include/boost/filesystem/config.hpp \
  /usr/include/boost/filesystem/path.hpp \
@@ -1363,8 +1363,8 @@ CMakeFiles/UdpRx.dir/Main.cpp.o: \
  /usr/include/boost/archive/detail/basic_oserializer.hpp \
  /usr/include/boost/archive/detail/basic_pointer_oserializer.hpp \
  /usr/include/boost/serialization/string.hpp \
- /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/JsonParser.hpp \
- /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/json.hpp \
+ /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/../SharedClasses/JsonParser.hpp \
+ /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/../SharedClasses/json.hpp \
  /usr/include/c++/11/numeric /usr/include/c++/11/bits/stl_numeric.h \
  /usr/include/c++/11/pstl/glue_numeric_defs.h \
  /usr/include/c++/11/forward_list /usr/include/c++/11/bits/forward_list.h \

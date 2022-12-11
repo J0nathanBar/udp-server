@@ -97,64 +97,64 @@ CMakeFiles/UdpRx.dir/UdpReceiver.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/UdpReceiver.cpp.s"
 	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/UdpReceiver.cpp -o CMakeFiles/UdpRx.dir/UdpReceiver.cpp.s
 
-CMakeFiles/UdpRx.dir/JsonParser.cpp.o: CMakeFiles/UdpRx.dir/flags.make
-CMakeFiles/UdpRx.dir/JsonParser.cpp.o: ../JsonParser.cpp
-CMakeFiles/UdpRx.dir/JsonParser.cpp.o: CMakeFiles/UdpRx.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/UdpRx.dir/JsonParser.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/UdpRx.dir/JsonParser.cpp.o -MF CMakeFiles/UdpRx.dir/JsonParser.cpp.o.d -o CMakeFiles/UdpRx.dir/JsonParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/JsonParser.cpp
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o: CMakeFiles/UdpRx.dir/flags.make
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o: /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o: CMakeFiles/UdpRx.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o -MF CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o.d -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp
 
-CMakeFiles/UdpRx.dir/JsonParser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/UdpRx.dir/JsonParser.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/JsonParser.cpp > CMakeFiles/UdpRx.dir/JsonParser.cpp.i
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp > CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i
 
-CMakeFiles/UdpRx.dir/JsonParser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/JsonParser.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/JsonParser.cpp -o CMakeFiles/UdpRx.dir/JsonParser.cpp.s
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s
 
-CMakeFiles/UdpRx.dir/File.cpp.o: CMakeFiles/UdpRx.dir/flags.make
-CMakeFiles/UdpRx.dir/File.cpp.o: ../File.cpp
-CMakeFiles/UdpRx.dir/File.cpp.o: CMakeFiles/UdpRx.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/UdpRx.dir/File.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/UdpRx.dir/File.cpp.o -MF CMakeFiles/UdpRx.dir/File.cpp.o.d -o CMakeFiles/UdpRx.dir/File.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/File.cpp
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o: CMakeFiles/UdpRx.dir/flags.make
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o: /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o: CMakeFiles/UdpRx.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o -MF CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o.d -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp
 
-CMakeFiles/UdpRx.dir/File.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/UdpRx.dir/File.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/File.cpp > CMakeFiles/UdpRx.dir/File.cpp.i
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp > CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i
 
-CMakeFiles/UdpRx.dir/File.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/File.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/File.cpp -o CMakeFiles/UdpRx.dir/File.cpp.s
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s
 
-CMakeFiles/UdpRx.dir/FileParser.cpp.o: CMakeFiles/UdpRx.dir/flags.make
-CMakeFiles/UdpRx.dir/FileParser.cpp.o: ../FileParser.cpp
-CMakeFiles/UdpRx.dir/FileParser.cpp.o: CMakeFiles/UdpRx.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/UdpRx.dir/FileParser.cpp.o"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/UdpRx.dir/FileParser.cpp.o -MF CMakeFiles/UdpRx.dir/FileParser.cpp.o.d -o CMakeFiles/UdpRx.dir/FileParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/FileParser.cpp
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o: CMakeFiles/UdpRx.dir/flags.make
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o: /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o: CMakeFiles/UdpRx.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o -MF CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o.d -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp
 
-CMakeFiles/UdpRx.dir/FileParser.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/UdpRx.dir/FileParser.cpp.i"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/FileParser.cpp > CMakeFiles/UdpRx.dir/FileParser.cpp.i
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp > CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i
 
-CMakeFiles/UdpRx.dir/FileParser.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/FileParser.cpp.s"
-	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/FileParser.cpp -o CMakeFiles/UdpRx.dir/FileParser.cpp.s
+CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s"
+	/usr/bin/g++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s
 
 # Object files for target UdpRx
 UdpRx_OBJECTS = \
 "CMakeFiles/UdpRx.dir/Main.cpp.o" \
 "CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o" \
-"CMakeFiles/UdpRx.dir/JsonParser.cpp.o" \
-"CMakeFiles/UdpRx.dir/File.cpp.o" \
-"CMakeFiles/UdpRx.dir/FileParser.cpp.o"
+"CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o" \
+"CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o" \
+"CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o"
 
 # External object files for target UdpRx
 UdpRx_EXTERNAL_OBJECTS =
 
 UdpRx: CMakeFiles/UdpRx.dir/Main.cpp.o
 UdpRx: CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o
-UdpRx: CMakeFiles/UdpRx.dir/JsonParser.cpp.o
-UdpRx: CMakeFiles/UdpRx.dir/File.cpp.o
-UdpRx: CMakeFiles/UdpRx.dir/FileParser.cpp.o
+UdpRx: CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o
+UdpRx: CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o
+UdpRx: CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o
 UdpRx: CMakeFiles/UdpRx.dir/build.make
 UdpRx: /usr/lib/x86_64-linux-gnu/libboost_filesystem.so.1.74.0
 UdpRx: /usr/lib/x86_64-linux-gnu/libboost_serialization.so.1.74.0

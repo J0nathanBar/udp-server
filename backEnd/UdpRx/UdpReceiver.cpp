@@ -59,7 +59,7 @@ void UdpReceiver::handleFile(std::string data)
 {
   try
   {
-    File f;
+    ModifiedFile f;
     _fParse.deSerialize(data, &f);
     f.setPath(_currentPath);
     boost::filesystem::ofstream stream{*f.getPath()};

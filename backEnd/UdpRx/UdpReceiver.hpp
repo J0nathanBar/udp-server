@@ -8,8 +8,8 @@
 #include<boost/bind/bind.hpp>
 #include<boost/array.hpp>
 #include<boost/shared_ptr.hpp>
-#include "FileParser.hpp"
-#include "JsonParser.hpp"
+#include "../SharedClasses/FileParser.hpp"
+#include "../SharedClasses/JsonParser.hpp"
 #include<vector>
 
 enum class IPV{

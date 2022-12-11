@@ -129,78 +129,6 @@ UdpRx/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/build
 .PHONY : UdpRx/fast
 
-File.o: File.cpp.o
-.PHONY : File.o
-
-# target to build an object file
-File.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/File.cpp.o
-.PHONY : File.cpp.o
-
-File.i: File.cpp.i
-.PHONY : File.i
-
-# target to preprocess a source file
-File.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/File.cpp.i
-.PHONY : File.cpp.i
-
-File.s: File.cpp.s
-.PHONY : File.s
-
-# target to generate assembly for a file
-File.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/File.cpp.s
-.PHONY : File.cpp.s
-
-FileParser.o: FileParser.cpp.o
-.PHONY : FileParser.o
-
-# target to build an object file
-FileParser.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/FileParser.cpp.o
-.PHONY : FileParser.cpp.o
-
-FileParser.i: FileParser.cpp.i
-.PHONY : FileParser.i
-
-# target to preprocess a source file
-FileParser.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/FileParser.cpp.i
-.PHONY : FileParser.cpp.i
-
-FileParser.s: FileParser.cpp.s
-.PHONY : FileParser.s
-
-# target to generate assembly for a file
-FileParser.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/FileParser.cpp.s
-.PHONY : FileParser.cpp.s
-
-JsonParser.o: JsonParser.cpp.o
-.PHONY : JsonParser.o
-
-# target to build an object file
-JsonParser.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/JsonParser.cpp.o
-.PHONY : JsonParser.cpp.o
-
-JsonParser.i: JsonParser.cpp.i
-.PHONY : JsonParser.i
-
-# target to preprocess a source file
-JsonParser.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/JsonParser.cpp.i
-.PHONY : JsonParser.cpp.i
-
-JsonParser.s: JsonParser.cpp.s
-.PHONY : JsonParser.s
-
-# target to generate assembly for a file
-JsonParser.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/JsonParser.cpp.s
-.PHONY : JsonParser.cpp.s
-
 Main.o: Main.cpp.o
 .PHONY : Main.o
 
@@ -249,6 +177,78 @@ UdpReceiver.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/UdpReceiver.cpp.s
 .PHONY : UdpReceiver.cpp.s
 
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.o: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.o
+
+# target to build an object file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.i: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.i
+
+# target to preprocess a source file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.i
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.s: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.s
+
+# target to generate assembly for a file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.s
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.o: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.o
+
+# target to build an object file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.i: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.i
+
+# target to preprocess a source file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.i
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.s: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.s
+
+# target to generate assembly for a file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.s
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.o: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.o
+
+# target to build an object file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.i: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.i
+
+# target to preprocess a source file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.i
+
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.s: home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.s
+
+# target to generate assembly for a file
+home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/UdpRx.dir/build.make CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s
+.PHONY : home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -258,21 +258,21 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... UdpRx"
-	@echo "... File.o"
-	@echo "... File.i"
-	@echo "... File.s"
-	@echo "... FileParser.o"
-	@echo "... FileParser.i"
-	@echo "... FileParser.s"
-	@echo "... JsonParser.o"
-	@echo "... JsonParser.i"
-	@echo "... JsonParser.s"
 	@echo "... Main.o"
 	@echo "... Main.i"
 	@echo "... Main.s"
 	@echo "... UdpReceiver.o"
 	@echo "... UdpReceiver.i"
 	@echo "... UdpReceiver.s"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.o"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.i"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.s"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.o"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.i"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.s"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.o"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.i"
+	@echo "... home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.s"
 .PHONY : help
 
 

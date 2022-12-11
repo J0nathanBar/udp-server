@@ -76,7 +76,7 @@ void UdpTX::scanConf()
 void UdpTX::handleFile(){
   try
   {
-    File f(_currentPath);
+    ModifiedFile f(_currentPath);
     std::string parsedFile = _fParse.serialize(&f);
     sendData(parsedFile);
     

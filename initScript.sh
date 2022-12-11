@@ -9,10 +9,6 @@ echo nodeJS-running
 cd -
 cd backEnd/UdpRx/build/
 make
-./UdpRx &
+./UdpRx
 echo Rx-running
-cd -
-cd backEnd/UdpTx/build/
-make
-./UdpTx &
-echo TX-running
+

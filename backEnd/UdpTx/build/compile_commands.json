@@ -11,17 +11,17 @@
 },
 {
   "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build",
-  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpTx.dir/JsonParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/JsonParser.cpp",
-  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/JsonParser.cpp"
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpTx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp"
 },
 {
   "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build",
-  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpTx.dir/File.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/File.cpp",
-  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/File.cpp"
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpTx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp"
 },
 {
   "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/build",
-  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpTx.dir/FileParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpTx/FileParser.cpp",
-  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpTx/FileParser.cpp"
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpTx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp"
 }
 ]

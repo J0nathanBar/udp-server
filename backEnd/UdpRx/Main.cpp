@@ -2,23 +2,16 @@
 #include "UdpReceiver.hpp"
 #include <boost/asio.hpp>
 #include <boost/filesystem.hpp>
-#include "File.hpp"
 
 void init();
 
 int main()
 {
-
-   init();
-
+    init();
 }
 void init()
 {
     boost::asio::io_service context;
-
-    //changed ports might do problems mush check
-    UdpReceiver r(42068, context);
-    //check the ports!!!!!
-    
+    UdpReceiver r(42069, context);
     context.run();
 }
