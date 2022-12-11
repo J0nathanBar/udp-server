@@ -11,22 +11,12 @@ const Transmitter = (props) => {
   return (
     <div>
       <h1>Transmitter</h1>
-      <TextForm></TextForm>
+      <TextForm name="TransConf.json" />
     </div>
-    
+
   )
 }
 
 
-const handler = async() => {
-  console.log("eeeeee")
-  const a = "eeeeee"
-  const body = {a}
-  const response = await fetch('http://localhost:5000/send', {
-    method: 'POST',
-    headers: {"content-type": "application/json"},
-    body:body
-  });
-}
 
 export default Transmitter

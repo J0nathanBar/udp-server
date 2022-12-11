@@ -1,12 +1,13 @@
 import React from 'react'
-import { DisplayPanel } from '../../components'
+import { TextForm } from '../../components';
 import './reciever.css'
 
 const Reciever = () => {
   return (
     <div>
-        <h1>Reciever</h1>
-      <DisplayPanel></DisplayPanel>
+      <h1>Reciever</h1>
+      <TextForm name="RecvConf.json" />
+
     </div>
   )
 }

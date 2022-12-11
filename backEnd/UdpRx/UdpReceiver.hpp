@@ -8,6 +8,8 @@
 #include<boost/bind/bind.hpp>
 #include<boost/array.hpp>
 #include<boost/shared_ptr.hpp>
+#include "../SharedClasses/FileParser.hpp"
+#include "../SharedClasses/JsonParser.hpp"
 #include<vector>
 
 enum class IPV{
@@ -22,6 +24,8 @@ public:
     ~UdpReceiver();
     void startReceive();
     void handleReceive(boost::system::error_code ec,std::size_t bytesTransferred );
+    void scanConf();
+    void handleFile(std::string data);
 
 private:
     boost::asio::ip::udp::socket _socket;
@@ -31,6 +35,13 @@ private:
     int _port;
     int k;
     boost::array<char, 1000> _buffer;
+    JsonParser _jParse;
+    FileParser _fParse;
+    std::string _path;
+    std::string _confPath;
+    std::string _currentPath;
+    std::thread _t;
+    bool _run;
 };
 
 #endif

@@ -4,7 +4,11 @@ npm start &
 echo react-running
 cd -
 cd backEnd/nodeServer/
-npm run dev 
+npm run dev &
 echo nodeJS-running
-read -n 1 
+cd -
+cd backEnd/UdpRx/build/
+make
+./UdpRx
+echo Rx-running
 

@@ -1,1 +1,0 @@
-/usr/bin/c++ CMakeFiles/UdpTx.dir/main.cpp.o CMakeFiles/UdpTx.dir/UdpTX.cpp.o -o UdpTx 
