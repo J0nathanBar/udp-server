@@ -1,0 +1,27 @@
+[
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/Main.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/Main.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/Main.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/UdpReceiver.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/UdpRx/UdpReceiver.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/UdpReceiver.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/FileParser.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/JsonParser.cpp"
+},
+{
+  "directory": "/home/jonny/Desktop/project/udp-server/backEnd/UdpRx/build",
+  "command": "/usr/bin/g++ -DBOOST_ALL_NO_LIB -DBOOST_FILESYSTEM_DYN_LINK -DBOOST_SERIALIZATION_DYN_LINK  -g -o CMakeFiles/UdpRx.dir/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp.o -c /home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp",
+  "file": "/home/jonny/Desktop/project/udp-server/backEnd/SharedClasses/ModifiedFile.cpp"
+}
+]
