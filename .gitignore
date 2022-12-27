@@ -1,3 +1,5 @@
 RecvConf.json
 TransConf.json
-
+backEnd/UdpTx/build/ 
+backEnd/UdpRx/build/
+frontEnd/node_modules/
