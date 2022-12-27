@@ -34,7 +34,7 @@ private:
     boost::asio::ip::udp::endpoint _local;
     int _port;
     int k;
-    boost::array<char, 1000> _buffer;
+    boost::array<char, 8000> _buffer;
     JsonParser _jParse;
     FileParser _fParse;
     std::string _path;

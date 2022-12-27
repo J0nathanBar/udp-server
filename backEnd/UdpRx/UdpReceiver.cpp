@@ -13,12 +13,14 @@ UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(por
 }
 UdpReceiver::~UdpReceiver()
 {
-    _t.detach();
+  _t.detach();
 }
 void UdpReceiver::startReceive()
 {
   std::cout << "recv" << std::endl;
+
   _socket.async_receive_from(boost::asio::buffer(_buffer),
+
                              _endpoint, [this](boost::system::error_code ec, std::size_t bytesTransferred)
                              { handleReceive(ec, bytesTransferred); });
 }
@@ -31,7 +33,9 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
     std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, std::back_inserter(data));
     std::cout << data << std::endl;
     std::thread dataHandler(&UdpReceiver::handleFile, this, data);
+    dataHandler.detach();
   }
+
   startReceive();
 }
 void UdpReceiver::scanConf()
