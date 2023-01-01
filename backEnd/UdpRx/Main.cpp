@@ -7,7 +7,9 @@ void init();
 
 int main()
 {
-    init();
+   init();
+
+
 }
 void init()
 {

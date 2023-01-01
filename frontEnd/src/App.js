@@ -1,16 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
-import { Reciever,Transmitter } from './containers';
+import { Reciever, Transmitter, FileForm } from './containers';
 function App() {
   return (
     <div className="counter">
-     
-   <Reciever/>
-   <Transmitter/>
+      <h1>Virtual Channel</h1>
+
+     <Transmitter/>
+     <Reciever/>
+     <FileForm/>
 
 
     </div>
-    
+
   );
 }
 

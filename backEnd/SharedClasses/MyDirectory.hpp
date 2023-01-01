@@ -11,19 +11,28 @@
 class MyDirectory
 {
 public:
-    MyDirectory(boost::filesystem::path,std::queue<std::string> & );
+    MyDirectory(boost::filesystem::path, std::queue<std::string> &);
+    MyDirectory(boost::filesystem::path, std::queue<std::string> &, std::string root);
+    MyDirectory();
     ~MyDirectory();
     void scanDir();
     int findFile(std::string name);
-
+    int findDir(std::string name);
+    std::string getName();
     void kill();
+    void ScannedFile(const boost::filesystem::path &);
+    void ScannedDir(const boost::filesystem::path &);
 
 private:
     boost::container::vector<ModifiedFile> _fileVec;
     boost::container::vector<ModifiedFile> _prevVec;
-    std::queue<std::string> & _buf;
+    boost::container::vector<std::string> _dirVec;
+    boost::container::vector<std::string> _prevDirVec;
+    std::queue<std::string> &_buf;
     boost::filesystem::path _path;
     boost::filesystem::directory_iterator _dirIt;
+    std::string _dirName;
+    std::string _dirRoot;
     bool _run;
     std::thread t;
     FileParser _fParse;

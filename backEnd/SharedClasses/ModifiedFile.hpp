@@ -13,8 +13,10 @@
 class ModifiedFile
 {
 public:
+    ModifiedFile(boost::filesystem::path &path);
     ModifiedFile(std::string path);
-    ModifiedFile(boost::filesystem::path*);
+    ModifiedFile(const boost::filesystem::path &,  boost::filesystem::path &);
+    
     ModifiedFile();
     ~ModifiedFile();
     void setFile(boost::filesystem::path);
@@ -27,11 +29,13 @@ public:
     int getSize();
     void setHandled(bool flag);
     bool getHandled();
+    std::string getRootFolder();
 
 private:
     void constructorDef();
     boost::filesystem::path _path;
     std::string _fileName;
+    std::string _rootFolder;
     std::string _data;
     int _size;
     bool _beenHandled;
@@ -43,6 +47,7 @@ private:
         ar &_fileName;
         ar &_data;
         ar &_size;
+        ar &_rootFolder;
     }
 };
 /*    std::cout << "filename and extension : " << src.filename() << std::endl; // file.ext

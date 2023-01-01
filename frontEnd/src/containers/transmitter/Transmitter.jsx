@@ -1,7 +1,7 @@
 import { getValue } from '@testing-library/user-event/dist/utils';
 import React from 'react';
 import { useRef } from 'react';
-import './transmitter.css';
+
 import { TextForm } from '../../components';
 
 

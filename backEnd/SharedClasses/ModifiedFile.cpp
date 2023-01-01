@@ -1,10 +1,16 @@
 #include "ModifiedFile.hpp"
 
-ModifiedFile::ModifiedFile(std::string path) : _path(boost::filesystem::path(path)),_beenHandled(false)
+ModifiedFile::ModifiedFile(boost::filesystem::path &path) : _path((path)), _beenHandled(false)
 {
+    _rootFolder = "";
     constructorDef();
 }
-ModifiedFile::ModifiedFile(boost::filesystem::path *path) : _path(*path)
+ModifiedFile::ModifiedFile(std::string path) : _path((path)), _beenHandled(false)
+{
+    _rootFolder = "";
+    constructorDef();
+}
+ModifiedFile::ModifiedFile(const boost::filesystem::path &path, boost::filesystem::path& root) : _path(path), _rootFolder(root.string())
 {
     constructorDef();
 }
@@ -30,10 +36,12 @@ void ModifiedFile::setFile(boost::filesystem::path path)
     _path = boost::filesystem::path(path);
     constructorDef();
 }
-void ModifiedFile::setHandled(bool flag){
+void ModifiedFile::setHandled(bool flag)
+{
     _beenHandled = flag;
 }
-bool ModifiedFile::getHandled(){
+bool ModifiedFile::getHandled()
+{
     return _beenHandled;
 }
 
@@ -58,6 +66,11 @@ void ModifiedFile::setPath(std::string folderPath)
     _path = folderPath;
     _path.append(_fileName);
 }
-void ModifiedFile::setPath(boost::filesystem::path path){
+void ModifiedFile::setPath(boost::filesystem::path path)
+{
     _path = path;
+}
+std::string ModifiedFile::getRootFolder()
+{
+    return _rootFolder;
 }

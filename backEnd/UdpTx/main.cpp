@@ -14,9 +14,11 @@
 void init();
 int main()
 {
-    // MyDirectory dir("/home/jonny/Desktop/filestosend/");
-    // dir.scanDir();
+
     init();
+   // boost::filesystem::path p("/home/jonny/Desktop/filestosend/");
+
+    
 }
 
 //   File f("/home/jonny/Desktop/filestosend/duck.jpeg");

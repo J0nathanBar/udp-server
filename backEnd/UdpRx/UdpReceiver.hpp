@@ -2,30 +2,32 @@
 #define UDPRECEIVER_HPP
 
 #pragma once
-#include<iostream>
-#include<string>
-#include<boost/asio.hpp>
-#include<boost/bind/bind.hpp>
-#include<boost/array.hpp>
-#include<boost/shared_ptr.hpp>
+#include <iostream>
+#include <string>
+#include <boost/asio.hpp>
+#include <boost/bind/bind.hpp>
+#include <boost/array.hpp>
+#include <boost/shared_ptr.hpp>
 #include "../SharedClasses/FileParser.hpp"
 #include "../SharedClasses/JsonParser.hpp"
-#include<vector>
+#include <vector>
 
-enum class IPV{
+enum class IPV
+{
     v4,
     v6
 };
 class UdpReceiver
 {
-    
+
 public:
-    UdpReceiver(int port,boost::asio::io_service &context);
+    UdpReceiver(int port, boost::asio::io_service &context);
     ~UdpReceiver();
     void startReceive();
-    void handleReceive(boost::system::error_code ec,std::size_t bytesTransferred );
+    void handleReceive(boost::system::error_code ec, std::size_t bytesTransferred);
     void scanConf();
     void handleFile(std::string data);
+    
 
 private:
     boost::asio::ip::udp::socket _socket;

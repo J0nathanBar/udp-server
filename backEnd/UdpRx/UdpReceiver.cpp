@@ -2,9 +2,8 @@
 
 UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(port),
                                                                        _socket(context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
-                                                                       _run(true),
-                                                                       _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/RecvConf.json"),
-                                                                       _path(""), _currentPath("")
+                                                                       _run(true)
+                                                                
 {
   std::cout << "starting server" << std::endl;
   _t = std::thread(&UdpReceiver::scanConf, this);
@@ -65,6 +64,11 @@ void UdpReceiver::handleFile(std::string data)
   {
     ModifiedFile f;
     _fParse.deSerialize(data, &f);
+     std::string p = _currentPath + f.getRootFolder();
+    
+    if(!boost::filesystem::is_directory(p)){
+        boost::filesystem::create_directories(p);
+    }
     f.setPath(_currentPath);
     boost::filesystem::ofstream stream{*f.getPath()};
     stream << f.getData();

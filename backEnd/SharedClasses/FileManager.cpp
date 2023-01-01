@@ -44,6 +44,7 @@ bool FileManager::handleFile(std::string path)
 {
     try
     {
+        
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string parsedFile = _fParse.serialize(&f);

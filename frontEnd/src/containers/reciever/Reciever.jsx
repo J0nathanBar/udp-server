@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextForm } from '../../components';
-import './reciever.css'
+
 
 const Reciever = () => {
   return (
