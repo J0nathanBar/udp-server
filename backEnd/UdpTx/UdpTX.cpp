@@ -29,6 +29,10 @@ void UdpTX::post(const std::string &message)
 
 void UdpTX::asyncSend()
 {
+  while (_buf.empty())
+  {
+  }
+  std::cout << "front buf: "<<_buf.front()<< std::endl;
   _socket.async_send_to(boost::asio::buffer(_buf.front()), _endpoint,
                         [this](boost::system::error_code ec, std::size_t bytesTransferred)
                         { handleSend(ec, bytesTransferred); });
@@ -36,6 +40,7 @@ void UdpTX::asyncSend()
 
 void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTransferred)
 {
+  
   std::cout << "bytes transferred: " << bytesTransferred << std::endl;
   _buf.pop();
   if (!_buf.empty())
@@ -46,8 +51,8 @@ void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTran
 void UdpTX::run()
 {
   _socket.open(udp::v4());
-  _context.run();
   _manager.start();
   _run = true;
   asyncSend();
+  _context.run();
 }

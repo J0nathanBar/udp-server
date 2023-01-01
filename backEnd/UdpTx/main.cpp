@@ -14,8 +14,9 @@
 void init();
 int main()
 {
-
+    std::cout << "eee"<< std::endl;
     init();
+    
    // boost::filesystem::path p("/home/jonny/Desktop/filestosend/");
 
     
@@ -25,7 +26,7 @@ int main()
 void init()
 {
     boost::asio::io_context context;
-    std::string addr = "192.168.47.38";
+    std::string addr = "192.168.110.38";
     int port = 42069;
     std::cout << "1" << std::endl;
     UdpTX tx(addr, port);

@@ -107,7 +107,9 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
     {
         boost::filesystem::path rel = boost::filesystem::relative(k, _path);
         ModifiedFile f(k, rel );
+        std::cout << f.getData();
         std::string parsedFile = _fParse.serialize(&f);
+        std::cout << parsedFile << std::endl;
         boost::filesystem::path relativePath = boost::filesystem::relative(k, _path);
         std::cout << relativePath << std::endl;
         _buf.push(parsedFile);

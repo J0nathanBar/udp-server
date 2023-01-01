@@ -1,6 +1,6 @@
 #include "FileManager.hpp"
 
-FileManager::FileManager(std::queue<std::string> &buf) : _path(""), _currentPath(""), _buf(buf),
+FileManager::FileManager(std::queue<std::string> & buf) : _path(""), _currentPath(""), _buf(buf),
                                                          _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json"), _run(false)
 {
 }
@@ -44,11 +44,13 @@ bool FileManager::handleFile(std::string path)
 {
     try
     {
-        
+
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string parsedFile = _fParse.serialize(&f);
-        _buf.push(parsedFile);
+
+        _buf.emplace(parsedFile);
+        std::cout << "buff " << _buf.front() << std::endl;
         // post(parsedFile);
     }
     catch (boost::filesystem::filesystem_error &e)
