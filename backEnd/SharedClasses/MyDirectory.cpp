@@ -21,21 +21,6 @@ void MyDirectory::scanDir()
             _prevVec = std::move(_fileVec);
         if (!(_dirVec.empty()))
             _prevDirVec = std::move(_dirVec);
-        // _dirIt = boost::filesystem::directory_iterator{_path};
-        // while (_dirIt != boost::filesystem::directory_iterator{})
-        // {
-        //     boost::filesystem::path k(*_dirIt++);
-        //      std::cout << k.filename().string()<< std::endl;
-        //     if (boost::filesystem::is_regular_file(k))
-        //     {
-
-        //         ScannedFile(k);
-        //     }
-        //     else if (boost::filesystem::is_directory(k))
-        //     {
-        //         ScannedDir(k);
-        //     }
-        // }
 
         if (!boost::filesystem::exists(_path))
         {
@@ -105,13 +90,19 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
     }
     else
     {
-        boost::filesystem::path rel = boost::filesystem::relative(k, _path);
-        ModifiedFile f(k, rel );
-        std::cout << f.getData();
-        std::string parsedFile = _fParse.serialize(&f);
-        std::cout << parsedFile << std::endl;
-        boost::filesystem::path relativePath = boost::filesystem::relative(k, _path);
+        boost::filesystem::path rel = boost::filesystem::relative(k, _path.parent_path().parent_path());
+        // if(rel.compare("") == 0)
+        //     rel =
+        // std::cout << "rel: " << rel.filename().string() << std::endl;
+
+        // std::cout << _path.parent_path().filename().string() <<"/"<< rel.filename().string() << std::endl;
+        ModifiedFile f(k);
+        boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
         std::cout << relativePath << std::endl;
+        f.setRoot(relativePath.string());
+        std::string parsedFile = _fParse.serialize(&f);
+
+        std::cout << "relatives: " << f.getRootFolder() << std::endl;
         _buf.push(parsedFile);
         _fileVec.push_back(f);
     }

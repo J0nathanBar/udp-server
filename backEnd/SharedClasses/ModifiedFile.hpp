@@ -13,7 +13,7 @@
 class ModifiedFile
 {
 public:
-    ModifiedFile(boost::filesystem::path &path);
+    ModifiedFile(const boost::filesystem::path &path);
     ModifiedFile(std::string path);
     ModifiedFile(const boost::filesystem::path &,  boost::filesystem::path &);
     
@@ -30,6 +30,7 @@ public:
     void setHandled(bool flag);
     bool getHandled();
     std::string getRootFolder();
+    void setRoot(std::string);
 
 private:
     void constructorDef();

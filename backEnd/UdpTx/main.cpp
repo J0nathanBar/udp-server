@@ -26,7 +26,7 @@ int main()
 void init()
 {
     boost::asio::io_context context;
-    std::string addr = "192.168.110.38";
+    std::string addr = "10.0.0.16";
     int port = 42069;
     std::cout << "1" << std::endl;
     UdpTX tx(addr, port);
