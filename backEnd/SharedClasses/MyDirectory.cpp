@@ -4,10 +4,7 @@ MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::string> &
 {
     t = std::thread(&MyDirectory::scanDir, this);
 }
-MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::string> &buf, std::string root) : _path(path), _run(true), _buf(buf), _dirName(root + '/' + path.filename().string()), _dirRoot(root)
-{
-    t = std::thread(&MyDirectory::scanDir, this);
-}
+
 
 MyDirectory::~MyDirectory()
 {
@@ -36,11 +33,7 @@ void MyDirectory::scanDir()
 
         while (it != end)
         {
-            if (boost::filesystem::is_directory(it->path()))
-            {
-                //   ScannedDir(it->path());
-            }
-            else
+            if (boost::filesystem::is_regular_file(it->path()))
             {
 
                 ScannedFile(it->path());
@@ -50,21 +43,12 @@ void MyDirectory::scanDir()
     }
 }
 
-int MyDirectory::findFile(std::string name)
+int MyDirectory::findFile(std::string path)
 {
 
     for (int i = 0; i < _prevVec.size(); i++)
     {
-        if (name.compare(_prevVec.at(i).getFileName()) == 0)
-            return i;
-    }
-    return -1;
-}
-int MyDirectory::findDir(std::string name)
-{
-    for (int i = 0; i < _prevDirVec.size(); i++)
-    {
-        if (name.compare(_prevDirVec.at(i)) == 0)
+        if (path.compare(_prevVec.at(i).getPath()->string()) == 0)
             return i;
     }
     return -1;
@@ -83,7 +67,7 @@ std::string MyDirectory::getName()
 void MyDirectory::ScannedFile(const boost::filesystem::path &k)
 {
 
-    int i = findFile(k.filename().string());
+    int i = findFile(k.string());
     if (i != -1)
     {
         _fileVec.push_back(_prevVec.at(i));
@@ -91,19 +75,18 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
     else
     {
         boost::filesystem::path rel = boost::filesystem::relative(k, _path.parent_path().parent_path());
-        // if(rel.compare("") == 0)
-        //     rel =
-        // std::cout << "rel: " << rel.filename().string() << std::endl;
-
-        // std::cout << _path.parent_path().filename().string() <<"/"<< rel.filename().string() << std::endl;
         ModifiedFile f(k);
         boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
         std::cout << relativePath << std::endl;
         f.setRoot(relativePath.string());
-        std::string parsedFile = _fParse.serialize(&f);
+        std::string parsedFile = _fParse.serialize(f);
 
         std::cout << "relatives: " << f.getRootFolder() << std::endl;
         _buf.push(parsedFile);
         _fileVec.push_back(f);
     }
+}
+void MyDirectory::splitFile(std::string data){
+    
+
 }

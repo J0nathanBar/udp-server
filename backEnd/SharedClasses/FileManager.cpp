@@ -47,9 +47,10 @@ bool FileManager::handleFile(std::string path)
 
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
-        std::string parsedFile = _fParse.serialize(&f);
+        std::string id = f.getId();
+        std::string parsedFile = _fParse.serialize(f);
 
-        _buf.emplace(parsedFile);
+        SplitFile(parsedFile, 2000, id);
         // post(parsedFile);
     }
     catch (boost::filesystem::filesystem_error &e)
@@ -81,4 +82,19 @@ void FileManager::start()
 {
     _run = true;
     t = std::thread(&FileManager::scanConf, this);
+}
+
+void FileManager::SplitFile(std::string data, int packetSize, std::string id)
+{
+    unsigned long index = 0;
+    unsigned long lastPacket = data.length() / packetSize;
+    if (lastPacket * packetSize != data.length())
+        lastPacket++;
+    for (unsigned long i = 0; i < data.length(); i += packetSize, index++)
+    {
+        std::string splicedData = data.substr(i, packetSize);
+        FilePacket packet(id, splicedData, i, lastPacket);
+        std::string packetData = _fParse.serialize(packet);
+        _buf.emplace(packetData);
+    }
 }

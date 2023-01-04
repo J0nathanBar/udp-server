@@ -23,6 +23,7 @@ ModifiedFile::~ModifiedFile()
 
 void ModifiedFile::constructorDef()
 {
+    generateId();
     boost::filesystem::ifstream f(_path);
     std::stringstream stream;
     stream << f.rdbuf();
@@ -77,4 +78,27 @@ std::string ModifiedFile::getRootFolder()
 void ModifiedFile::setRoot(std::string root)
 {
     _rootFolder = root;
+}
+
+void ModifiedFile::generateId()
+{
+    static const char alphabet[] = "0123456789"
+                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                   "abcdefghijklmnopqrstuvwxyz";
+
+    static std::mt19937 generator(std::random_device{}());
+    static std::uniform_int_distribution<int> distribution(0, sizeof(alphabet) - 2);
+
+    std::string result;
+    result.reserve(8);
+
+    for (int i = 0; i < 8; ++i)
+    {
+        result += alphabet[distribution(generator)];
+    }
+    _id = result;
+}
+std::string ModifiedFile::getId()
+{
+    return _id;
 }

@@ -10,7 +10,15 @@
 #include <boost/shared_ptr.hpp>
 #include "../SharedClasses/FileParser.hpp"
 #include "../SharedClasses/JsonParser.hpp"
+#include "../SharedClasses/FilePacket.hpp"
 #include <vector>
+#include <boost/unordered_set.hpp>
+#include <boost/container/set.hpp>
+#include <unordered_set>
+#include <set>
+#include <functional>
+#include <boost/unordered_map.hpp>
+#include <boost/container/map.hpp>
 
 enum class IPV
 {
@@ -26,8 +34,9 @@ public:
     void startReceive();
     void handleReceive(boost::system::error_code ec, std::size_t bytesTransferred);
     void scanConf();
+    std::string stichFile(boost::container::map<unsigned long, FilePacket >  &);
+    void handlePacket(std::string);
     void handleFile(std::string data);
-    
 
 private:
     boost::asio::ip::udp::socket _socket;
@@ -44,6 +53,7 @@ private:
     std::string _currentPath;
     std::thread _t;
     bool _run;
+    boost::unordered_map<std::string, boost::container::map<unsigned long, FilePacket > > _packets;
 };
 
 #endif

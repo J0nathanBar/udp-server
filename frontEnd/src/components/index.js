@@ -1,3 +1,3 @@
-
 export {default as TextForm} from './textForm/TextForm'
-export {default as FileSelector} from './FileSelector/FileSelector'
+export {default as FolderUploader} from './FolderUploader/FolderUploader'
+

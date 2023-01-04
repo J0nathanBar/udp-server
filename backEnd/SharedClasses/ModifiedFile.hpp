@@ -9,7 +9,7 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/string.hpp>
-
+#include <random>
 class ModifiedFile
 {
 public:
@@ -31,13 +31,17 @@ public:
     bool getHandled();
     std::string getRootFolder();
     void setRoot(std::string);
+  
+    std::string getId();
 
 private:
     void constructorDef();
+      void generateId();
     boost::filesystem::path _path;
     std::string _fileName;
     std::string _rootFolder;
     std::string _data;
+    std::string _id;
     int _size;
     bool _beenHandled;
 
@@ -49,6 +53,7 @@ private:
         ar &_data;
         ar &_size;
         ar &_rootFolder;
+        ar & _id;
     }
 };
 /*    std::cout << "filename and extension : " << src.filename() << std::endl; // file.ext

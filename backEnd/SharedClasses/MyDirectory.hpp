@@ -4,6 +4,7 @@
 #pragma once
 #include "ModifiedFile.hpp"
 #include "FileParser.hpp"
+#include "FileManager.hpp"
 #include "boost/container/vector.hpp"
 #include <queue>
 #include <thread>
@@ -12,7 +13,6 @@ class MyDirectory
 {
 public:
     MyDirectory(boost::filesystem::path, std::queue<std::string> &);
-    MyDirectory(boost::filesystem::path, std::queue<std::string> &, std::string root);
     MyDirectory();
     ~MyDirectory();
     void scanDir();
@@ -20,6 +20,7 @@ public:
     int findDir(std::string name);
     std::string getName();
     void kill();
+    void splitFile(std::string);
     void ScannedFile(const boost::filesystem::path &);
     void ScannedDir(const boost::filesystem::path &);
 
