@@ -18,7 +18,7 @@ public:
     bool handleDir();
     void kill();
     void start();
-    void SplitFile(std::string data,int packetSize,std::string id);
+    void splitFile(std::string data,int packetSize,std::string id);
 
 private:
     JsonParser _jParse;

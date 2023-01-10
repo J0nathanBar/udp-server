@@ -18,6 +18,7 @@ public:
     std::string getId();
     unsigned long getIndex();
     unsigned long getLastPacket();
+    void printInfo();
 
 private:
     std::string _fileId;

@@ -26,3 +26,6 @@ unsigned long FilePacket::getLastPacket()
 {
     return _lastPacket;
 }
+void FilePacket::printInfo(){
+    std::cout << "id: "<<_fileId << " index: " << _index << " last packet: " << _lastPacket << std::endl;
+}

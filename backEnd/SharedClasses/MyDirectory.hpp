@@ -20,7 +20,8 @@ public:
     int findDir(std::string name);
     std::string getName();
     void kill();
-    void splitFile(std::string);
+
+    void splitFile(std::string data, int packetSize, std::string id);
     void ScannedFile(const boost::filesystem::path &);
     void ScannedDir(const boost::filesystem::path &);
 

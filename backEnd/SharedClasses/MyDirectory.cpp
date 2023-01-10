@@ -5,7 +5,6 @@ MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::string> &
     t = std::thread(&MyDirectory::scanDir, this);
 }
 
-
 MyDirectory::~MyDirectory()
 {
     t.join();
@@ -77,16 +76,28 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
         boost::filesystem::path rel = boost::filesystem::relative(k, _path.parent_path().parent_path());
         ModifiedFile f(k);
         boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
-        std::cout << relativePath << std::endl;
+        //std::cout << relativePath << std::endl;
         f.setRoot(relativePath.string());
         std::string parsedFile = _fParse.serialize(f);
-
+        std::cout << "file name: " << f.getFileName() << std::endl;
         std::cout << "relatives: " << f.getRootFolder() << std::endl;
-        _buf.push(parsedFile);
+        //  _buf.push(parsedFile);
+        splitFile(parsedFile, 2000, f.getId());
         _fileVec.push_back(f);
     }
 }
-void MyDirectory::splitFile(std::string data){
-    
-
+void MyDirectory::splitFile(std::string data, int packetSize, std::string id)
+{
+    unsigned long index = 0;
+    unsigned long lastPacket = data.length() / packetSize;
+    if (lastPacket * packetSize != data.length())
+        lastPacket++;
+    for (unsigned long i = 0; i < data.length(); i += packetSize, index++)
+    {
+        std::string splicedData = data.substr(i, packetSize);
+        FilePacket packet(id, splicedData, index, lastPacket);
+        packet.printInfo();
+        std::string packetData = _fParse.serialize(packet);
+        _buf.emplace(packetData);
+    }
 }
