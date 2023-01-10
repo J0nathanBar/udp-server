@@ -2,7 +2,7 @@
 
 UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(port),
                                                                        _socket(context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
-                                                                       _run(true)
+                                                                       _run(true), _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/RecvConf.json")
 
 {
   std::cout << "starting server" << std::endl;
@@ -32,7 +32,7 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
   {
     std::string data;
     std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, std::back_inserter(data));
-    std::cout << data << std::endl;
+    // std::cout << data << std::endl;
     std::thread dataHandler(&UdpReceiver::handlePacket, this, data);
     dataHandler.detach();
   }
@@ -50,7 +50,7 @@ void UdpReceiver::scanConf()
       if (_path.compare(_currentPath) != 0)
       {
         _currentPath = _path;
-        std::cout << _currentPath << std::endl;
+        std::cout << "c path: "<<_currentPath << std::endl;
       }
     }
     catch (nlohmann::json::parse_error &ex)
@@ -64,18 +64,23 @@ void UdpReceiver::handleFile(std::string data)
 {
   try
   {
+    std::cout << "trying files" << std::endl;
 
     ModifiedFile f;
     _fParse.deSerialize(data, f);
     std::string p = _currentPath + f.getRootFolder();
+    std::cout << "p: " << p << std::endl;
 
     if (!boost::filesystem::is_directory(p))
     {
       boost::filesystem::create_directories(p);
     }
-    f.setPath(_currentPath);
+    f.setPath(p);
     boost::filesystem::ofstream stream{*f.getPath()};
     stream << f.getData();
+    std::cout << "f path: " << f.getPath() << std::endl;
+
+    std::cout << "file saved" << std::endl;
   }
   catch (boost::filesystem::filesystem_error &e)
   {
@@ -85,11 +90,13 @@ void UdpReceiver::handleFile(std::string data)
 std::string UdpReceiver::stichFile(boost::container::map<unsigned long, FilePacket> &fileSet)
 {
   std::string stichedData = "";
+  unsigned long s = fileSet.size();
 
-  for (unsigned long i = 0; i < fileSet.size(); i++)
+  for (unsigned long i = 0; i < s; i++)
   {
+    std::cout << "stiched " << i << std::endl;
 
-    stichedData += fileSet.at(i).getData();
+    stichedData += fileSet.find(i)->second.getData();
   }
   return stichedData;
 }
