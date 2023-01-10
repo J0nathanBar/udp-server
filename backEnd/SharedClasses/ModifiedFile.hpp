@@ -10,10 +10,12 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/string.hpp>
 #include <random>
+#include<time.h>
 class ModifiedFile
 {
 public:
     ModifiedFile(const boost::filesystem::path &path);
+    ModifiedFile(const boost::filesystem::path &path,const std::string ,std::time_t);
     ModifiedFile(std::string path);
     ModifiedFile(const boost::filesystem::path &,  boost::filesystem::path &);
     
@@ -23,6 +25,8 @@ public:
     void setPath(std::string folderPath);
     void setPath(boost::filesystem::path);
     void saveFile();
+    void setfTime(std::time_t);
+    std::time_t getfTime();
     boost::filesystem::path *getPath();
     std::string getFileName();
     std::string getData();
@@ -44,6 +48,7 @@ private:
     std::string _id;
     int _size;
     bool _beenHandled;
+    std::time_t _fTime;
 
     friend class boost::serialization::access;
     template <class Archive>

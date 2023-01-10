@@ -15,8 +15,6 @@ void MyDirectory::scanDir()
     {
         if (!(_fileVec.empty()))
             _prevVec = std::move(_fileVec);
-        if (!(_dirVec.empty()))
-            _prevDirVec = std::move(_dirVec);
 
         if (!boost::filesystem::exists(_path))
         {
@@ -69,21 +67,11 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
     int i = findFile(k.string());
     if (i != -1)
     {
-        _fileVec.push_back(_prevVec.at(i));
+        existingFile(k, i);
     }
     else
     {
-        boost::filesystem::path rel = boost::filesystem::relative(k, _path.parent_path().parent_path());
-        ModifiedFile f(k);
-        boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
-        //std::cout << relativePath << std::endl;
-        f.setRoot(relativePath.string());
-        std::string parsedFile = _fParse.serialize(f);
-        std::cout << "file name: " << f.getFileName() << std::endl;
-        std::cout << "relatives: " << f.getRootFolder() << std::endl;
-        //  _buf.push(parsedFile);
-        splitFile(parsedFile, 2000, f.getId());
-        _fileVec.push_back(f);
+        newFile(k);
     }
 }
 void MyDirectory::splitFile(std::string data, int packetSize, std::string id)
@@ -96,8 +84,24 @@ void MyDirectory::splitFile(std::string data, int packetSize, std::string id)
     {
         std::string splicedData = data.substr(i, packetSize);
         FilePacket packet(id, splicedData, index, lastPacket);
-        packet.printInfo();
         std::string packetData = _fParse.serialize(packet);
         _buf.emplace(packetData);
     }
+}
+void MyDirectory::newFile(const boost::filesystem::path &k)
+{
+
+    boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
+    // f.setRoot(relativePath.string());
+    std::time_t time = boost::filesystem::last_write_time(k);
+    ModifiedFile f(k, relativePath.string(), time);
+    std::string parsedFile = _fParse.serialize(f);
+    splitFile(parsedFile, 2000, f.getId());
+    _fileVec.push_back(f);
+}
+void MyDirectory::existingFile(const boost::filesystem::path &k, int i)
+{
+    if (_prevVec.at(i).getfTime() == boost::filesystem::last_write_time(k))
+        _fileVec.push_back(_prevVec.at(i));
+    else newFile(k);
 }

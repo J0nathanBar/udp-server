@@ -24,10 +24,7 @@ class UdpTX
 public:
     UdpTX(std::string addr, int port);
     ~UdpTX();
-    void sendData(std::string);
     void handleSend(const boost::system::error_code, std::size_t);
-    void post(const std::string &message);
-    void start();
     void asyncSend();
     void run();
 

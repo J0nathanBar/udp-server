@@ -44,14 +44,11 @@ bool FileManager::handleFile(std::string path)
 {
     try
     {
-
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string id = f.getId();
         std::string parsedFile = _fParse.serialize(f);
-
         splitFile(parsedFile, 2000, id);
-        // post(parsedFile);
     }
     catch (boost::filesystem::filesystem_error &e)
     {
@@ -65,7 +62,6 @@ bool FileManager::handleDir()
     try
     {
         MyDirectory dir(_currentPath, _buf);
-        /* code */
     }
     catch (boost::filesystem::filesystem_error &e)
     {

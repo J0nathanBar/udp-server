@@ -5,6 +5,11 @@ ModifiedFile::ModifiedFile(const boost::filesystem::path &path) : _path((path)),
     _rootFolder = "";
     constructorDef();
 }
+ModifiedFile::ModifiedFile(const boost::filesystem::path &path,const std::string root , std::time_t time): _path(path),_rootFolder(root),_fTime(time)
+{
+    constructorDef();
+
+}
 ModifiedFile::ModifiedFile(std::string path) : _path((path)), _beenHandled(false)
 {
     _rootFolder = "";
@@ -101,4 +106,11 @@ void ModifiedFile::generateId()
 std::string ModifiedFile::getId()
 {
     return _id;
+}
+std::time_t ModifiedFile::getfTime(){
+    return _fTime;
+}
+void ModifiedFile::setfTime(std::time_t time){
+    _fTime = time;
+
 }
