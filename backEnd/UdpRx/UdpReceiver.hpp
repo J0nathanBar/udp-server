@@ -54,6 +54,7 @@ private:
     std::thread _t;
     bool _run;
     boost::unordered_map<std::string, boost::container::map<unsigned long, FilePacket > > _packets;
+
 };
 
 #endif

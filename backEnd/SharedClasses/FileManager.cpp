@@ -1,7 +1,7 @@
 #include "FileManager.hpp"
 
-FileManager::FileManager(std::queue<std::string> &buf) : _path(""), _currentPath(""), _buf(buf),
-                                                         _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json"), _run(false)
+FileManager::FileManager(std::queue<std::vector<uint8_t>> &buf) : _path(""), _currentPath(""), _buf(buf),
+                                                                  _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json"), _run(false)
 {
 }
 
@@ -40,7 +40,7 @@ void FileManager::scanConf()
         }
     }
 }
-bool FileManager::handleFile(std::string path)
+bool FileManager::handleFile(std::string &path)
 {
     try
     {
@@ -49,6 +49,7 @@ bool FileManager::handleFile(std::string path)
         std::string id = f.getId();
         std::string parsedFile = _fParse.serialize(f);
         splitFile(parsedFile, 2000, id);
+        encode();
     }
     catch (boost::filesystem::filesystem_error &e)
     {
@@ -80,7 +81,7 @@ void FileManager::start()
     t = std::thread(&FileManager::scanConf, this);
 }
 
-void FileManager::splitFile(std::string data, int packetSize, std::string id)
+void FileManager::splitFile(std::string &data, int packetSize, std::string id)
 {
     unsigned long index = 0;
     unsigned long lastPacket = data.length() / packetSize;
@@ -92,6 +93,33 @@ void FileManager::splitFile(std::string data, int packetSize, std::string id)
         FilePacket packet(id, splicedData, index, lastPacket);
         packet.printInfo();
         std::string packetData = _fParse.serialize(packet);
-        _buf.emplace(packetData);
+        // _buf.emplace(packetData);
+        _unEncoded.emplace_back(packetData);
+    }
+}
+void FileManager::encode()
+{
+    FecCoder coder;
+    for (int i = 0; i < _unEncoded.size(); i++)
+    {
+        std::cout << "-----------------------------" << std::endl;
+        std::cout << "encoding chunk: " << i << std::endl;
+        int packetSize = 1400;
+        if (packetSize > _unEncoded.at(i).length())
+        {
+            packetSize = _unEncoded.at(i).length() / 3;
+        }
+
+        auto v = coder.encode(_unEncoded.at(i), packetSize); // change later to user transmitted
+        mountOnBuffer(v);
+    }
+}
+void FileManager::mountOnBuffer(auto v)
+{
+
+    while (!v->empty())
+    {
+        _buf.push(std::move(v->front()));
+        v->pop();
     }
 }

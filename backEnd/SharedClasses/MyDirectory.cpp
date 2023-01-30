@@ -1,6 +1,6 @@
 #include "MyDirectory.hpp"
 
-MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::string> &buf) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string())
+MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<uint8_t>> &buf) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string())
 {
     t = std::thread(&MyDirectory::scanDir, this);
 }
@@ -74,18 +74,21 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
         newFile(k);
     }
 }
-void MyDirectory::splitFile(std::string data, int packetSize, std::string id)
+void MyDirectory::splitFile(std::string data, int chunkSize, std::string id)
 {
     unsigned long index = 0;
-    unsigned long lastPacket = data.length() / packetSize;
-    if (lastPacket * packetSize != data.length())
+    unsigned long lastPacket = data.length() / chunkSize;
+    std::vector<std::string> chunks;
+    if (lastPacket * chunkSize != data.length())
         lastPacket++;
-    for (unsigned long i = 0; i < data.length(); i += packetSize, index++)
+    for (unsigned long i = 0; i < data.length(); i += chunkSize, index++)
     {
-        std::string splicedData = data.substr(i, packetSize);
+        std::string splicedData = data.substr(i, chunkSize);
         FilePacket packet(id, splicedData, index, lastPacket);
         std::string packetData = _fParse.serialize(packet);
-        _buf.emplace(packetData);
+        // _buf.emplace(packetData);
+        chunks.push_back(packetData);
+        encode(chunks, chunkSize, data);
     }
 }
 void MyDirectory::newFile(const boost::filesystem::path &k)
@@ -103,5 +106,9 @@ void MyDirectory::existingFile(const boost::filesystem::path &k, int i)
 {
     if (_prevVec.at(i).getfTime() == boost::filesystem::last_write_time(k))
         _fileVec.push_back(_prevVec.at(i));
-    else newFile(k);
+    else
+        newFile(k);
+}
+void MyDirectory::encode(std::vector<std::string> &chunks, int packetSize, std::string data)
+{
 }

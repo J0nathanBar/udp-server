@@ -16,6 +16,7 @@
 #include"../SharedClasses/JsonParser.hpp"
 #include"../SharedClasses/MyDirectory.hpp"
 #include "../SharedClasses/FileManager.hpp"
+#include <wirehair/wirehair.h>
 
 using boost::asio::ip::udp;
 
@@ -36,7 +37,7 @@ private:
     std::string _addr;
     std::thread t;
     int _port;
-    std::queue<std::string> _buf{};
+    std::queue<std::vector<uint8_t>> _buf{};
     bool _run;
     FileManager _manager;
 
