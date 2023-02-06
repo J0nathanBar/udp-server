@@ -3,17 +3,30 @@
 
 #pragma once
 #include <boost/serialization/serialization.hpp>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <boost/format.hpp>
 
 class DataHeader
 {
 public:
     DataHeader();
-    DataHeader(int blockSize, int dataSize);
+    DataHeader(unsigned int blockSize, unsigned int dataSize);
+    void toLong();
     ~DataHeader();
+    unsigned int  getBlockSize();
+    unsigned int getDataSize();
+    bool isEmpty();
+    void fill();
+
 
 private:
-    int _blockSize;
-    int _dataSize;
+   
+
+
+    unsigned int _blockSize, _dataSize;
+    bool _empty;
 
     friend class boost::serialization::access;
     template <class Archive>

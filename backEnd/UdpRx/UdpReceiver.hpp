@@ -19,6 +19,8 @@
 #include <functional>
 #include <boost/unordered_map.hpp>
 #include <boost/container/map.hpp>
+#include<memory>
+#include "../SharedClasses/FecCoder.hpp"
 
 enum class IPV
 {
@@ -34,7 +36,7 @@ public:
     void startReceive();
     void handleReceive(boost::system::error_code ec, std::size_t bytesTransferred);
     void scanConf();
-    std::string stichFile(boost::container::map<unsigned long, FilePacket >  &);
+    std::string stichFile(boost::container::map<unsigned long, FilePacket> &);
     void handlePacket(std::string);
     void handleFile(std::string data);
 
@@ -45,7 +47,7 @@ private:
     boost::asio::ip::udp::endpoint _local;
     int _port;
     int k;
-    boost::array<char, 8000> _buffer;
+    std::vector<uint8_t> _buffer;
     JsonParser _jParse;
     FileParser _fParse;
     std::string _path;
@@ -53,8 +55,9 @@ private:
     std::string _currentPath;
     std::thread _t;
     bool _run;
-    boost::unordered_map<std::string, boost::container::map<unsigned long, FilePacket > > _packets;
-
+    boost::unordered_map<std::string, boost::container::map<unsigned long, FilePacket>> _packets;
+    FecCoder _coder;
+    DataHeader _header;
 };
 
 #endif

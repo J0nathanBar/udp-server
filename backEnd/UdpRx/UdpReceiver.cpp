@@ -7,6 +7,7 @@ UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(por
 {
   std::cout << "starting server" << std::endl;
   _t = std::thread(&UdpReceiver::scanConf, this);
+  _buffer.resize(100);
 
   //_fileThreads = {};
 
@@ -27,14 +28,44 @@ void UdpReceiver::startReceive()
 }
 void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesTransferred)
 {
+  std::cout << "---------------------------------------------------" << std::endl;
   std::cout << "bytes transferred: " << bytesTransferred << std::endl;
   if (!ec)
   {
     std::string data;
-    std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, std::back_inserter(data));
+
+    if (_header.isEmpty())
+    {
+      std::cout << "decoding header... " << std::endl;
+      std::string hdata(_coder.decodeHeader(_buffer, bytesTransferred));
+      if (hdata != "")
+      {
+        _fParse.deSerialize(hdata, _header);
+        _buffer.resize(_header.getBlockSize());
+      }
+    }
+    else
+    {
+      std::cout << "decoding data" << std::endl;
+      data = _coder.decode(_buffer, _header.getDataSize(), _header.getBlockSize());
+
+      if (data != "")
+      {
+        std::cout << "Fec Over" << std::endl;
+        std::thread dataHandler(&UdpReceiver::handlePacket, this, data);
+        dataHandler.detach();
+        _header = DataHeader();
+        data = "";
+        _coder = FecCoder();
+      }
+    }
+
+    // std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, std::back_inserter(data));
     // std::cout << data << std::endl;
-    std::thread dataHandler(&UdpReceiver::handlePacket, this, data);
-    dataHandler.detach();
+    // if (data != "")
+    // {
+    //
+    // }
   }
 
   startReceive();
@@ -50,7 +81,7 @@ void UdpReceiver::scanConf()
       if (_path.compare(_currentPath) != 0)
       {
         _currentPath = _path;
-        std::cout << "c path: "<<_currentPath << std::endl;
+        std::cout << "c path: " << _currentPath << std::endl;
       }
     }
     catch (nlohmann::json::parse_error &ex)
@@ -127,5 +158,4 @@ void UdpReceiver::handlePacket(std::string data)
       _packets.erase(id);
     }
   }
-  // int i;
 }

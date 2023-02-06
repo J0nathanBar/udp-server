@@ -82,6 +82,7 @@ void FileParser::deSerialize(const std::string &data, DataHeader &h)
     {
         std::cout << e.what() << std::endl;
     }
+    h.fill();
 }
 std::string FileParser::serialize(const DataHeader &data)
 {

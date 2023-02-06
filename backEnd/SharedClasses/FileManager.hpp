@@ -21,10 +21,9 @@ public:
     void kill();
     void start();
 
-
 private:
     void encode();
-    void mountOnBuffer(auto v);
+    void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
     void splitFile(std::string &data, int packetSize, std::string id);
 
     JsonParser _jParse;

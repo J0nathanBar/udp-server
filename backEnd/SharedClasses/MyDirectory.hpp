@@ -20,15 +20,17 @@ public:
     int findFile(std::string name);
     std::string getName();
     void kill();
-    void splitFile(std::string data, int packetSize, std::string id);
+    void splitFile(std::string &data, int packetSize, std::string id);
     void ScannedFile(const boost::filesystem::path &);
     void newFile(const boost::filesystem::path &);
     void existingFile(const boost::filesystem::path &, int);
-    void encode(std::vector<std::string> &chunks,int packetSize,std::string data);
+    void encode();
+    void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
 
 private:
     boost::container::vector<ModifiedFile> _fileVec;
     boost::container::vector<ModifiedFile> _prevVec;
+    std::vector<std::string> _unEncoded;
     std::queue<std::vector<uint8_t>> &_buf;
     boost::filesystem::path _path;
     boost::filesystem::directory_iterator _dirIt;
@@ -37,8 +39,7 @@ private:
     bool _run;
     std::thread t;
     FileParser _fParse;
-    //std::vector<std::string> _chunks;
-
+    // std::vector<std::string> _chunks;
 };
 
 #endif

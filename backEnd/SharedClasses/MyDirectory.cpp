@@ -74,21 +74,20 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
         newFile(k);
     }
 }
-void MyDirectory::splitFile(std::string data, int chunkSize, std::string id)
+void MyDirectory::splitFile(std::string &data, int packetSize, std::string id)
 {
     unsigned long index = 0;
-    unsigned long lastPacket = data.length() / chunkSize;
-    std::vector<std::string> chunks;
-    if (lastPacket * chunkSize != data.length())
+    unsigned long lastPacket = data.length() / packetSize;
+    if (lastPacket * packetSize != data.length())
         lastPacket++;
-    for (unsigned long i = 0; i < data.length(); i += chunkSize, index++)
+    for (unsigned long i = 0; i < data.length(); i += packetSize, index++)
     {
-        std::string splicedData = data.substr(i, chunkSize);
+        std::string splicedData = data.substr(i, packetSize);
         FilePacket packet(id, splicedData, index, lastPacket);
+        packet.printInfo();
         std::string packetData = _fParse.serialize(packet);
         // _buf.emplace(packetData);
-        chunks.push_back(packetData);
-        encode(chunks, chunkSize, data);
+        _unEncoded.emplace_back(packetData);
     }
 }
 void MyDirectory::newFile(const boost::filesystem::path &k)
@@ -100,6 +99,7 @@ void MyDirectory::newFile(const boost::filesystem::path &k)
     ModifiedFile f(k, relativePath.string(), time);
     std::string parsedFile = _fParse.serialize(f);
     splitFile(parsedFile, 2000, f.getId());
+    encode();
     _fileVec.push_back(f);
 }
 void MyDirectory::existingFile(const boost::filesystem::path &k, int i)
@@ -109,6 +109,32 @@ void MyDirectory::existingFile(const boost::filesystem::path &k, int i)
     else
         newFile(k);
 }
-void MyDirectory::encode(std::vector<std::string> &chunks, int packetSize, std::string data)
+
+void MyDirectory::encode()
 {
+    FecCoder coder;
+    for (int i = 0; i < _unEncoded.size(); i++)
+    {
+        std::cout << "-----------------------------" << std::endl;
+        std::cout << "encoding chunk: " << i << std::endl;
+        int packetSize = 1400;
+        if (packetSize > _unEncoded.at(i).length())
+        {
+            packetSize = _unEncoded.at(i).length() / 3;
+        }
+
+        auto v = coder.encode(_unEncoded.at(i), packetSize); // change later to user transmitted
+        mountOnBuffer(v);
+    }
+}
+void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v)
+{
+
+    // FecCoder fc;
+
+    while (!v->empty())
+    {
+        _buf.push(std::move(v->front()));
+        v->pop();
+    }
 }

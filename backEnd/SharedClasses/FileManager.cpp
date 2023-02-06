@@ -114,8 +114,10 @@ void FileManager::encode()
         mountOnBuffer(v);
     }
 }
-void FileManager::mountOnBuffer(auto v)
+void FileManager::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v)
 {
+
+    //FecCoder fc;
 
     while (!v->empty())
     {

@@ -56,42 +56,45 @@ std::shared_ptr<std::queue<std::vector<uint8_t>>> FecCoder::encode(const std::ve
             std::cout << "wirehair_encode failed: " << encodeResult << std::endl;
             return nullptr;
         }
-        std::cout << "block size: " << block.size() << std::endl;
+        std::cout << "bytes: " << kMessageBytes << " block size: " << block.size() << std::endl;
+        // block.emplace_back(kMessageBytes);
+        //     std::cout << "size:: " << block.at(block.size() - 1) << std::endl;
         v->emplace(block);
         i += writeLen;
         needed++;
     }
     wirehair_free(_encoder);
+    _blockId = 0;
     return v;
 }
-bool FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes)
+std::string FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes, int kPacketSize)
 
 {
-    if (!_decoder)
+    if (_blockId == 0)
     {
-        _decoder = wirehair_decoder_create(nullptr, kMessageBytes, block.size());
-        _blockId = 1;
+        std::cout << "creating decoder..." << std::endl;
+        _decoder = wirehair_decoder_create(nullptr, kMessageBytes, kPacketSize);
+        _blockId++;
     }
     if (!_decoder)
     {
         // Free memory for encoder
 
         std::cout << "!!! Failed to create decoder" << std::endl;
-        return false;
+        return "";
     }
-
     std::cout << "decode " << std::endl;
     WirehairResult decodeResult = wirehair_decode(
-        _decoder,      // Decoder object
-        _blockId,      // ID of block that was encoded
-        &block[0],     // Input block
-        block.size()); // Block length
+        _decoder,     // Decoder object
+        _blockId,     // ID of block that was encoded
+        &block[0],    // Input block
+        kPacketSize); // Block length
 
     // If decoder returns success:
     if (decodeResult == Wirehair_Success)
     {
         // Decoder has enough data to recover now
-        recover();
+        return recover(kMessageBytes);
     }
     else if (decodeResult == Wirehair_NeedMore)
     {
@@ -101,45 +104,42 @@ bool FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes)
     else
     {
         std::cout << "wirehair_decoder failed: " << decodeResult << std::endl;
-        return false;
+        return "";
     }
-    return true;
+    return "";
 }
-bool FecCoder::recover()
+std::string FecCoder::recover(int kMessageBytes)
 {
     std::cout << "recover " << std::endl;
-    std::vector<uint8_t> decoded(_data.length()); // change later
+    std::vector<uint8_t> decoded(kMessageBytes); // change later
 
-    WirehairResult decodeResult = wirehair_recover(_decoder, decoded.data(), decoded.size());
+    WirehairResult decodeResult = wirehair_recover(_decoder, decoded.data(), kMessageBytes);
     if (decodeResult != Wirehair_Success)
     {
         std::cout << "wirehair_recover failed: " << decodeResult << std::endl;
-        return false;
+        return "";
     }
     std::string a = std::string(decoded.begin(), decoded.end());
-    std::cout << a << std::endl;
     _data = a;
+    _blockId = 0;
     wirehair_free(_decoder);
 
-    return true;
+    return a;
 }
-std::string FecCoder::getRecovered()
-{
-    return _data;
-}
+
 void FecCoder::makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>> v, int kPacketSize, int kMessageBytes)
 {
     std::cout << "header encoding starts" << std::endl;
     DataHeader h(kPacketSize, kMessageBytes);
     FileParser fp;
     int blockId = 0;
-  
+
     std::string data = fp.serialize(h);
     std::vector<uint8_t> msg(data.begin(), data.end());
-      int packetSize = msg.size() / 2 + 1;
-      std::cout<<"header packet size: " << packetSize<<std::endl;
+    int headerSize = data.size();
+    int headerPacketSize = headerSize / 2;
 
-    WirehairCodec hencoder = wirehair_encoder_create(nullptr, &msg[0], msg.size(), packetSize);
+    WirehairCodec hencoder = wirehair_encoder_create(nullptr, &msg[0], headerSize, headerPacketSize);
     if (!hencoder)
     {
         std::cout << "!!! Failed to create header encoder" << std::endl;
@@ -147,25 +147,38 @@ void FecCoder::makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>> v, i
     }
     int i = 0;
     uint32_t writeLen = 0;
-    while (i < msg.size())
+    while (i < headerSize)
     {
-        std::vector<uint8_t> block(packetSize, 0);
+        std::vector<uint8_t> block(headerPacketSize, 0);
         blockId++;
         WirehairResult encodeResult = wirehair_encode(
-            hencoder,   // Encoder object
-            blockId,   // ID of block to generate
-            &block[0],  // Output buffer
-            packetSize, // Output buffer size
-            &writeLen); // Returned block length
+            hencoder,         // Encoder object
+            blockId,          // ID of block to generate
+            &block[0],        // Output buffer
+            headerPacketSize, // Output buffer size
+            &writeLen);       // Returned block length
 
         if (encodeResult != Wirehair_Success)
         {
             std::cout << "wirehair_encode header failed: " << encodeResult << std::endl;
         }
-        std::cout << "header block size: " << block.size() << std::endl;
+        block.emplace_back(headerSize);
         v->emplace(block);
+
         i += writeLen;
     }
     wirehair_free(hencoder);
     std::cout << "header encoding over" << std::endl;
+}
+std::string FecCoder::decodeHeader(std::vector<uint8_t> &block, int kPacketSize)
+{
+    kPacketSize--;
+    int headerSize = block.at(kPacketSize);
+    block.pop_back();
+
+    decode(block, headerSize, kPacketSize);
+    if (_data != "")
+        return std::move(_data);
+    std::cout << "waiting for more header packets..." << std::endl;
+    return "";
 }
