@@ -1,7 +1,8 @@
 #include "FileManager.hpp"
 
-FileManager::FileManager(std::queue<std::vector<uint8_t>> &buf) : _path(""), _currentPath(""), _buf(buf),
-                                                                  _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json"), _run(false)
+FileManager::FileManager(std::queue<std::vector<uint8_t>> &buf, std::mutex &bufferMutex) : _path(""), _currentPath(""), _buf(buf),
+                                                                                           _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json"), _run(false),
+                                                                                           _bufferMutex(bufferMutex)
 {
 }
 
@@ -23,6 +24,7 @@ void FileManager::scanConf()
                 if (boost::filesystem::is_directory(_path))
                 {
                     std::cout << "is dir" << std::endl;
+                    std::cout << _path << std::endl;
                     _currentPath = _path;
                     handleDir();
                 }
@@ -44,6 +46,7 @@ bool FileManager::handleFile(std::string &path)
 {
     try
     {
+
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string id = f.getId();
@@ -62,7 +65,7 @@ bool FileManager::handleDir()
 {
     try
     {
-        MyDirectory dir(_currentPath, _buf);
+        MyDirectory dir(_currentPath, _buf, _bufferMutex);
     }
     catch (boost::filesystem::filesystem_error &e)
     {
@@ -89,35 +92,35 @@ void FileManager::splitFile(std::string &data, int packetSize, std::string id)
         lastPacket++;
     for (unsigned long i = 0; i < data.length(); i += packetSize, index++)
     {
-        std::string splicedData = data.substr(i, packetSize);
-        FilePacket packet(id, splicedData, index, lastPacket);
-        packet.printInfo();
-        std::string packetData = _fParse.serialize(packet);
-        // _buf.emplace(packetData);
-        _unEncoded.emplace_back(packetData);
+        // std::string splicedData = data.substr(i, packetSize);
+        // FilePacket packet(id, splicedData, "", index);
+        // packet.printInfo();
+        // std::string packetData = _fParse.serialize(packet);
+        // // _buf.emplace(packetData);
+        // _unEncoded.emplace_back(packetData);
     }
 }
 void FileManager::encode()
 {
     FecCoder coder;
-    for (int i = 0; i < _unEncoded.size(); i++)
-    {
-        std::cout << "-----------------------------" << std::endl;
-        std::cout << "encoding chunk: " << i << std::endl;
-        int packetSize = 1400;
-        if (packetSize > _unEncoded.at(i).length())
-        {
-            packetSize = _unEncoded.at(i).length() / 3;
-        }
+    // for (int i = 0; i < _unEncoded.size(); i++)
+    // {
+    //     std::cout << "-----------------------------" << std::endl;
+    //     std::cout << "encoding chunk: " << i << std::endl;
+    //     int packetSize = 1400;
+    //     if (packetSize > _unEncoded.at(i).length())
+    //     {
+    //         packetSize = _unEncoded.at(i).length() / 3;
+    //     }
 
-        auto v = coder.encode(_unEncoded.at(i), packetSize); // change later to user transmitted
-        mountOnBuffer(v);
-    }
+    //     auto v = coder.encode(_unEncoded.at(i), packetSize); // change later to user transmitted
+    //     mountOnBuffer(v);
+    // }
 }
 void FileManager::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v)
 {
 
-    //FecCoder fc;
+    // FecCoder fc;
 
     while (!v->empty())
     {

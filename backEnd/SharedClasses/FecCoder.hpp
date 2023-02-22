@@ -16,12 +16,12 @@ public:
     FecCoder();
     ~FecCoder();
     std::string recover(int kMessaageBytes);
-    std::shared_ptr<std::queue<std::vector<uint8_t>>> encode(const std::string &data, const int kPacketSize);
-    std::shared_ptr<std::queue<std::vector<uint8_t>>> encode(const std::vector<uint8_t> &data, const int kPacketSize);
+    std::shared_ptr<std::queue<std::vector<uint8_t>>> encode(const std::string &data, const int kPacketSize,const std::string id, const unsigned long index);
+    std::shared_ptr<std::queue<std::vector<uint8_t>>> encode(const std::vector<uint8_t> &data, const int kPacketSize,const std::string id, const unsigned long index);
     std::string decode(std::vector<uint8_t> &block, int kMessageBytes,int kPacketSize);
     std::string  decodeHeader(std::vector<uint8_t>& ,int kPacketSize);
     std::string getRecovered();
-    void makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>>, int kPacketSize, int kMessageBytes);
+    void makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>>, int kPacketSize, int kMessageBytes,const std::string id, const unsigned long index);
     //const int _headerPacketSize = 22, _headerSize = 61;
 
 private:

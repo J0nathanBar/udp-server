@@ -19,7 +19,7 @@ void FileParser::deSerialize(const std::string &data, ModifiedFile &f)
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cout << "parse error: " << e.what() << std::endl;
     }
 }
 std::string FileParser::serialize(const ModifiedFile &data)
@@ -28,12 +28,11 @@ std::string FileParser::serialize(const ModifiedFile &data)
     try
     {
         boost::archive::text_oarchive ar(stream);
-        //  std::cout<<stream.str()<<std::endl;
         ar << data;
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cout << "parse error: " << e.what() << std::endl;
     }
 
     return stream.str();
@@ -45,11 +44,19 @@ void FileParser::deSerialize(const std::string &data, FilePacket &fp)
     try
     {
         boost::archive::text_iarchive ar(stream);
-        ar >> fp;
+        try
+        {
+            ar >> fp;
+        }
+        catch (boost::archive::archive_exception &e)
+        {
+            std::cout << "inner try" << std::endl;
+        }
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cout << "bad data: " << data << std::endl;
+        std::cout << "parse error: " << e.what() << std::endl;
     }
 }
 std::string FileParser::serialize(const FilePacket &data)
@@ -58,12 +65,12 @@ std::string FileParser::serialize(const FilePacket &data)
     try
     {
         boost::archive::text_oarchive ar(stream);
-        //  std::cout<<stream.str()<<std::endl;
         ar << data;
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << e.what() << std::endl;
+
+        std::cout << "parse error: " << e.what() << std::endl;
     }
 
     return stream.str();
@@ -80,7 +87,7 @@ void FileParser::deSerialize(const std::string &data, DataHeader &h)
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cout << "parse error: " << e.what() << std::endl;
     }
     h.fill();
 }
@@ -90,12 +97,11 @@ std::string FileParser::serialize(const DataHeader &data)
     try
     {
         boost::archive::text_oarchive ar(stream);
-        //  std::cout<<stream.str()<<std::endl;
         ar << data;
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << e.what() << std::endl;
+        std::cout << "parse error: " << e.what() << std::endl;
     }
 
     return stream.str();

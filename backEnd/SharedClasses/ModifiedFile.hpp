@@ -27,7 +27,7 @@ public:
     void saveFile();
     void setfTime(std::time_t);
     std::time_t getfTime();
-    boost::filesystem::path *getPath();
+    boost::filesystem::path getPath();
     std::string getFileName();
     std::string getData();
     int getSize();
@@ -44,9 +44,9 @@ private:
     boost::filesystem::path _path;
     std::string _fileName;
     std::string _rootFolder;
-    std::string _data;
+   // std::string _data;
     std::string _id;
-    int _size;
+    unsigned long _size;
     bool _beenHandled;
     std::time_t _fTime;
 
@@ -55,7 +55,7 @@ private:
     void serialize(Archive &ar, const unsigned int version)
     {
         ar &_fileName;
-        ar &_data;
+      //  ar &_data;
         ar &_size;
         ar &_rootFolder;
         ar & _id;

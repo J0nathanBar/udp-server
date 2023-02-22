@@ -8,23 +8,26 @@
 #include "boost/container/vector.hpp"
 #include <queue>
 #include <wirehair/wirehair.h>
+#include <string>
 #include <vector>
+#include <mutex>
 #include <thread>
+#include <chrono>
 
 class MyDirectory
 {
 public:
-    MyDirectory(boost::filesystem::path, std::queue<std::vector<uint8_t>> &);
+    MyDirectory(boost::filesystem::path, std::queue<std::vector<uint8_t>> &, std::mutex &bufferMutex);
     ~MyDirectory();
     void scanDir();
     int findFile(std::string name);
     std::string getName();
     void kill();
-    void splitFile(std::string &data, int packetSize, std::string id);
+    std::vector<std::string> splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path);
     void ScannedFile(const boost::filesystem::path &);
-    void newFile(const boost::filesystem::path &);
+    void newFile(const boost::filesystem::path);
     void existingFile(const boost::filesystem::path &, int);
-    void encode();
+    void encode(std::string &id, std::vector<std::string> unEncoded);
     void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
 
 private:
@@ -38,6 +41,9 @@ private:
     std::string _dirRoot;
     bool _run;
     std::thread t;
+    std::mutex _vecMutex;
+    std::mutex &_bufferMutex;
+    std::vector<std::thread> _threads;
     FileParser _fParse;
     // std::vector<std::string> _chunks;
 };

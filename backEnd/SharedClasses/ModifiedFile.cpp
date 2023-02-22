@@ -32,7 +32,7 @@ void ModifiedFile::constructorDef()
     boost::filesystem::ifstream f(_path);
     std::stringstream stream;
     stream << f.rdbuf();
-    _data = stream.str();
+   // _data = stream.str();
     _fileName = _path.filename().string();
     _size = boost::filesystem::file_size(_path);
 }
@@ -51,14 +51,15 @@ bool ModifiedFile::getHandled()
     return _beenHandled;
 }
 
-boost::filesystem::path *ModifiedFile::getPath()
+boost::filesystem::path ModifiedFile::getPath()
 {
-    return &_path;
+    return _path;
 }
 std::string ModifiedFile::getData()
 {
-    return _data;
+   // return _data;
 }
+
 std::string ModifiedFile::getFileName()
 {
     return _fileName;

@@ -12,20 +12,21 @@ class DataHeader
 {
 public:
     DataHeader();
-    DataHeader(unsigned int blockSize, unsigned int dataSize);
+    DataHeader(unsigned int blockSize, unsigned int dataSize, std::string id, unsigned long index);
     void toLong();
     ~DataHeader();
-    unsigned int  getBlockSize();
+    unsigned int getBlockSize();
     unsigned int getDataSize();
+    unsigned long getIndex();
+    std::string getId();
     bool isEmpty();
     void fill();
-
+    void print();
 
 private:
-   
-
-
     unsigned int _blockSize, _dataSize;
+    unsigned long _index;
+    std::string _id;
     bool _empty;
 
     friend class boost::serialization::access;
@@ -34,6 +35,8 @@ private:
     {
         ar &_blockSize;
         ar &_dataSize;
+        ar &_id;
+        ar &_index;
     }
 };
 

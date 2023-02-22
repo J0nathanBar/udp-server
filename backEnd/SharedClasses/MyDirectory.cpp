@@ -1,6 +1,6 @@
 #include "MyDirectory.hpp"
 
-MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<uint8_t>> &buf) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string())
+MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<uint8_t>> &buf, std::mutex &bufferMutex) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string()), _bufferMutex(bufferMutex)
 {
     t = std::thread(&MyDirectory::scanDir, this);
 }
@@ -8,11 +8,17 @@ MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<ui
 MyDirectory::~MyDirectory()
 {
     t.join();
+    for (auto &thread : _threads)
+    {
+        thread.join();
+    }
 }
 void MyDirectory::scanDir()
 {
     while (_run)
     {
+        std::lock_guard<std::mutex> guard(_vecMutex);
+
         if (!(_fileVec.empty()))
             _prevVec = std::move(_fileVec);
 
@@ -37,6 +43,7 @@ void MyDirectory::scanDir()
             }
             ++it;
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
@@ -45,7 +52,7 @@ int MyDirectory::findFile(std::string path)
 
     for (int i = 0; i < _prevVec.size(); i++)
     {
-        if (path.compare(_prevVec.at(i).getPath()->string()) == 0)
+        if (path.compare(_prevVec.at(i).getPath().string()) == 0)
             return i;
     }
     return -1;
@@ -71,59 +78,97 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
     }
     else
     {
-        newFile(k);
+        boost::filesystem::path a(k);
+        // newFile(k);
+        _threads.push_back(std::thread(&MyDirectory::newFile, this, std::move(a)));
+
+        // std::cout << "size: " << _threads.size() << std::endl;
+
+        // std::thread a(&MyDirectory::newFile, this, k);
+        //  a.detach();
     }
 }
-void MyDirectory::splitFile(std::string &data, int packetSize, std::string id)
+std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path)
 {
     unsigned long index = 0;
-    unsigned long lastPacket = data.length() / packetSize;
-    if (lastPacket * packetSize != data.length())
-        lastPacket++;
-    for (unsigned long i = 0; i < data.length(); i += packetSize, index++)
+    std::vector<FilePacket> packets;
+    std::vector<std::string> unEncoded;
+    std::ifstream File(path.string(), std::ios::binary);
+    if (!File.is_open())
     {
-        std::string splicedData = data.substr(i, packetSize);
-        FilePacket packet(id, splicedData, index, lastPacket);
-        packet.printInfo();
-        std::string packetData = _fParse.serialize(packet);
-        // _buf.emplace(packetData);
-        _unEncoded.emplace_back(packetData);
+        std::cout << path.string() << std::endl;
+        throw std::runtime_error("Failed to open the file");
     }
-}
-void MyDirectory::newFile(const boost::filesystem::path &k)
-{
 
+    while (File.good())
+    {
+
+        std::string chunk(packetSize, '\0');
+        std::cout << "index::   " << index << std::endl;
+        File.read(&chunk[0], packetSize);
+
+        unsigned long size = f.getSize();
+        std::string name = f.getFileName();
+        std::string root = f.getRootFolder();
+
+        packets.emplace_back(FilePacket(id, chunk, index, size, name, root));
+
+        index++;
+    }
+    File.close();
+    std::cout << "number of indexes " << index << std::endl;
+    for (FilePacket p : packets)
+    {
+        p.setLastPacket(index);
+        std::cout << p.getFileData() << std::endl;
+        std::string packetData = _fParse.serialize(p);
+        unEncoded.emplace_back(packetData);
+    }
+    return std::move(unEncoded);
+}
+void MyDirectory::newFile(const boost::filesystem::path k)
+{
     boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
-    // f.setRoot(relativePath.string());
     std::time_t time = boost::filesystem::last_write_time(k);
     ModifiedFile f(k, relativePath.string(), time);
-    std::string parsedFile = _fParse.serialize(f);
-    splitFile(parsedFile, 2000, f.getId());
-    encode();
+
+    std::string id = f.getId();
+    unsigned long size = f.getSize();
+    std::string root = f.getRootFolder(); //
+    std::vector<std::string> unEncoded = splitFile(f, 25000 * 3, id, k);
+    id = f.getId();
+    encode(id, std::move(unEncoded));
+    std::lock_guard<std::mutex> guard(_vecMutex);
     _fileVec.push_back(f);
 }
 void MyDirectory::existingFile(const boost::filesystem::path &k, int i)
 {
     if (_prevVec.at(i).getfTime() == boost::filesystem::last_write_time(k))
+    {
+        std::lock_guard<std::mutex> guard(_vecMutex);
+
         _fileVec.push_back(_prevVec.at(i));
+    }
     else
         newFile(k);
 }
 
-void MyDirectory::encode()
+void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded)
 {
-    FecCoder coder;
-    for (int i = 0; i < _unEncoded.size(); i++)
+    std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>();
+    // FecCoder coder;
+    for (unsigned long i = 0; i < unEncoded.size(); i++)
     {
         std::cout << "-----------------------------" << std::endl;
         std::cout << "encoding chunk: " << i << std::endl;
-        int packetSize = 1400;
-        if (packetSize > _unEncoded.at(i).length())
+        int packetSize = 5000 * 5 * 2;
+        if (packetSize > unEncoded.at(i).length())
         {
-            packetSize = _unEncoded.at(i).length() / 3;
+            packetSize = unEncoded.at(i).length() / 3;
         }
+        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
-        auto v = coder.encode(_unEncoded.at(i), packetSize); // change later to user transmitted
+        auto v = coder->encode(unEncoded.at(i), packetSize, id, i); // change later to user transmitted
         mountOnBuffer(v);
     }
 }
@@ -131,6 +176,7 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
 {
 
     // FecCoder fc;
+    std::lock_guard<std::mutex> guard(_bufferMutex);
 
     while (!v->empty())
     {

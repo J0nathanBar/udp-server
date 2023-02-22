@@ -13,7 +13,7 @@
 class FileManager
 {
 public:
-    FileManager(std::queue<std::vector<uint8_t>> &buf);
+    FileManager(std::queue<std::vector<uint8_t>> &buf, std::mutex &_bufferMutex);
     ~FileManager();
     void scanConf();
     bool handleFile(std::string &);
@@ -35,6 +35,7 @@ private:
     std::queue<std::vector<uint8_t>> &_buf;
     std::vector<std::string> _unEncoded;
     std::thread t;
+     std::mutex &_bufferMutex;
 };
 
 #endif

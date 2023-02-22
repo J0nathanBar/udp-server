@@ -5,18 +5,19 @@
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 #include <boost/bind/bind.hpp>
-#include<boost/algorithm/string.hpp>
+#include <boost/algorithm/string.hpp>
 #include <iostream>
 #include <queue>
 #include <string>
 #include <thread>
-
-#include"../SharedClasses/FileParser.hpp"
-#include"../SharedClasses/json.hpp"
-#include"../SharedClasses/JsonParser.hpp"
-#include"../SharedClasses/MyDirectory.hpp"
+#include<mutex>
+#include "../SharedClasses/FileParser.hpp"
+#include "../SharedClasses/json.hpp"
+#include "../SharedClasses/JsonParser.hpp"
+#include "../SharedClasses/MyDirectory.hpp"
 #include "../SharedClasses/FileManager.hpp"
 #include <wirehair/wirehair.h>
+#include <chrono>
 
 using boost::asio::ip::udp;
 
@@ -40,7 +41,8 @@ private:
     std::queue<std::vector<uint8_t>> _buf{};
     bool _run;
     FileManager _manager;
-
+    int packetCounter;
+    std::mutex _bufferMutex;
 };
 
 #endif
