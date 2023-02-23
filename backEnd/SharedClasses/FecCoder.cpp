@@ -59,7 +59,7 @@ std::shared_ptr<std::queue<std::vector<uint8_t>>> FecCoder::encode(const std::ve
         unsigned long value = index;
 
         uint8_t *bytes = reinterpret_cast<uint8_t *>(&value);
-        std::cout << "currently pushing " << index << std::endl;
+   //     std::cout << "currently pushing " << index << std::endl;
 
         // Add each byte to the vector.
         for (int i = 0; i < sizeof(long); i++)

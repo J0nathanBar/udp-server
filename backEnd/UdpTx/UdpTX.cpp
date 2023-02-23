@@ -5,6 +5,9 @@ UdpTX::UdpTX(std::string addr, int port) : _resolver(_context), _socket(_context
                                            _run(false), _manager(_buf, _bufferMutex)
 {
   packetCounter = 0;
+
+  _lock = std::unique_lock<std::mutex>(_bufferMutex);
+  _lock.unlock();
 }
 
 UdpTX::~UdpTX()
@@ -17,7 +20,8 @@ void UdpTX::asyncSend()
   {
     // std::cout << "empty" << std::endl;
   }
-  std::lock_guard<std::mutex> guard(_bufferMutex);
+  _lock.lock();
+
   _socket.async_send_to(boost::asio::buffer(_buf.front()), _endpoint,
                         [this](boost::system::error_code ec, std::size_t bytesTransferred)
                         { handleSend(ec, bytesTransferred); });
@@ -28,8 +32,11 @@ void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTran
 
   std::cout << "bytes transferred: " << bytesTransferred << " packet number: " << packetCounter << std::endl;
   _buf.pop();
+  bool e = _buf.empty();
+  _lock.unlock();
   packetCounter++;
-  std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  std::this_thread::sleep_for(std::chrono::milliseconds(3));
+
   asyncSend();
 }
 void UdpTX::run()

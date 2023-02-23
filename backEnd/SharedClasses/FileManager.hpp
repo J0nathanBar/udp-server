@@ -18,6 +18,9 @@ public:
     void scanConf();
     bool handleFile(std::string &);
     bool handleDir();
+    bool getRun(){
+        return _run;
+    }
     void kill();
     void start();
 

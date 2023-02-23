@@ -1,13 +1,16 @@
 #include "MyDirectory.hpp"
 
-MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<uint8_t>> &buf, std::mutex &bufferMutex) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string()), _bufferMutex(bufferMutex)
+MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<uint8_t>> &buf, std::mutex &bufferMutex) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string()), _bufferMutex(bufferMutex),
+                                                                                                                         _sem(_MaxThreads)
 {
     t = std::thread(&MyDirectory::scanDir, this);
+    cleaner = std::thread(&MyDirectory::cleanThreads, this);
 }
 
 MyDirectory::~MyDirectory()
 {
     t.join();
+    cleaner.join();
     for (auto &thread : _threads)
     {
         thread.join();
@@ -15,9 +18,10 @@ MyDirectory::~MyDirectory()
 }
 void MyDirectory::scanDir()
 {
-    while (_run)
+    int i = 0;
+    while (_run && i++ == 0)//remove later!!!!
     {
-        std::lock_guard<std::mutex> guard(_vecMutex);
+        //  std::lock_guard<std::mutex> guard(_vecMutex);
 
         if (!(_fileVec.empty()))
             _prevVec = std::move(_fileVec);
@@ -43,7 +47,10 @@ void MyDirectory::scanDir()
             }
             ++it;
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        //  std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::cout << "\n\n\n\nfinished iteration of files" << std::endl;
+        running = false;
+
     }
 }
 
@@ -80,12 +87,15 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
     {
         boost::filesystem::path a(k);
         // newFile(k);
+        _sem.acquire();
+        std::unique_lock<std::mutex> lock(_threadMutex);
         _threads.push_back(std::thread(&MyDirectory::newFile, this, std::move(a)));
 
-        // std::cout << "size: " << _threads.size() << std::endl;
+        std::cout << "size: " << _threads.size() << std::endl;
+        lock.unlock();
 
-        // std::thread a(&MyDirectory::newFile, this, k);
-        //  a.detach();
+        // std::thread b(&MyDirectory::newFile, this, k);
+        // b.detach();
     }
 }
 std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path)
@@ -104,7 +114,7 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize,
     {
 
         std::string chunk(packetSize, '\0');
-        std::cout << "index::   " << index << std::endl;
+        // std::cout << "index::   " << index << std::endl;
         File.read(&chunk[0], packetSize);
 
         unsigned long size = f.getSize();
@@ -116,11 +126,11 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize,
         index++;
     }
     File.close();
-    std::cout << "number of indexes " << index << std::endl;
+    // std::cout << "number of indexes " << index << std::endl;
     for (FilePacket p : packets)
     {
         p.setLastPacket(index);
-        std::cout << p.getFileData() << std::endl;
+        //   std::cout << p.getFileData() << std::endl;
         std::string packetData = _fParse.serialize(p);
         unEncoded.emplace_back(packetData);
     }
@@ -138,16 +148,17 @@ void MyDirectory::newFile(const boost::filesystem::path k)
     std::vector<std::string> unEncoded = splitFile(f, 25000 * 3, id, k);
     id = f.getId();
     encode(id, std::move(unEncoded));
-    std::lock_guard<std::mutex> guard(_vecMutex);
-    _fileVec.push_back(f);
+    // std::lock_guard<std::mutex> guard(_vecMutex);
+    // _fileVec.push_back(f);
+    _sem.release();
 }
 void MyDirectory::existingFile(const boost::filesystem::path &k, int i)
 {
     if (_prevVec.at(i).getfTime() == boost::filesystem::last_write_time(k))
     {
-        std::lock_guard<std::mutex> guard(_vecMutex);
+        // std::lock_guard<std::mutex> guard(_vecMutex);
 
-        _fileVec.push_back(_prevVec.at(i));
+        // _fileVec.push_back(_prevVec.at(i));
     }
     else
         newFile(k);
@@ -176,11 +187,29 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
 {
 
     // FecCoder fc;
-    std::lock_guard<std::mutex> guard(_bufferMutex);
+    std::unique_lock<std::mutex> lock(_bufferMutex);
 
     while (!v->empty())
     {
         _buf.push(std::move(v->front()));
         v->pop();
+    }
+    lock.unlock();
+}
+void MyDirectory::cleanThreads()
+{
+    while (true)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::unique_lock<std::mutex> lock(_threadMutex);
+        for (size_t i = 0; i < _threads.size(); i++)
+        {
+            if (_threads.at(i).joinable())
+            {
+                _threads.at(i).join();
+                _threads.erase(_threads.begin() + i);
+            }
+        }
+        lock.unlock();
     }
 }

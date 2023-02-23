@@ -13,10 +13,8 @@ void init();
 int main()
 {
     init();
-    // std::vector a = {1, 2, 3, 4, 5, 6};
-    // std::cout << a.capacity() << std::endl;
-    // std::vector b = std::move(a);
-    // std::cout << a.capacity() << std::endl;
+  
+    //  std::cout <<  __cplusplus << std::endl;
 }
 
 //   File f("/home/jonny/Desktop/filestosend/duck.jpeg");

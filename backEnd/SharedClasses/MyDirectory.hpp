@@ -13,6 +13,8 @@
 #include <mutex>
 #include <thread>
 #include <chrono>
+#include <semaphore>
+#include <boost/thread.hpp>
 
 class MyDirectory
 {
@@ -29,6 +31,8 @@ public:
     void existingFile(const boost::filesystem::path &, int);
     void encode(std::string &id, std::vector<std::string> unEncoded);
     void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
+    void cleanThreads();
+    bool running = true;
 
 private:
     boost::container::vector<ModifiedFile> _fileVec;
@@ -40,12 +44,18 @@ private:
     std::string _dirName;
     std::string _dirRoot;
     bool _run;
-    std::thread t;
-    std::mutex _vecMutex;
+    std::thread t,cleaner;
+    std::mutex _vecMutex,_threadMutex;
     std::mutex &_bufferMutex;
     std::vector<std::thread> _threads;
     FileParser _fParse;
+    const int _MaxThreads = 20;
+    // std::counting
+    // std::counting_semaphore<> sem();
     // std::vector<std::string> _chunks;
+    // boost::counting
+    // boost::counting_semaphore<> sem(5); // create a counting semaphore with initial value of 5
+    std::counting_semaphore<> _sem;
 };
 
 #endif

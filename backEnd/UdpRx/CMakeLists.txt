@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.22.1)
 
 project(UdpRx)
 
+set(CMAKE_CXX_STANDARD 20)
 
 include_directories(${Wirehair_INCLUDE_DIRS} ${Boost_INCLUDE_DIRS})
 file(GLOB_RECURSE CPP_FILES ../SharedClasses/*.cpp )

@@ -9,12 +9,15 @@ FileManager::FileManager(std::queue<std::vector<uint8_t>> &buf, std::mutex &buff
 FileManager::~FileManager()
 {
     t.join();
+    std::cout << "eeeee" << std::endl;
 }
 
 void FileManager::scanConf()
 {
+
     while (_run)
     {
+
         try
         {
             _path = _jParse.parse(_confPath);
@@ -27,6 +30,7 @@ void FileManager::scanConf()
                     std::cout << _path << std::endl;
                     _currentPath = _path;
                     handleDir();
+                    std::cout << "ooooo" << std::endl;
                 }
                 else if (boost::filesystem::is_regular_file(_path))
                 {

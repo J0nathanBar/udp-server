@@ -43,6 +43,7 @@ private:
     FileManager _manager;
     int packetCounter;
     std::mutex _bufferMutex;
+    std::unique_lock<std::mutex> _lock;
 };
 
 #endif
