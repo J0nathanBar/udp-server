@@ -16,15 +16,24 @@ UdpTX::~UdpTX()
 
 void UdpTX::asyncSend()
 {
+  // while (_run)
+  //{
+  bool p = true;
   while (_buf.empty())
   {
     // std::cout << "empty" << std::endl;
+    if (p)
+    {
+      std::cout << "empty" << std::endl;
+      p = false;
+    }
   }
   _lock.lock();
 
   _socket.async_send_to(boost::asio::buffer(_buf.front()), _endpoint,
                         [this](boost::system::error_code ec, std::size_t bytesTransferred)
                         { handleSend(ec, bytesTransferred); });
+  ////}
 }
 
 void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTransferred)
@@ -35,7 +44,7 @@ void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTran
   bool e = _buf.empty();
   _lock.unlock();
   packetCounter++;
-  std::this_thread::sleep_for(std::chrono::milliseconds(3));
+  // std::this_thread::sleep_for(std::chrono::milliseconds(3));
 
   asyncSend();
 }

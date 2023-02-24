@@ -19,7 +19,7 @@ MyDirectory::~MyDirectory()
 void MyDirectory::scanDir()
 {
     int i = 0;
-    while (_run && i++ == 0)//remove later!!!!
+    while (_run && i++ == 0) // remove later!!!!
     {
         //  std::lock_guard<std::mutex> guard(_vecMutex);
 
@@ -50,7 +50,6 @@ void MyDirectory::scanDir()
         //  std::this_thread::sleep_for(std::chrono::milliseconds(5));
         std::cout << "\n\n\n\nfinished iteration of files" << std::endl;
         running = false;
-
     }
 }
 
@@ -187,20 +186,31 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
 {
 
     // FecCoder fc;
-    std::unique_lock<std::mutex> lock(_bufferMutex);
 
-    while (!v->empty())
+    std::unique_lock<std::mutex> lock(_bufferMutex);
+    if (_buf.size()+v->size() < _MaxThreads)
     {
-        _buf.push(std::move(v->front()));
-        v->pop();
+
+        while (!v->empty())
+        {
+            _buf.push(std::move(v->front()));
+            v->pop();
+        }
+        lock.unlock();
     }
-    lock.unlock();
+
+    else
+    {
+        lock.unlock();
+        std::this_thread::sleep_for(std::chrono::milliseconds(3));
+        mountOnBuffer(v);
+    }
 }
 void MyDirectory::cleanThreads()
 {
     while (true)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         std::unique_lock<std::mutex> lock(_threadMutex);
         for (size_t i = 0; i < _threads.size(); i++)
         {

@@ -49,7 +49,7 @@ private:
     std::mutex &_bufferMutex;
     std::vector<std::thread> _threads;
     FileParser _fParse;
-    const int _MaxThreads = 20;
+    const int _MaxThreads = 200000;
     // std::counting
     // std::counting_semaphore<> sem();
     // std::vector<std::string> _chunks;
