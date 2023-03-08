@@ -44,18 +44,21 @@ private:
     std::string _dirName;
     std::string _dirRoot;
     bool _run;
-    std::thread t,cleaner;
-    std::mutex _vecMutex,_threadMutex;
+    std::thread t, cleaner;
+    std::mutex _vecMutex, _threadMutex;
     std::mutex &_bufferMutex;
     std::vector<std::thread> _threads;
     FileParser _fParse;
-    const int _MaxThreads = 200000;
+    const int _MaxThreads = 400000;
     // std::counting
     // std::counting_semaphore<> sem();
     // std::vector<std::string> _chunks;
     // boost::counting
     // boost::counting_semaphore<> sem(5); // create a counting semaphore with initial value of 5
     std::counting_semaphore<> _sem;
+    int _pz, _kmsg;
+    const int _headerId = 69;
+    const int _dataId = 0;
 };
 
 #endif

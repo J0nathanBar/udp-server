@@ -44,18 +44,10 @@ void FileParser::deSerialize(const std::string &data, FilePacket &fp)
     try
     {
         boost::archive::text_iarchive ar(stream);
-        try
-        {
-            ar >> fp;
-        }
-        catch (boost::archive::archive_exception &e)
-        {
-            std::cout << "inner try" << std::endl;
-        }
+        ar >> fp;
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << "bad data: " << data << std::endl;
         std::cout << "parse error: " << e.what() << std::endl;
     }
 }
@@ -90,6 +82,7 @@ void FileParser::deSerialize(const std::string &data, DataHeader &h)
         std::cout << "parse error: " << e.what() << std::endl;
     }
     h.fill();
+    /// h.print();
 }
 std::string FileParser::serialize(const DataHeader &data)
 {

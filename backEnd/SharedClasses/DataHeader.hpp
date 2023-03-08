@@ -18,6 +18,7 @@ public:
     unsigned int getBlockSize();
     unsigned int getDataSize();
     unsigned long getIndex();
+    uint8_t getDex();
     std::string getId();
     bool isEmpty();
     void fill();
@@ -26,6 +27,7 @@ public:
 private:
     unsigned int _blockSize, _dataSize;
     unsigned long _index;
+    uint8_t _dex;
     std::string _id;
     bool _empty;
 
@@ -37,6 +39,7 @@ private:
         ar &_dataSize;
         ar &_id;
         ar &_index;
+        ar & _dex;
     }
 };
 

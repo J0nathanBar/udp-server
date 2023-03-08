@@ -3,10 +3,8 @@
 FecCoder::FecCoder()
 {
     const WirehairResult initResult = wirehair_init();
-
     if (initResult != Wirehair_Success)
     {
-
         std::cout << "!!! Wirehair initialization failed: " << initResult << std::endl;
     }
     _blockId = 0;
@@ -30,8 +28,6 @@ std::shared_ptr<std::queue<std::vector<uint8_t>>> FecCoder::encode(const std::ve
     _blockId = 0;
     int needed = 0;
     int kMessageBytes = msg.size();
-    // std::cout << "kMessageBytes: " << kMessageBytes << std::endl;
-
     _encoder = wirehair_encoder_create(nullptr, &msg[0], kMessageBytes, kPacketSize);
     if (!_encoder)
     {
@@ -57,26 +53,18 @@ std::shared_ptr<std::queue<std::vector<uint8_t>>> FecCoder::encode(const std::ve
             return nullptr;
         }
         unsigned long value = index;
-
         uint8_t *bytes = reinterpret_cast<uint8_t *>(&value);
-   //     std::cout << "currently pushing " << index << std::endl;
-
+        //     std::cout << "currently pushing " << index << std::endl;
         // Add each byte to the vector.
-        for (int i = 0; i < sizeof(long); i++)
-        {
-            block.push_back(bytes[i]);
-        }
-        for (char c : id)
-        {
-            block.push_back(static_cast<uint8_t>(c)); // Convert the character to its ASCII value and store it in the vector
-        }
-        // std::string str;
-        // for (size_t i = block.size() - 8; i < block.size(); i++)
+        // for (int i = 0; i < sizeof(long); i++)
         // {
-        //     //  std::cout << v[i];
-        //     str += static_cast<char>(block[i]); // Conblockert the uint8_t value to a character and append it to the string
+        //     block.push_back(bytes[i]);
         // }
-        // std::cout << "str : " << str << std::endl;
+        // for (char c : id)
+        // {
+        //     block.push_back(static_cast<uint8_t>(c)); // Convert the character to its ASCII value and store it in the vector
+        // }
+        //     block.emplace_back((uint8_t)index);
         block.emplace_back(0);
         v->emplace(block);
         i += writeLen;
@@ -87,22 +75,20 @@ std::shared_ptr<std::queue<std::vector<uint8_t>>> FecCoder::encode(const std::ve
     return v;
 }
 std::string FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes, int kPacketSize)
-
 {
     if (_blockId == 0)
     {
-        //  std::cout << "creating decoder..." << std::endl;
         _decoder = wirehair_decoder_create(nullptr, kMessageBytes, kPacketSize);
         _blockId++;
     }
     if (!_decoder)
     {
-        // Free memory for encoder
 
+        _blockId = 0;
         std::cout << "!!! Failed to create decoder" << std::endl;
+        std::cout << "msg bytes: " << kMessageBytes << " packet Size" << kPacketSize << std::endl;
         return "";
     }
-    // std::cout << "decode " << std::endl;
     WirehairResult decodeResult = wirehair_decode(
         _decoder,     // Decoder object
         _blockId,     // ID of block that was encoded
@@ -118,7 +104,6 @@ std::string FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes, int
     else if (decodeResult == Wirehair_NeedMore)
     {
         _blockId++;
-        // std::cout << "waiting for more data: " << std::endl;
     }
     else
     {
@@ -129,9 +114,7 @@ std::string FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes, int
 }
 std::string FecCoder::recover(int kMessageBytes)
 {
-    //   std::cout << "recover " << std::endl;
     std::vector<uint8_t> decoded(kMessageBytes); // change later
-
     WirehairResult decodeResult = wirehair_recover(_decoder, decoded.data(), kMessageBytes);
     if (decodeResult != Wirehair_Success)
     {
@@ -139,11 +122,10 @@ std::string FecCoder::recover(int kMessageBytes)
         return "";
     }
     std::string a = std::string(decoded.begin(), decoded.end());
-    // std::cout << a << std::endl;
+    //   std::cout << a << std::endl;
     _data = a;
     _blockId = 0;
     wirehair_free(_decoder);
-
     return a;
 }
 
@@ -153,12 +135,10 @@ void FecCoder::makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>> v, i
     DataHeader h(kPacketSize, kMessageBytes, id, index);
     FileParser fp;
     int blockId = 0;
-
     std::string data = fp.serialize(h);
     std::vector<uint8_t> msg(data.begin(), data.end());
     int headerSize = data.size();
-    int headerPacketSize = headerSize / 2;
-
+    int headerPacketSize = headerSize / 12;
     WirehairCodec hencoder = wirehair_encoder_create(nullptr, &msg[0], headerSize, headerPacketSize);
     if (!hencoder)
     {
@@ -199,7 +179,11 @@ std::string FecCoder::decodeHeader(std::vector<uint8_t> &block, int kPacketSize)
 
     decode(block, headerSize, kPacketSize);
     if (_data != "")
+    {
         return std::move(_data);
-    // std::cout << "waiting for more header packets..." << std::endl;
+    }
     return "";
+}
+void FecCoder::LongtoVec(std::vector<uint8_t> &v, unsigned long value)
+{
 }

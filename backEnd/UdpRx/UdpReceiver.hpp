@@ -20,6 +20,7 @@
 #include <boost/unordered_map.hpp>
 #include <boost/container/map.hpp>
 #include <memory>
+#include <mutex>
 #include "../SharedClasses/FecCoder.hpp"
 
 enum class IPV
@@ -40,12 +41,15 @@ public:
     void stichFile(std::vector<FilePacket> &);
     void handlePacket(std::string);
     void handleFile(std::string &data);
-    void handleHeader(int, std::vector<uint8_t> &buffer);
-    void handleRawData(std::vector<uint8_t> buffer);
+    void handleHeader(int, std::vector<uint8_t> buffer);
+    void handleRawData(std::vector<uint8_t> buffer, int headerId, int counter);
     std::string extractId(std::vector<uint8_t> &v, std::size_t &bytesTransferred);
     unsigned long extractIndex(std::vector<uint8_t> &v, std::size_t &bytesTransferred);
+    void processData(std::vector<std::vector<uint8_t>> v);
 
 private:
+    static constexpr int SIZE = 10000;
+
     boost::asio::ip::udp::socket _socket;
     boost::asio::ip::udp::endpoint _endpoint;
     boost::asio::io_service _context;
@@ -53,6 +57,7 @@ private:
     int _port;
     int k;
     std::vector<uint8_t> _buffer;
+    std::vector<std::vector<uint8_t>> _v;
     JsonParser _jParse;
     FileParser _fParse;
     std::string _path;
@@ -61,9 +66,16 @@ private:
     std::thread _t;
     std::vector<std::thread> _threads;
     bool _run;
+    std::mutex _coderMutex, _headerMutex;
+    std::vector<FilePacket> _packetVec;
     boost::unordered_map<std::string, boost::container::map<unsigned long, FilePacket>> _packets;
-    FecCoder _coder;
-    DataHeader _header;
+    FecCoder /*_coder,*/ _hcoder;
+    int eff = 0;
+    // DataHeader _header;
+    // std::queue<DataHeader> _qhead;
+    std::vector<DataHeader> _headers;
+    std::vector<FecCoder> _coders;
+    int hSize;
     int hcounter;
     int packetCounter;
 };

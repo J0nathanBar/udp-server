@@ -12,18 +12,20 @@ void init();
 
 int main()
 {
-    init();
-  
-    //  std::cout <<  __cplusplus << std::endl;
+  init();
+
+  //  fp.deSerialize(a, f);
+
+  //  std::cout <<  __cplusplus << std::endl;
 }
 
 //   File f("/home/jonny/Desktop/filestosend/duck.jpeg");
 void init()
 {
-    std::cout << "init " << std::endl;
-    boost::asio::io_context context;
-    std::string addr = "127.0.0.1";
-    int port = 42069;
-    UdpTX tx(addr, port);
-    tx.run();
+  std::cout << "init " << std::endl;
+  boost::asio::io_context context;
+  std::string addr = "127.0.0.1";
+  int port = 42069;
+  UdpTX tx(addr, port);
+  tx.run();
 }

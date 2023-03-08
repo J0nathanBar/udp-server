@@ -25,10 +25,16 @@ bool DataHeader::isEmpty()
     return _empty;
 }
 
-unsigned long DataHeader::getIndex(){
+unsigned long DataHeader::getIndex()
+{
     return _index;
 }
-std::string DataHeader::getId(){
+uint8_t DataHeader::getDex()
+{
+    return _dex;
+}
+std::string DataHeader::getId()
+{
     return _id;
 }
 void DataHeader::fill()
@@ -36,8 +42,7 @@ void DataHeader::fill()
     _empty = false;
 }
 
-
 void DataHeader::print()
 {
-    //   std::cout << " block size: " << _blockSize << " data size: " << _dataSize << std::endl;
+    std::cout << "header:: " <<" block size: " << _blockSize << " data size: " << _dataSize << std::endl;
 }

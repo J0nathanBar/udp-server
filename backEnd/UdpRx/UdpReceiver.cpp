@@ -2,13 +2,14 @@
 
 UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(port),
                                                                        _socket(context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
-                                                                       _run(true), _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/RecvConf.json"), hcounter(0)
+                                                                       _run(true), _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/RecvConf.json"), hcounter(0), hSize(0)
 
 {
   std::cout << "starting server" << std::endl;
   _t = std::thread(&UdpReceiver::scanConf, this);
-  _buffer.resize(100);
+  _buffer.resize(SIZE);
   packetCounter = 0;
+  _coders.push_back(FecCoder());
   startReceive();
 }
 UdpReceiver::~UdpReceiver()
@@ -16,7 +17,6 @@ UdpReceiver::~UdpReceiver()
   _t.detach();
   for (int i = 0; i < _threads.size(); i++)
   {
-    /* code */
     _threads.at(i).join();
   }
 }
@@ -24,7 +24,6 @@ void UdpReceiver::startReceive()
 {
   try
   {
-    // std::cout << "recv: " << packetCounter << std::endl;
     _socket.async_receive_from(boost::asio::buffer(_buffer),
                                _endpoint, [this](boost::system::error_code ec, std::size_t bytesTransferred)
                                { handleReceive(ec, bytesTransferred); });
@@ -38,36 +37,38 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
 {
   try
   {
-    std::vector<uint8_t> v = std::move(_buffer);
 
-    if (!_header.isEmpty())
-      _buffer.resize(_header.getBlockSize() + 100);
-    else
-      _buffer.resize(100);
+    // // std::cout << "recv: " << packetCounter << std::endl;
+
     // std::cout << "---------------------------------------------------" << std::endl;
     // std::cout << "bytes transferred: " << bytesTransferred << std::endl;
-    if (!ec && bytesTransferred > 0)
+    if (bytesTransferred == 1 && !ec)
     {
+      hSize++;
+      _threads.push_back(std::thread(&UdpReceiver::processData, this, std::move(_v)));
+    }
+
+    else if (!ec && bytesTransferred > 0)
+    {
+      std::vector<uint8_t> v(bytesTransferred);
+      std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, v.begin());
 
       int id = v.at(--bytesTransferred);
       v.erase(v.begin() + bytesTransferred);
       if (id == 69 /*&& _header.isEmpty()*/)
       {
+
         handleHeader(bytesTransferred, v);
+        // _threads.push_back(std::thread(&UdpReceiver::handleHeader, this, bytesTransferred, std::move(v)));
       }
-      else if (id == 0 && !_header.isEmpty())
+      else if (id == 0 /*&& !_header.isEmpty()*/)
       {
-        std::string str = extractId(v, bytesTransferred);
-        unsigned long index = extractIndex(v, bytesTransferred);
-        // std::cout << "index: " << index << std::endl;
-        // std::cout << "header index: " << _header.getIndex() << std::endl;
-        // std::cout << "id " << str << "header id: " << _header.getId() << std::endl;
-        if (str == _header.getId() && index == _header.getIndex())
-        {
-          handleRawData(v);
-        }
+        int k = hSize - 1;
+        _v.push_back(std::move(v));
+        // _threads.push_back(std::thread(&UdpReceiver::handleRawData, this, std::move(v), k, packetCounter));
       }
     }
+
     packetCounter++;
     startReceive();
   }
@@ -100,38 +101,42 @@ void UdpReceiver::scanConf()
 
 void UdpReceiver::stichFile(boost::container::map<unsigned long, FilePacket> &fileSet)
 {
+  std::cout << "stitch" << std::endl;
   FilePacket packet = fileSet.at(0);
   std::cout << packet.getFileData() << std::endl;
-  ModifiedFile mf;
-  _fParse.deSerialize(packet.getFileData(), mf);
 
-  std::string p = _currentPath + mf.getRootFolder();
+  std::string p = _currentPath + packet.getRootFolder();
   if (!boost::filesystem::is_directory(p))
   {
     boost::filesystem::create_directories(p);
   }
-  mf.setPath(p);
-  std::ofstream File(mf.getPath().string(), std::ios::binary);
+  std::cout << p << std::endl;
+  packet.setPath(p);
+
+  std::ofstream File(packet.getPath().string(), std::ios::binary);
   if (!File.is_open())
   {
+    std::cout << packet.getPath().string() << std::endl;
     throw std::runtime_error("Failed to open the file");
   }
 
   for (unsigned long i = 0; i < fileSet.size(); i++)
   {
-    packet = fileSet.find(i)->second;
-    // std::cout << "string: " << packet.getData() << std::endl;
-    // std::cout << "string size " << packet.getData().size() << std::endl;
+   // std::cout << "i: " << i << std::endl;
+    packet = fileSet.at(i);
     File.write(packet.getData().data(), packet.getData().size());
   }
 
   File.close();
-  std::cout << "File Saved" << std::endl;
+  std::cout << "File Saved: " << fileSet.at(0).getFileName() << " id: " << fileSet.at(0).getId() << std::endl;
 }
 void UdpReceiver::handlePacket(std::string data)
 {
+  // std::cout << "handle packet " << std::endl;
   FilePacket fp;
-  _fParse.deSerialize(data, fp);
+  FileParser fparse;
+  fparse.deSerialize(data, fp);
+
   std::string id = fp.getId();
   auto i = _packets.find(fp.getId());
   if (i == _packets.end())
@@ -148,62 +153,84 @@ void UdpReceiver::handlePacket(std::string data)
   else
   {
     i->second.insert(std::make_pair(fp.getIndex(), std::move(fp)));
-    if (fp.getLastPacket() == i->second.size())
+  //  std::cout << "set size: " << i->second.size() << " last packet -1: " << fp.getLastPacket() - 1 << std::endl;
+    if (fp.getLastPacket() - 1 == i->second.size())
     {
       stichFile(i->second);
       _packets.erase(id);
     }
-   
-    
   }
 }
 
-void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> &buffer)
+void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer)
 {
   try
   {
-    std::string hdata(_coder.decodeHeader(buffer, bytesTransferred));
+    std::unique_lock lock(_headerMutex);
+    std::string hdata(_hcoder.decodeHeader(buffer, bytesTransferred));
     if (hdata != "")
     {
-      _fParse.deSerialize(hdata, _header);
-      _header.print();
-      if (buffer.capacity() < _header.getBlockSize() + 100)
-      {
-        _buffer.resize(_header.getBlockSize() + 100);
-      }
+      FileParser fparse;
+      DataHeader header;
+      fparse.deSerialize(hdata, header);
+      _headers.push_back(std::move(header));
+      _hcoder = FecCoder();
     }
+    lock.unlock();
   }
   catch (std::exception &e)
   {
     std::cout << "handle Header Excpetion: " << e.what() << std::endl;
   }
 }
-void UdpReceiver::handleRawData(std::vector<uint8_t> buffer)
+void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter)
 {
   try
   {
-    std::cout << "handling data " << std::endl;
+
     std::string data;
-    data = _coder.decode(buffer, _header.getDataSize(), _header.getBlockSize());
+
+    std::unique_lock lockk(_headerMutex);
+    bool locked = true;
+    while (id > _headers.size() - 1)
+    {
+      if (locked)
+      {
+        locked = false;
+        lockk.unlock();
+      }
+    }
+    if (!locked)
+      lockk.lock();
+    int dataSize = _headers.at(id).getDataSize();
+    int blockSize = _headers.at(id).getBlockSize();
+    std::unique_lock lock(_coderMutex);
+    if (id > _coders.size() - 1)
+    {
+
+      _coders.push_back(FecCoder());
+    }
+    data = _coders.at(id).decode(buffer, dataSize, blockSize);
     if (data != "")
     {
-      _threads.push_back(std::thread(&UdpReceiver::handlePacket, this, data));
-      _header = DataHeader();
-      data = "";
-      _coder = FecCoder();
-      buffer.clear();
-      buffer.resize(100);
+      handlePacket(data);
+      // _header = DataHeader();
+      //_coder = FecCoder();
     }
+    lockk.unlock();
+    lock.unlock();
   }
   catch (std::exception &e)
   {
+    std::unique_lock lock(_coderMutex);
     std::cout << "handle raw Excpetion: " << e.what() << std::endl;
+    std::cout << "coder size" << _coders.size() << std::endl;
+    lock.unlock();
   }
 }
 void UdpReceiver::stichFile(std::vector<FilePacket> &vec)
 {
   FilePacket packet = vec.at(0);
-  std::cout << packet.getFileData() << std::endl;
 
   std::string p = _currentPath + packet.getRootFolder();
   if (!boost::filesystem::is_directory(p))
@@ -249,4 +276,12 @@ unsigned long UdpReceiver::extractIndex(std::vector<uint8_t> &v, std::size_t &by
   v.erase(v.begin() + (bytesTransferred - 8), v.begin() + bytesTransferred);
   bytesTransferred -= 8;
   return *value;
+}
+
+void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v)
+{
+  for (int i = 0; i < v.size(); i++)
+  {
+    handleRawData(v.at(i), hSize - 1, packetCounter);
+  }
 }

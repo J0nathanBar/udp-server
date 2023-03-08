@@ -47,8 +47,6 @@ void MyDirectory::scanDir()
             }
             ++it;
         }
-        //  std::this_thread::sleep_for(std::chrono::milliseconds(5));
-        std::cout << "\n\n\n\nfinished iteration of files" << std::endl;
         running = false;
     }
 }
@@ -89,8 +87,6 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
         _sem.acquire();
         std::unique_lock<std::mutex> lock(_threadMutex);
         _threads.push_back(std::thread(&MyDirectory::newFile, this, std::move(a)));
-
-        std::cout << "size: " << _threads.size() << std::endl;
         lock.unlock();
 
         // std::thread b(&MyDirectory::newFile, this, k);
@@ -100,6 +96,7 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k)
 std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path)
 {
     unsigned long index = 0;
+
     std::vector<FilePacket> packets;
     std::vector<std::string> unEncoded;
     std::ifstream File(path.string(), std::ios::binary);
@@ -111,28 +108,23 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize,
 
     while (File.good())
     {
-
+       
         std::string chunk(packetSize, '\0');
-        // std::cout << "index::   " << index << std::endl;
         File.read(&chunk[0], packetSize);
-
         unsigned long size = f.getSize();
         std::string name = f.getFileName();
         std::string root = f.getRootFolder();
-
         packets.emplace_back(FilePacket(id, chunk, index, size, name, root));
-
-        index++;
+         index++;
     }
     File.close();
-    // std::cout << "number of indexes " << index << std::endl;
     for (FilePacket p : packets)
     {
-        p.setLastPacket(index);
-        //   std::cout << p.getFileData() << std::endl;
+        p.setLastPacket(packets.size());
         std::string packetData = _fParse.serialize(p);
         unEncoded.emplace_back(packetData);
     }
+    std::cout << "last packet " << packets.size() << std::endl;
     return std::move(unEncoded);
 }
 void MyDirectory::newFile(const boost::filesystem::path k)
@@ -142,9 +134,16 @@ void MyDirectory::newFile(const boost::filesystem::path k)
     ModifiedFile f(k, relativePath.string(), time);
 
     std::string id = f.getId();
-    unsigned long size = f.getSize();
-    std::string root = f.getRootFolder(); //
-    std::vector<std::string> unEncoded = splitFile(f, 25000 * 3, id, k);
+    int packetSize = 25000;
+    int size = f.getSize();
+    if (size == 0)
+    {
+        return;
+    }
+    if (size < packetSize)
+        packetSize = size + 1;
+    std::string root = f.getRootFolder();
+    std::vector<std::string> unEncoded = splitFile(f, packetSize, id, k);
     id = f.getId();
     encode(id, std::move(unEncoded));
     // std::lock_guard<std::mutex> guard(_vecMutex);
@@ -169,36 +168,36 @@ void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded)
     // FecCoder coder;
     for (unsigned long i = 0; i < unEncoded.size(); i++)
     {
-        std::cout << "-----------------------------" << std::endl;
-        std::cout << "encoding chunk: " << i << std::endl;
-        int packetSize = 5000 * 5 * 2;
+        int packetSize = 1300;
         if (packetSize > unEncoded.at(i).length())
         {
-            packetSize = unEncoded.at(i).length() / 3;
+            packetSize = unEncoded.at(i).length() / 10;
         }
-        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
         auto v = coder->encode(unEncoded.at(i), packetSize, id, i); // change later to user transmitted
         mountOnBuffer(v);
     }
 }
 void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v)
 {
-
-    // FecCoder fc;
-
+    FecCoder c;
     std::unique_lock<std::mutex> lock(_bufferMutex);
-    if (_buf.size()+v->size() < _MaxThreads)
-    {
+    uint8_t id = _headerId;
+    std::vector<uint8_t> a(1, 0);
 
+    if (_buf.size() + v->size() < _MaxThreads)
+    {
         while (!v->empty())
         {
+            if (id != v->front().at(v->front().size() - 1))
+            {
+                id = _dataId;
+                _buf.push(a);
+            }
             _buf.push(std::move(v->front()));
             v->pop();
         }
         lock.unlock();
     }
-
     else
     {
         lock.unlock();
