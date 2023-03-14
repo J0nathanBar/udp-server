@@ -53,7 +53,7 @@ void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTran
   //  _lock.lock();
    // _buf.pop();
    // _lock.unlock();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
   }
 
   asyncSend();

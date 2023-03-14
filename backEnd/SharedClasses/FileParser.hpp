@@ -12,7 +12,7 @@ public:
     ~FileParser();
     void deSerialize(const std::string &, ModifiedFile &);
     std::string serialize(const ModifiedFile &);
-    void deSerialize(const std::string &, FilePacket &);
+    bool deSerialize(const std::string &, FilePacket &);
     std::string serialize(const FilePacket &);
     void deSerialize(const std::string &, DataHeader &);
     std::string serialize(const DataHeader &);

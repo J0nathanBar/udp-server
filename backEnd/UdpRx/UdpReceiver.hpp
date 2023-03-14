@@ -39,13 +39,12 @@ public:
     void scanConf();
     void stichFile(boost::container::map<unsigned long, FilePacket> &);
     void stichFile(std::vector<FilePacket> &);
-    void handlePacket(std::string);
-    void handleFile(std::string &data);
+    void handlePacket(FilePacket fp);
     void handleHeader(int, std::vector<uint8_t> buffer);
-    void handleRawData(std::vector<uint8_t> buffer, int headerId, int counter);
+    void handleRawData(std::vector<uint8_t> buffer, int headerId, int counter,int dataSize,int blockSize);
     std::string extractId(std::vector<uint8_t> &v, std::size_t &bytesTransferred);
     unsigned long extractIndex(std::vector<uint8_t> &v, std::size_t &bytesTransferred);
-    void processData(std::vector<std::vector<uint8_t>> v);
+    void processData(std::vector<std::vector<uint8_t>> v,int id);
 
 private:
     static constexpr int SIZE = 10000;

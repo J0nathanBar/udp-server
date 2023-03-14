@@ -108,14 +108,14 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int packetSize,
 
     while (File.good())
     {
-       
+
         std::string chunk(packetSize, '\0');
         File.read(&chunk[0], packetSize);
         unsigned long size = f.getSize();
         std::string name = f.getFileName();
         std::string root = f.getRootFolder();
         packets.emplace_back(FilePacket(id, chunk, index, size, name, root));
-         index++;
+        index++;
     }
     File.close();
     for (FilePacket p : packets)
@@ -188,20 +188,16 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
     {
         while (!v->empty())
         {
-            if (id != v->front().at(v->front().size() - 1))
-            {
-                id = _dataId;
-                _buf.push(a);
-            }
             _buf.push(std::move(v->front()));
             v->pop();
         }
+        _buf.push(a);
         lock.unlock();
     }
     else
     {
         lock.unlock();
-        std::this_thread::sleep_for(std::chrono::milliseconds(3));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
         mountOnBuffer(v);
     }
 }

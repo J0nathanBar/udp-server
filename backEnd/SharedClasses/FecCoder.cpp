@@ -87,7 +87,7 @@ std::string FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes, int
         _blockId = 0;
         std::cout << "!!! Failed to create decoder" << std::endl;
         std::cout << "msg bytes: " << kMessageBytes << " packet Size" << kPacketSize << std::endl;
-        return "";
+        return ".";
     }
     WirehairResult decodeResult = wirehair_decode(
         _decoder,     // Decoder object

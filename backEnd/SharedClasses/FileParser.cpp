@@ -38,7 +38,7 @@ std::string FileParser::serialize(const ModifiedFile &data)
     return stream.str();
 }
 
-void FileParser::deSerialize(const std::string &data, FilePacket &fp)
+bool FileParser::deSerialize(const std::string &data, FilePacket &fp)
 {
     std::istringstream stream(data);
     try
@@ -48,8 +48,10 @@ void FileParser::deSerialize(const std::string &data, FilePacket &fp)
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << "parse error: " << e.what() << std::endl;
+        std::cout << "file packet parse error: " << e.what() << std::endl;
+        return false;
     }
+    return true;
 }
 std::string FileParser::serialize(const FilePacket &data)
 {
@@ -79,7 +81,7 @@ void FileParser::deSerialize(const std::string &data, DataHeader &h)
     }
     catch (boost::archive::archive_exception &e)
     {
-        std::cout << "parse error: " << e.what() << std::endl;
+        std::cout << "header parse error: " << e.what() << std::endl;
     }
     h.fill();
     /// h.print();

@@ -35,23 +35,18 @@ void UdpReceiver::startReceive()
 }
 void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesTransferred)
 {
+  std::vector<uint8_t> v(bytesTransferred);
+  std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, v.begin());
+  startReceive();
   try
   {
-
-    // // std::cout << "recv: " << packetCounter << std::endl;
-
-    // std::cout << "---------------------------------------------------" << std::endl;
-    // std::cout << "bytes transferred: " << bytesTransferred << std::endl;
     if (bytesTransferred == 1 && !ec)
     {
-      hSize++;
-      _threads.push_back(std::thread(&UdpReceiver::processData, this, std::move(_v)));
+      _threads.push_back(std::thread(&UdpReceiver::processData, this, std::move(_v), hSize++));
     }
 
     else if (!ec && bytesTransferred > 0)
     {
-      std::vector<uint8_t> v(bytesTransferred);
-      std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, v.begin());
 
       int id = v.at(--bytesTransferred);
       v.erase(v.begin() + bytesTransferred);
@@ -69,8 +64,7 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
       }
     }
 
-    packetCounter++;
-    startReceive();
+    // packetCounter++;
   }
   catch (std::exception &ex)
   {
@@ -104,8 +98,9 @@ void UdpReceiver::stichFile(boost::container::map<unsigned long, FilePacket> &fi
   std::cout << "stitch" << std::endl;
   FilePacket packet = fileSet.at(0);
   std::cout << packet.getFileData() << std::endl;
-
-  std::string p = _currentPath + packet.getRootFolder();
+  std::string p = _currentPath;
+  if (packet.getRootFolder() != ".")
+    p += "/" + packet.getRootFolder();
   if (!boost::filesystem::is_directory(p))
   {
     boost::filesystem::create_directories(p);
@@ -122,7 +117,7 @@ void UdpReceiver::stichFile(boost::container::map<unsigned long, FilePacket> &fi
 
   for (unsigned long i = 0; i < fileSet.size(); i++)
   {
-   // std::cout << "i: " << i << std::endl;
+    // std::cout << "i: " << i << std::endl;
     packet = fileSet.at(i);
     File.write(packet.getData().data(), packet.getData().size());
   }
@@ -130,12 +125,9 @@ void UdpReceiver::stichFile(boost::container::map<unsigned long, FilePacket> &fi
   File.close();
   std::cout << "File Saved: " << fileSet.at(0).getFileName() << " id: " << fileSet.at(0).getId() << std::endl;
 }
-void UdpReceiver::handlePacket(std::string data)
+void UdpReceiver::handlePacket(FilePacket fp)
 {
   // std::cout << "handle packet " << std::endl;
-  FilePacket fp;
-  FileParser fparse;
-  fparse.deSerialize(data, fp);
 
   std::string id = fp.getId();
   auto i = _packets.find(fp.getId());
@@ -153,7 +145,7 @@ void UdpReceiver::handlePacket(std::string data)
   else
   {
     i->second.insert(std::make_pair(fp.getIndex(), std::move(fp)));
-  //  std::cout << "set size: " << i->second.size() << " last packet -1: " << fp.getLastPacket() - 1 << std::endl;
+    //  std::cout << "set size: " << i->second.size() << " last packet -1: " << fp.getLastPacket() - 1 << std::endl;
     if (fp.getLastPacket() - 1 == i->second.size())
     {
       stichFile(i->second);
@@ -183,42 +175,35 @@ void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer
     std::cout << "handle Header Excpetion: " << e.what() << std::endl;
   }
 }
-void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter)
+void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter, int dataSize, int blockSize)
 {
   try
   {
 
     std::string data;
+    std::unique_lock lock(_coderMutex);
+    data = _coders.at(id).decode(buffer, dataSize, blockSize);
+    lock.unlock();
 
-    std::unique_lock lockk(_headerMutex);
-    bool locked = true;
-    while (id > _headers.size() - 1)
+    if (data == ".")
     {
-      if (locked)
+      std::cout << "error at: " << id << std::endl;
+      std::cout << "data size" << dataSize << " blockSize: " << blockSize << std::endl;
+      std::unique_lock lockk(_headerMutex);
+      _headers.at(id).print();
+      lockk.unlock();
+    }
+    else if (data != "")
+    {
+      FilePacket fp;
+      FileParser fparse;
+      if (fparse.deSerialize(data, fp))
+        handlePacket(std::move(fp));
+      else
       {
-        locked = false;
-        lockk.unlock();
+        std::cout << "id: " << id << " index: " << counter << std::endl;
       }
     }
-    if (!locked)
-      lockk.lock();
-    int dataSize = _headers.at(id).getDataSize();
-    int blockSize = _headers.at(id).getBlockSize();
-    std::unique_lock lock(_coderMutex);
-    if (id > _coders.size() - 1)
-    {
-
-      _coders.push_back(FecCoder());
-    }
-    data = _coders.at(id).decode(buffer, dataSize, blockSize);
-    if (data != "")
-    {
-      handlePacket(data);
-      // _header = DataHeader();
-      //_coder = FecCoder();
-    }
-    lockk.unlock();
-    lock.unlock();
   }
   catch (std::exception &e)
   {
@@ -257,31 +242,39 @@ void UdpReceiver::stichFile(std::vector<FilePacket> &vec)
   std::cout << "File Saved: " << vec.at(0).getFileName() << " id: " << vec.at(0).getId() << std::endl;
   vec.clear();
 }
-std::string UdpReceiver::extractId(std::vector<uint8_t> &v, std::size_t &bytesTransferred)
-{
-  std::string str;
-  for (size_t i = bytesTransferred - 8; i < bytesTransferred; i++)
-  {
-    str += static_cast<char>(v[i]); // Convert the uint8_t value to a character and append it to the string
-  }
-  v.erase(v.begin() + (bytesTransferred - 8), v.begin() + bytesTransferred);
-  bytesTransferred -= 8;
-  return std::move(str);
-}
-unsigned long UdpReceiver::extractIndex(std::vector<uint8_t> &v, std::size_t &bytesTransferred)
-{
-  uint8_t bytes[sizeof(long)];
-  std::copy(v.begin() + (bytesTransferred - 8), v.begin() + bytesTransferred, bytes);
-  long *value = reinterpret_cast<long *>(bytes);
-  v.erase(v.begin() + (bytesTransferred - 8), v.begin() + bytesTransferred);
-  bytesTransferred -= 8;
-  return *value;
-}
 
-void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v)
+void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v, int id)
 {
+  std::unique_lock lockk(_headerMutex);
+  bool locked = true;
+  while (id > _headers.size() - 1)
+  {
+    if (locked)
+    {
+      locked = false;
+      lockk.unlock();
+    }
+  }
+  if (!locked)
+    lockk.lock();
+  int dataSize = _headers.at(id).getDataSize();
+  int blockSize = _headers.at(id).getBlockSize();
+  lockk.unlock();
+  std::unique_lock lock(_coderMutex);
+  while (id > _coders.size())
+  {
+    lock.unlock();
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    lock.lock();
+  }
+  if (id == _coders.size())
+  {
+
+    _coders.push_back(FecCoder());
+  }
+  lock.unlock();
   for (int i = 0; i < v.size(); i++)
   {
-    handleRawData(v.at(i), hSize - 1, packetCounter);
+    handleRawData(v.at(i), id, i, dataSize, blockSize);
   }
 }
