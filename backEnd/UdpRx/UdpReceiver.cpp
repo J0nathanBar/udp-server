@@ -42,6 +42,8 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
   {
     if (bytesTransferred == 1 && !ec)
     {
+      if (hSize == 0)
+        std::cout << "full loop" << std::endl;
       _threads.push_back(std::thread(&UdpReceiver::processData, this, std::move(_v), hSize++));
     }
 
@@ -93,64 +95,34 @@ void UdpReceiver::scanConf()
   }
 }
 
-void UdpReceiver::stichFile(boost::container::map<unsigned long, FilePacket> &fileSet)
-{
-  std::cout << "stitch" << std::endl;
-  FilePacket packet = fileSet.at(0);
-  std::cout << packet.getFileData() << std::endl;
-  std::string p = _currentPath;
-  if (packet.getRootFolder() != ".")
-    p += "/" + packet.getRootFolder();
-  if (!boost::filesystem::is_directory(p))
-  {
-    boost::filesystem::create_directories(p);
-  }
-  std::cout << p << std::endl;
-  packet.setPath(p);
-
-  std::ofstream File(packet.getPath().string(), std::ios::binary);
-  if (!File.is_open())
-  {
-    std::cout << packet.getPath().string() << std::endl;
-    throw std::runtime_error("Failed to open the file");
-  }
-
-  for (unsigned long i = 0; i < fileSet.size(); i++)
-  {
-    // std::cout << "i: " << i << std::endl;
-    packet = fileSet.at(i);
-    File.write(packet.getData().data(), packet.getData().size());
-  }
-
-  File.close();
-  std::cout << "File Saved: " << fileSet.at(0).getFileName() << " id: " << fileSet.at(0).getId() << std::endl;
-}
 void UdpReceiver::handlePacket(FilePacket fp)
 {
-  // std::cout << "handle packet " << std::endl;
-
-  std::string id = fp.getId();
-  auto i = _packets.find(fp.getId());
-  if (i == _packets.end())
+  try
   {
-    boost::container::map<unsigned long, FilePacket> fileMap;
-    fileMap.emplace(fp.getIndex(), fp);
-    if (fp.getLastPacket() == 1)
+    std::unique_lock lock(_fileMutex);
+    std::string id = fp.getId();
+    auto i = _files.find(fp.getId());
+    if (i == _files.end())
     {
-      stichFile(fileMap);
+      std::string p = _currentPath;
+      if (fp.getRootFolder() != ".")
+        p += "/" + fp.getRootFolder();
+      fp.setPath(p);
+      if (!boost::filesystem::is_directory(p))
+      {
+        boost::filesystem::create_directories(p);
+      }
+      _files.emplace(std::move(id), ModifiedFile(std::move(fp)));
     }
     else
-      _packets.emplace(id, fileMap);
-  }
-  else
-  {
-    i->second.insert(std::make_pair(fp.getIndex(), std::move(fp)));
-    //  std::cout << "set size: " << i->second.size() << " last packet -1: " << fp.getLastPacket() - 1 << std::endl;
-    if (fp.getLastPacket() - 1 == i->second.size())
     {
-      stichFile(i->second);
-      _packets.erase(id);
+      i->second.appendPacket(std::move(fp));
     }
+    lock.unlock();
+  }
+  catch (const std::exception &e)
+  {
+    std::cerr << "handle packet: " << e.what() << std::endl;
   }
 }
 
@@ -164,9 +136,17 @@ void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer
     {
       FileParser fparse;
       DataHeader header;
-      fparse.deSerialize(hdata, header);
-      _headers.push_back(std::move(header));
-      _hcoder = FecCoder();
+
+      if (fparse.deSerialize(hdata, header))
+      {
+        _headers.push_back(std::move(header));
+        _hcoder = FecCoder();
+      }
+      else
+      {
+        std::cout << "header failed wtf is going on" << std::endl;
+        std::cout << "bytes Transferred" << bytesTransferred << std::endl;
+      }
     }
     lock.unlock();
   }
@@ -212,35 +192,6 @@ void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter
     std::cout << "coder size" << _coders.size() << std::endl;
     lock.unlock();
   }
-}
-void UdpReceiver::stichFile(std::vector<FilePacket> &vec)
-{
-  FilePacket packet = vec.at(0);
-
-  std::string p = _currentPath + packet.getRootFolder();
-  if (!boost::filesystem::is_directory(p))
-  {
-    boost::filesystem::create_directories(p);
-  }
-  std::cout << p << std::endl;
-  packet.setPath(p);
-
-  std::ofstream File(packet.getPath().string(), std::ios::binary);
-  if (!File.is_open())
-  {
-    std::cout << packet.getPath().string() << std::endl;
-    throw std::runtime_error("Failed to open the file");
-  }
-
-  for (unsigned long i = 0; i < vec.size(); i++)
-  {
-    packet = vec.at(i);
-    File.write(packet.getData().data(), packet.getData().size());
-  }
-
-  File.close();
-  std::cout << "File Saved: " << vec.at(0).getFileName() << " id: " << vec.at(0).getId() << std::endl;
-  vec.clear();
 }
 
 void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v, int id)

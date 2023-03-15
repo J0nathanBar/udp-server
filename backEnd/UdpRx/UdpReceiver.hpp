@@ -11,6 +11,7 @@
 #include "../SharedClasses/FileParser.hpp"
 #include "../SharedClasses/JsonParser.hpp"
 #include "../SharedClasses/FilePacket.hpp"
+#include "../SharedClasses/ModifiedFile.hpp"
 #include <vector>
 #include <boost/unordered_set.hpp>
 #include <boost/container/set.hpp>
@@ -37,14 +38,10 @@ public:
     void startReceive();
     void handleReceive(boost::system::error_code ec, std::size_t bytesTransferred);
     void scanConf();
-    void stichFile(boost::container::map<unsigned long, FilePacket> &);
-    void stichFile(std::vector<FilePacket> &);
     void handlePacket(FilePacket fp);
     void handleHeader(int, std::vector<uint8_t> buffer);
-    void handleRawData(std::vector<uint8_t> buffer, int headerId, int counter,int dataSize,int blockSize);
-    std::string extractId(std::vector<uint8_t> &v, std::size_t &bytesTransferred);
-    unsigned long extractIndex(std::vector<uint8_t> &v, std::size_t &bytesTransferred);
-    void processData(std::vector<std::vector<uint8_t>> v,int id);
+    void handleRawData(std::vector<uint8_t> buffer, int headerId, int counter, int dataSize, int blockSize);
+    void processData(std::vector<std::vector<uint8_t>> v, int id);
 
 private:
     static constexpr int SIZE = 10000;
@@ -65,10 +62,10 @@ private:
     std::thread _t;
     std::vector<std::thread> _threads;
     bool _run;
-    std::mutex _coderMutex, _headerMutex;
-    std::vector<FilePacket> _packetVec;
-    boost::unordered_map<std::string, boost::container::map<unsigned long, FilePacket>> _packets;
-    FecCoder /*_coder,*/ _hcoder;
+    std::mutex _coderMutex, _headerMutex, _fileMutex;
+
+    boost::unordered_map<std::string, ModifiedFile> _files;
+    FecCoder _hcoder;
     int eff = 0;
     // DataHeader _header;
     // std::queue<DataHeader> _qhead;

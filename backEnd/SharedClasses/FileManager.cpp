@@ -54,9 +54,9 @@ bool FileManager::handleFile(std::string &path)
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string id = f.getId();
-        std::string parsedFile = _fParse.serialize(f);
-        splitFile(parsedFile, 2000, id);
-        encode();
+       // std::string parsedFile = _fParse.serialize(f);
+      //  splitFile(parsedFile, 2000, id);
+       // encode();
     }
     catch (boost::filesystem::filesystem_error &e)
     {

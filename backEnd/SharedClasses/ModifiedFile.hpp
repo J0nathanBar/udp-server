@@ -10,58 +10,50 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/serialization/string.hpp>
 #include <random>
-#include<time.h>
+#include <time.h>
+#include <boost/container/map.hpp>
+#include "FilePacket.hpp"
 class ModifiedFile
 {
 public:
-    ModifiedFile(const boost::filesystem::path &path);
-    ModifiedFile(const boost::filesystem::path &path,const std::string ,std::time_t);
-    ModifiedFile(std::string path);
-    ModifiedFile(const boost::filesystem::path &,  boost::filesystem::path &);
-    
-    ModifiedFile();
-    ~ModifiedFile();
-    void setFile(boost::filesystem::path);
-    void setPath(std::string folderPath);
-    void setPath(boost::filesystem::path);
-    void saveFile();
-    void setfTime(std::time_t);
-    std::time_t getfTime();
-    boost::filesystem::path getPath();
-    std::string getFileName();
-    std::string getData();
-    int getSize();
-    void setHandled(bool flag);
-    bool getHandled();
-    std::string getRootFolder();
-    void setRoot(std::string);
-  
-    std::string getId();
+  ModifiedFile(const boost::filesystem::path &path);
+  ModifiedFile(std::string path);
+  ModifiedFile(const boost::filesystem::path &, boost::filesystem::path &);
+  ModifiedFile(const boost::filesystem::path &path, const std::string, std::time_t);
+
+  ModifiedFile(FilePacket);
+  ModifiedFile();
+  ~ModifiedFile();
+  void setFile(boost::filesystem::path);
+  void setPath(std::string folderPath);
+  void setPath(boost::filesystem::path);
+  void setfTime(std::time_t);
+  std::time_t getfTime();
+  boost::filesystem::path getPath();
+  std::string getFileName();
+  std::string getData();
+  int getSize();
+  void setHandled(bool flag);
+  bool getHandled();
+  std::string getRootFolder();
+  void setRoot(std::string);
+  std::string getId();
+  void saveFile();
+  bool saveFile(FilePacket &packet);
+  void appendPacket(FilePacket);
 
 private:
-    void constructorDef();
-      void generateId();
-    boost::filesystem::path _path;
-    std::string _fileName;
-    std::string _rootFolder;
-   // std::string _data;
-    std::string _id;
-    unsigned long _size;
-    bool _beenHandled;
-    std::time_t _fTime;
-
-    friend class boost::serialization::access;
-    template <class Archive>
-    void serialize(Archive &ar, const unsigned int version)
-    {
-        ar &_fileName;
-      //  ar &_data;
-        ar &_size;
-        ar &_rootFolder;
-        ar & _id;
-    }
+  void constructorDef();
+  void generateId();
+  boost::filesystem::path _path;
+  std::string _fileName;
+  std::string _rootFolder;
+  std::string _id;
+  unsigned long _size;
+  bool _beenHandled;
+  std::time_t _fTime;
+  unsigned long _currentIndex, _lastPacket;
+  boost::container::map<unsigned long, FilePacket> _packets;
 };
-/*    std::cout << "filename and extension : " << src.filename() << std::endl; // file.ext
-std::cout << "filename only          : " << src.stem() << std::endl;
-std::cout << "extension only          : " << src.extension() << std::endl;  */
+
 #endif

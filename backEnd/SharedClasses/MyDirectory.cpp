@@ -47,6 +47,8 @@ void MyDirectory::scanDir()
             }
             ++it;
         }
+        std::cout << "finished Scanning" << std::endl;
+
         running = false;
     }
 }

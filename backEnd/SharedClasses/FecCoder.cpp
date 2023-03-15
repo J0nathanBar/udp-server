@@ -108,7 +108,7 @@ std::string FecCoder::decode(std::vector<uint8_t> &block, int kMessageBytes, int
     else
     {
         std::cout << "wirehair_decoder failed: " << decodeResult << std::endl;
-        return "";
+        return ".";
     }
     return "";
 }
@@ -119,7 +119,7 @@ std::string FecCoder::recover(int kMessageBytes)
     if (decodeResult != Wirehair_Success)
     {
         std::cout << "wirehair_recover failed: " << decodeResult << std::endl;
-        return "";
+        return ".";
     }
     std::string a = std::string(decoded.begin(), decoded.end());
     //   std::cout << a << std::endl;
