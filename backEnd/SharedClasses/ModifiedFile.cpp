@@ -139,7 +139,6 @@ bool ModifiedFile::saveFile(FilePacket &packet)
         File.write(packet.getData().data(), packet.getData().size());
         File.close();
         _currentIndex++;
-      //  std::cout << _currentIndex << std::endl;
         if (_currentIndex == _lastPacket)
         {
             _beenHandled = true;

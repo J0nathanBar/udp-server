@@ -19,17 +19,17 @@
 class MyDirectory
 {
 public:
-    MyDirectory(boost::filesystem::path, std::queue<std::vector<uint8_t>> &, std::mutex &bufferMutex);
+    MyDirectory(boost::filesystem::path, std::queue<std::vector<uint8_t>> &, std::mutex &bufferMutex, int chunkSize, int blockSize);
     ~MyDirectory();
-    void scanDir();
+    void scanDir(int chunkSize, int blockSize);
     int findFile(std::string name);
     std::string getName();
     void kill();
     std::vector<std::string> splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path);
-    void ScannedFile(const boost::filesystem::path &);
-    void newFile(const boost::filesystem::path);
-    void existingFile(const boost::filesystem::path &, int);
-    void encode(std::string &id, std::vector<std::string> unEncoded);
+    void ScannedFile(const boost::filesystem::path &,int chunkSize,int  blockSize);
+    void newFile(const boost::filesystem::path,int chunkSize, int blockSize);
+    void existingFile(const boost::filesystem::path &, int,int chunkSize,int blockSize);
+    void encode(std::string &id, std::vector<std::string> unEncoded,int blockSize);
     void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
     void cleanThreads();
     bool running = true;

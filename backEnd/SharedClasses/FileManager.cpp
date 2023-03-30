@@ -20,7 +20,12 @@ void FileManager::scanConf()
 
         try
         {
-            _path = _jParse.parse(_confPath);
+            int chunkSize, blockSize;
+            bool flag = _jParse.convertJson(true, _confPath, chunkSize, blockSize, _path);
+
+            //  _path = _jParse.parse(_confPath);
+            if (!flag)
+                continue;
             boost::erase_all(_path, "\"");
             if (_path != _currentPath)
             {
@@ -29,7 +34,7 @@ void FileManager::scanConf()
                     std::cout << "is dir" << std::endl;
                     std::cout << _path << std::endl;
                     _currentPath = _path;
-                    handleDir();
+                    handleDir(chunkSize, blockSize);
                     std::cout << "ooooo" << std::endl;
                 }
                 else if (boost::filesystem::is_regular_file(_path))
@@ -54,9 +59,9 @@ bool FileManager::handleFile(std::string &path)
         ModifiedFile f(path);
         std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string id = f.getId();
-       // std::string parsedFile = _fParse.serialize(f);
-      //  splitFile(parsedFile, 2000, id);
-       // encode();
+        // std::string parsedFile = _fParse.serialize(f);
+        //  splitFile(parsedFile, 2000, id);
+        // encode();
     }
     catch (boost::filesystem::filesystem_error &e)
     {
@@ -65,11 +70,11 @@ bool FileManager::handleFile(std::string &path)
     }
     return true;
 }
-bool FileManager::handleDir()
+bool FileManager::handleDir(int chunkSize,int blockSize)
 {
     try
     {
-        MyDirectory dir(_currentPath, _buf, _bufferMutex);
+        MyDirectory dir(_currentPath, _buf, _bufferMutex,chunkSize, blockSize);
     }
     catch (boost::filesystem::filesystem_error &e)
     {

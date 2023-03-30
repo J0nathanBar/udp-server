@@ -8,6 +8,9 @@ const TextForm = (props) => {
   const [msg,setMsg] = useState("")
   const [content,setContent] = useState("")
   const [filename,setFileName] = useState("")
+  const [FileChunkValue,setFileChunkValue] = useState("")
+  const [FilePacketValue,setFilePacketValue] = useState("")
+
 
  
   const submits = async () => {
@@ -37,6 +40,7 @@ const TextForm = (props) => {
     const res = await response.json()
     console.log(res);
   }
+  //const handle
 
   return (
     <div>

@@ -17,7 +17,7 @@ public:
     ~FileManager();
     void scanConf();
     bool handleFile(std::string &);
-    bool handleDir();
+    bool handleDir(int chunkSize, int blockSize);
     bool getRun(){
         return _run;
     }

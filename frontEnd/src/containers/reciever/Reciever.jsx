@@ -1,50 +1,55 @@
-/*import React from 'react'
-import { TextForm } from '../../components';
+import React, { useState } from 'react'
+import { Input, Button, Typography, Box } from '@mui/joy/';
+
 
 
 const Reciever = () => {
-  return (
-    <div>
-      <h1>Reciever</h1>
-      <TextForm name="RecvConf.json" />
+  const [textInputValue, setTextInputValue] = useState("");
 
-    </div>
-  )
-}
-
-export default Reciever*/
-
-import React, { useState } from 'react';
-
-export default function Receiver() {
-  const [destination, setDestination] = useState('');
-
-  const handleDestinationChange = (event) => {
-    setDestination(event.target.value);
+  const handleTextInputChange = (event) => {
+    setTextInputValue(event.target.value);
   };
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
-  const handleSubmit = () => {
-    fetch('http://localhost:5000/receive', {
+    console.log("Text input value:", textInputValue);
+    var obj = {
+      attributes: {   
+        srcPath: "textInputValue",   
+      }
+    }
+   obj.attributes.srcPath = textInputValue
+    const a = obj 
+    const body = { a }
+    const response = await fetch('http://localhost:5000/Reciever', {
       method: 'POST',
-      body: JSON.stringify({ destination }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-    .then(response => {
-      // handle success
-      setDestination('');
-    })
-    .catch(error => {
-      // handle error
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body)
     });
+    const res = await response.json()
+    console.log(res);
   };
-
   return (
-    <div>
-      <input type="text" value={destination} onChange={handleDestinationChange} />
-      <button onClick={handleSubmit}>Submit</button>
-    </div>
+    <Box sx={{ display: 'flex', justifyContent: 'center', width: '50%', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto' }}
+    >
+      <Typography id="slider1" gutterBottom>
+        Welcome to the reciever end
+      </Typography>
+      <Input
+        placeholder='Enter destination path in here...'
+        id="text-input"
+        label="Text input"
+        value={textInputValue}
+        onChange={handleTextInputChange}
+        margin="normal" />
+      <Button variant="contained" onClick={handleSubmit} color="danger">
+        Submit
+      </Button>
+    </Box>
   );
 }
+
+export default Reciever
+
+
 

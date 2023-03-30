@@ -13,8 +13,10 @@ public:
     JsonParser();
     ~JsonParser();
     std::string parse(std::string path);
-
+    bool convertJson(bool transmitter,std::string & confpath,int & chunkSize,int & blockSize,std::string & srcPath);
+  
 private:
+
 
 
 

@@ -1,21 +1,22 @@
 import logo from './logo.svg';
 import './App.css';
-import { Reciever, Transmitter} from './containers';
+
+
+import { HomePage, Reciever, Transmitter } from './containers';
+import { BrowserRouter as Router, Route, Link,Routes } from 'react-router-dom';
+
 function App() {
+
   return (
     <div className="counter">
-      <h1>Virtual Channel</h1>
-      <h2>Transmitter</h2>
-    <Transmitter/>
-    <h2>Reciever</h2>
-    <Reciever/>
-  
-   
-
-
+      <Routes>
+    
+          <Route path="/" element={<HomePage />} />
+          <Route path="/Transmitter" element={<Transmitter />} />
+      
+      </Routes>
     </div>
 
   );
 }
-
 export default App;
