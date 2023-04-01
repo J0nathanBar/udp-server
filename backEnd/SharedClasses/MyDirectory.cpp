@@ -112,6 +112,7 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, 
     {
 
         std::string chunk(chunkSize, '\0');
+        
         File.read(&chunk[0], chunkSize);
         unsigned long size = f.getSize();
         std::string name = f.getFileName();

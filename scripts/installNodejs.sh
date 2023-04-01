@@ -6,7 +6,10 @@ sudo apt install npm
 sudo npm install -g create-react-app
 sudo npm install -g node-modules
 cd -
-cd ../frontEnd/src/
+cd ../frontEnd/
 sudo npm install
+sudo npm install @mui/joy @emotion/react @emotion/styled
+sudo npm i react-router-dom
+
 cd -
 ./installNodeDemon.sh

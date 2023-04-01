@@ -16,6 +16,7 @@
 #include "../SharedClasses/JsonParser.hpp"
 #include "../SharedClasses/MyDirectory.hpp"
 #include "../SharedClasses/FileManager.hpp"
+#include "../SharedClasses/WebConnection.hpp"
 #include <wirehair/wirehair.h>
 #include <chrono>
 

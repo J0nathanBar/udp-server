@@ -52,17 +52,15 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
 
       int id = v.at(--bytesTransferred);
       v.erase(v.begin() + bytesTransferred);
-      if (id == 69 /*&& _header.isEmpty()*/)
+      if (id == 69 )
       {
 
         handleHeader(bytesTransferred, v);
-        // _threads.push_back(std::thread(&UdpReceiver::handleHeader, this, bytesTransferred, std::move(v)));
       }
-      else if (id == 0 /*&& !_header.isEmpty()*/)
+      else if (id == 0)
       {
         int k = hSize - 1;
         _v.push_back(std::move(v));
-        // _threads.push_back(std::thread(&UdpReceiver::handleRawData, this, std::move(v), k, packetCounter));
       }
     }
 
