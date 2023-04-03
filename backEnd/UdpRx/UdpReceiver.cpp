@@ -155,7 +155,7 @@ void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer
     std::cout << "handle Header Excpetion: " << e.what() << std::endl;
   }
 }
-void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter, int dataSize, int blockSize)
+int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter, int dataSize, int blockSize, int numOfBlocks) // 0 = success, 1 = fail, 2 = awaiting for more data
 {
   try
   {
@@ -172,16 +172,27 @@ void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter
       std::unique_lock lockk(_headerMutex);
       _headers.at(id).print();
       lockk.unlock();
+      return 1;
+    }
+    else if (data == "" && counter == numOfBlocks - 1)
+    {
+      std::cout << "data wasnt sufficient" << std::endl;
+      std::cout << " data size: " << dataSize << " blockSize: " << blockSize << std::endl;
+      return 1;
     }
     else if (data != "")
     {
       FilePacket fp;
       FileParser fparse;
       if (fparse.deSerialize(data, fp))
+      {
         handlePacket(std::move(fp));
+        return 0;
+      }
       else
       {
         std::cout << "id: " << id << " index: " << counter << std::endl;
+        return 1;
       }
     }
   }
@@ -192,6 +203,7 @@ void UdpReceiver::handleRawData(std::vector<uint8_t> buffer, int id, int counter
     std::cout << "coder size" << _coders.size() << std::endl;
     lock.unlock();
   }
+  return 2;
 }
 
 void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v, int id)
@@ -226,6 +238,21 @@ void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v, int id)
   lock.unlock();
   for (int i = 0; i < v.size(); i++)
   {
-    handleRawData(v.at(i), id, i, dataSize, blockSize);
+    std::vector<uint8_t> hBytes(v.at(i).end() - 8, v.at(i).end());
+    std::string hID(hBytes.begin(), hBytes.end());
+    v.at(i).erase(v.at(i).end() - 8, v.at(i).end());
+    if (hID != _headers.at(id).gethID())
+    {
+      std::cout << "sneaky packet " << std::endl;
+      continue;
+    }
+
+    int res = handleRawData(v.at(i), id, i, dataSize, blockSize, v.size());
+    if (res == 0)
+      break;
+    if (res == 1)
+    {
+      std::cout << " vector's size: " << v.size() << std::endl;
+    }
   }
 }

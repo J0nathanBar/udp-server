@@ -11,6 +11,17 @@ FecCoder::FecCoder()
     rec = false;
 }
 
+FecCoder::FecCoder(std::string hID) : _hID(std::move(hID)), _hBytes(std::vector<uint8_t>(_hID.begin(), _hID.end()))
+{
+    const WirehairResult initResult = wirehair_init();
+    if (initResult != Wirehair_Success)
+    {
+        std::cout << "!!! Wirehair initialization failed: " << initResult << std::endl;
+    }
+    _blockId = 0;
+    rec = false;
+}
+
 FecCoder::~FecCoder()
 {
 }
@@ -52,19 +63,7 @@ std::shared_ptr<std::queue<std::vector<uint8_t>>> FecCoder::encode(const std::ve
             std::cout << "wirehair_encode failed: " << encodeResult << std::endl;
             return nullptr;
         }
-        unsigned long value = index;
-        uint8_t *bytes = reinterpret_cast<uint8_t *>(&value);
-        //     std::cout << "currently pushing " << index << std::endl;
-        // Add each byte to the vector.
-        // for (int i = 0; i < sizeof(long); i++)
-        // {
-        //     block.push_back(bytes[i]);
-        // }
-        // for (char c : id)
-        // {
-        //     block.push_back(static_cast<uint8_t>(c)); // Convert the character to its ASCII value and store it in the vector
-        // }
-        //     block.emplace_back((uint8_t)index);
+        block.insert(block.end(), _hBytes.begin(), _hBytes.end());
         block.emplace_back(0);
         v->emplace(block);
         i += writeLen;
@@ -132,7 +131,7 @@ std::string FecCoder::recover(int kMessageBytes)
 void FecCoder::makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>> v, int kPacketSize, int kMessageBytes, const std::string id, const unsigned long index)
 {
     //   std::cout << "header encoding starts" << std::endl;
-    DataHeader h(kPacketSize, kMessageBytes, id, index);
+    DataHeader h(kPacketSize, kMessageBytes, id, index, _hID);
     FileParser fp;
     int blockId = 0;
     std::string data = fp.serialize(h);

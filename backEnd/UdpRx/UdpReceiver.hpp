@@ -40,7 +40,7 @@ public:
     void scanConf();
     void handlePacket(FilePacket fp);
     void handleHeader(int, std::vector<uint8_t> buffer);
-    void handleRawData(std::vector<uint8_t> buffer, int headerId, int counter, int dataSize, int blockSize);
+    int handleRawData(std::vector<uint8_t> buffer, int headerId, int counter, int dataSize, int blockSize,int numOfBlocks);
     void processData(std::vector<std::vector<uint8_t>> v, int id);
 
 private:

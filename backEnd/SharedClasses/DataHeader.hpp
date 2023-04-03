@@ -13,7 +13,7 @@ class DataHeader
 {
 public:
     DataHeader();
-    DataHeader(unsigned int blockSize, unsigned int dataSize, std::string id, unsigned long index);
+    DataHeader(unsigned int blockSize, unsigned int dataSize, std::string id, unsigned long index, std::string & hID);
     void toLong();
     ~DataHeader();
     unsigned int getBlockSize();
@@ -24,23 +24,25 @@ public:
     bool isEmpty();
     void fill();
     void print();
+    std::string gethID();
 
 private:
     unsigned int _blockSize, _dataSize;
     unsigned long _index;
     uint8_t _dex;
-    std::string _id;
+    std::string _id, _hID;
     bool _empty;
 
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version)
     {
+        ar &_hID;
         ar &_blockSize;
         ar &_dataSize;
         ar &_id;
         ar &_index;
-        ar & _dex;
+        ar &_dex;
     }
 };
 

@@ -112,14 +112,13 @@ std::string ModifiedFile::getId()
 }
 void ModifiedFile::saveFile()
 {
-    //    std::cout << "handled " << (bool)_beenHandled << " empty: " << (bool)_packets.empty() << " current index: " << _currentIndex << " first " << _packets.begin()->first << std::endl;
+    auto it = _packets.rbegin();
+    int maxKey = it->first;
+ //   std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
     while (!_beenHandled && !_packets.empty() && _packets.begin()->first == _currentIndex)
     {
-        //     std::cout << "looping ee" << std::endl;
         bool flag = saveFile(_packets.at(_currentIndex));
-        //     std::cout << "size: " << _packets.size() << std::endl;
         _packets.erase(_currentIndex - 1);
-        //      std::cout << "new size: " << _packets.size() << std::endl;
     }
 }
 bool ModifiedFile::saveFile(FilePacket &packet)

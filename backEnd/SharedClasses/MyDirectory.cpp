@@ -112,7 +112,7 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, 
     {
 
         std::string chunk(chunkSize, '\0');
-        
+
         File.read(&chunk[0], chunkSize);
         unsigned long size = f.getSize();
         std::string name = f.getFileName();
@@ -167,7 +167,7 @@ void MyDirectory::existingFile(const boost::filesystem::path &k, int i, int chun
 
 void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded, int blockSize)
 {
-    std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>();
+    std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>(generateHeaderId());
     // FecCoder coder;
     for (unsigned long i = 0; i < unEncoded.size(); i++)
     {
@@ -202,6 +202,13 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         mountOnBuffer(v);
     }
+}
+std::string MyDirectory::generateHeaderId()
+{
+    std::stringstream ss;
+    ss << std::setfill('0') << std::setw(8) << _hCounter;
+    _hCounter++;
+    return ss.str();
 }
 void MyDirectory::cleanThreads()
 {

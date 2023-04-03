@@ -14,6 +14,7 @@ class FecCoder
 {
 public:
     FecCoder();
+    FecCoder(std::string hID);
     ~FecCoder();
     std::string recover(int kMessaageBytes);
     std::shared_ptr<std::queue<std::vector<uint8_t>>> encode(const std::string &data, const int kPacketSize, const std::string id, const unsigned long index);
@@ -23,7 +24,7 @@ public:
     std::string getRecovered();
     void makeHeader(std::shared_ptr<std::queue<std::vector<uint8_t>>>, int kPacketSize, int kMessageBytes, const std::string id, const unsigned long index);
     void LongtoVec(std::vector<uint8_t> &v, unsigned long value);
-   // void scramble
+    // void scramble
     // const int _headerPacketSize = 22, _headerSize = 61;
 
 private:
@@ -33,6 +34,8 @@ private:
     unsigned int _blockId;
     bool rec;
     int _lastPacketSize;
+    std::string _hID;
+    std::vector<uint8_t> _hBytes;
 };
 
 #endif

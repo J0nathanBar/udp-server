@@ -26,11 +26,12 @@ public:
     std::string getName();
     void kill();
     std::vector<std::string> splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path);
-    void ScannedFile(const boost::filesystem::path &,int chunkSize,int  blockSize);
-    void newFile(const boost::filesystem::path,int chunkSize, int blockSize);
-    void existingFile(const boost::filesystem::path &, int,int chunkSize,int blockSize);
-    void encode(std::string &id, std::vector<std::string> unEncoded,int blockSize);
+    void ScannedFile(const boost::filesystem::path &, int chunkSize, int blockSize);
+    void newFile(const boost::filesystem::path, int chunkSize, int blockSize);
+    void existingFile(const boost::filesystem::path &, int, int chunkSize, int blockSize);
+    void encode(std::string &id, std::vector<std::string> unEncoded, int blockSize);
     void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
+    std::string generateHeaderId();
     void cleanThreads();
     bool running = true;
 
@@ -59,6 +60,7 @@ private:
     int _pz, _kmsg;
     const int _headerId = 69;
     const int _dataId = 0;
+    int _hCounter = 0;
 };
 
 #endif
