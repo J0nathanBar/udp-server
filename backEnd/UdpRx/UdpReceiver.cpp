@@ -52,7 +52,7 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
 
       int id = v.at(--bytesTransferred);
       v.erase(v.begin() + bytesTransferred);
-      if (id == 69 )
+      if (id == 69)
       {
 
         handleHeader(bytesTransferred, v);
@@ -78,7 +78,9 @@ void UdpReceiver::scanConf()
   {
     try
     {
-      _path = _jParse.parse(_confPath);
+      // _path = _jParse.parse(_confPath);
+      int z = k = 0;
+      _jParse.convertJson(false, _confPath, z, k, _path);
       boost::erase_all(_path, "\"");
       if (_path.compare(_currentPath) != 0)
       {
