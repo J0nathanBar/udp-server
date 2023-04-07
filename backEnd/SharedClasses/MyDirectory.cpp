@@ -167,10 +167,11 @@ void MyDirectory::existingFile(const boost::filesystem::path &k, int i, int chun
 
 void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded, int blockSize)
 {
-    std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>(generateHeaderId());
+
     // FecCoder coder;
     for (unsigned long i = 0; i < unEncoded.size(); i++)
     {
+        std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>(generateHeaderId());
         if (blockSize > unEncoded.at(i).length())
         {
             blockSize = unEncoded.at(i).length() / 10;
