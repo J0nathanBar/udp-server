@@ -22,6 +22,7 @@ UdpReceiver::~UdpReceiver()
 }
 void UdpReceiver::startReceive()
 {
+  std::cout << "recv" << std::endl;
   try
   {
     _socket.async_receive_from(boost::asio::buffer(_buffer),
@@ -38,7 +39,8 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
   std::cout << "counter: " << packetCounter++ << std::endl;
   std::vector<uint8_t> v(bytesTransferred);
   std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, v.begin());
-  startReceive();
+
+    startReceive();
   std::string hID;
   try
   {

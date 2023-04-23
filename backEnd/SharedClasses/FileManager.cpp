@@ -1,7 +1,6 @@
 #include "FileManager.hpp"
 
 FileManager::FileManager(std::queue<std::vector<uint8_t>> &buf, std::mutex &bufferMutex) : _path(""), _currentPath(""), _buf(buf),
-                                                                                           _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/TransConf.json"), _run(false),
                                                                                            _bufferMutex(bufferMutex)
 {
 }
@@ -21,7 +20,7 @@ void FileManager::scanConf()
         try
         {
             int chunkSize, blockSize;
-            bool flag = _jParse.convertJson(true, _confPath, chunkSize, blockSize, _path);
+            bool flag = _jParse.convertJson(true, chunkSize, blockSize, _path);
 
             //  _path = _jParse.parse(_confPath);
             if (!flag)
@@ -35,13 +34,16 @@ void FileManager::scanConf()
                     std::cout << _path << std::endl;
                     _currentPath = _path;
                     handleDir(chunkSize, blockSize);
-                    std::cout << "ooooo" << std::endl;
                 }
                 else if (boost::filesystem::is_regular_file(_path))
                 {
                     std::cout << "is file" << std::endl;
                     _currentPath = _path;
                     handleFile(_currentPath);
+                }
+                else
+                {
+                    std::cout << "is not a file or folder" << std::endl;
                 }
             }
         }
@@ -57,11 +59,7 @@ bool FileManager::handleFile(std::string &path)
     {
 
         ModifiedFile f(path);
-        std::cout << "file in folder: " << f.getFileName() << std::endl;
         std::string id = f.getId();
-        // std::string parsedFile = _fParse.serialize(f);
-        //  splitFile(parsedFile, 2000, id);
-        // encode();
     }
     catch (boost::filesystem::filesystem_error &e)
     {
@@ -70,11 +68,11 @@ bool FileManager::handleFile(std::string &path)
     }
     return true;
 }
-bool FileManager::handleDir(int chunkSize,int blockSize)
+bool FileManager::handleDir(int chunkSize, int blockSize)
 {
     try
     {
-        MyDirectory dir(_currentPath, _buf, _bufferMutex,chunkSize, blockSize);
+        MyDirectory dir(_currentPath, _buf, _bufferMutex, chunkSize, blockSize);
     }
     catch (boost::filesystem::filesystem_error &e)
     {

@@ -34,7 +34,6 @@ private:
     bool _run;
     std::string _path;
     std::string _currentPath;
-    std::string _confPath;
     std::queue<std::vector<uint8_t>> &_buf;
     std::vector<std::string> _unEncoded;
     std::thread t;

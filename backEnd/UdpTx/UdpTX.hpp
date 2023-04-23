@@ -10,7 +10,7 @@
 #include <queue>
 #include <string>
 #include <thread>
-#include<mutex>
+#include <mutex>
 #include "../SharedClasses/FileParser.hpp"
 #include "../SharedClasses/json.hpp"
 #include "../SharedClasses/JsonParser.hpp"
@@ -42,7 +42,7 @@ private:
     std::queue<std::vector<uint8_t>> _buf{};
     bool _run;
     FileManager _manager;
-    int packetCounter;
+    unsigned long packetCounter;
     std::mutex _bufferMutex;
     std::unique_lock<std::mutex> _lock;
 };

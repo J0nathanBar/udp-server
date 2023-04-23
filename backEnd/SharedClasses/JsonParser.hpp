@@ -3,23 +3,20 @@
 
 #pragma once
 #include "json.hpp"
-#include<fstream>
+#include <fstream>
+#include <iostream>
+#include <boost/algorithm/string.hpp>
 #include<iostream>
-#include<boost/algorithm/string.hpp>
-#include<string.h>
+#include <string.h>
 class JsonParser
 {
 public:
     JsonParser();
     ~JsonParser();
     std::string parse(std::string path);
-    bool convertJson(bool transmitter,std::string & confpath,int & chunkSize,int & blockSize,std::string & srcPath);
-  
+    bool convertJson(bool transmitter, int &chunkSize, int &blockSize, std::string &srcPath);
+
 private:
-
-
-
-
 };
 
 #endif

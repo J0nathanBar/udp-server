@@ -18,11 +18,11 @@ MyDirectory::~MyDirectory()
 }
 void MyDirectory::scanDir(int chunkSize, int blockSize)
 {
-    int i = 0;
-    while (_run && i++ == 0) // remove later!!!!
+   
+    while (_run) 
     {
         //  std::lock_guard<std::mutex> guard(_vecMutex);
-
+        
         if (!(_fileVec.empty()))
             _prevVec = std::move(_fileVec);
 

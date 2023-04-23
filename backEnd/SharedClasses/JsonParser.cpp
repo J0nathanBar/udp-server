@@ -23,16 +23,10 @@ std::string JsonParser::parse(std::string path)
     return data.dump();
 }
 
-bool JsonParser::convertJson(bool transmitter, std::string &confpath, int &chunkSize, int &blockSize, std::string &srcPath)
+bool JsonParser::convertJson(bool transmitter, int &chunkSize, int &blockSize, std::string &srcPath)
 {
-
-    std::ifstream input(confpath);
-
-    if (!input)
-    {
-        std::cerr << "Could not open the file!" << std::endl;
-        return false;
-    }
+    std::string input;
+    std::getline(std::cin, input);
     nlohmann::json data = nlohmann::json::parse(input);
     srcPath = data["srcPath"].get<std::string>();
     if (transmitter)
@@ -40,6 +34,5 @@ bool JsonParser::convertJson(bool transmitter, std::string &confpath, int &chunk
         chunkSize = data["filePacket"].get<int>();
         blockSize = data["blockSize"].get<int>();
     }
-
     return true;
 }
