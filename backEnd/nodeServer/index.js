@@ -5,12 +5,24 @@ const app = express();
 const fs = require('fs')
 const WebSocket = require('ws')
 const { spawn } = require('child_process')
-app.use(cors());
-app.use(bodyParser.json());
-let udpTx = null;
+app.use(cors())
+app.use(bodyParser.json())
+let udpTx = null
 const port = process.env.PORT || "5000";
 
 
+
+
+function isTX() {
+  return udpTx !== null
+}
+app.post("/stopTX", ({ body }, res) => {
+  if(udpTx){
+    udpTx.kill()
+    udpTx = null
+    console.log("TX killed ")
+  }
+ })
 
 
 app.post("/Transmitter", ({ body }, res) => {
@@ -24,13 +36,13 @@ app.post("/Transmitter", ({ body }, res) => {
     console.log("udpTx process started");
   }
   else console.log("already exists")
-  if (udpTx != null) {
+  if (udpTx !== null) {
     udpTx.on('close', (code) => {
       console.log(`C++ process exited with code ${code}`)
       udpTx = null
     });
   }
-  if (udpTx != null) {
+  if (udpTx !== null) {
     udpTx.stdin.write(JSON.stringify(body.a.attributes) + '\n')
   }
   if (udpTx.stdout) {

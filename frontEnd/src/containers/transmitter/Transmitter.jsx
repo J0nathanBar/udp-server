@@ -10,6 +10,10 @@ function Transmitter() {
   const [slider1Value, setSlider1Value] = useState(25000);
   const [slider2Value, setSlider2Value] = useState(1300);
   const [textInputValue, setTextInputValue] = useState("");
+  const [isTx, setTx] = useState(false)
+
+  const [buttonText, setButtonText] = useState("Activate Channel")
+
 
 
 
@@ -29,37 +33,53 @@ function Transmitter() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Slider 1 value:", slider1Value);
-    console.log("Slider 2 value:", slider2Value);
-    console.log("Text input value:", textInputValue);
-    var obj = {
-      attributes: {
-        // msg : "value1",
-        //filename: props.name,
-        //content: "value1"
-        srcPath: "textInputValue",
-        filePacket: 0,
-        blockSize: 0
+    if (!isTx) {
+      console.log("Slider 1 value:", slider1Value);
+      console.log("Slider 2 value:", slider2Value);
+      console.log("Text input value:", textInputValue);
+      var obj = {
+        attributes: {
+          srcPath: "textInputValue",
+          filePacket: 0,
+          blockSize: 0
 
-
+        }
       }
+
+      obj.attributes.srcPath = textInputValue
+      obj.attributes.filePacket = slider1Value
+      obj.attributes.blockSize = slider2Value
+
+      const a = obj
+
+      const body = { a }
+      const response = await fetch('http://localhost:5000/Transmitter', {
+        method: 'POST',
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body)
+      });
+
+      const res = await response.json()
+      console.log(res);
+      setButtonText("Stop Channel")
+      setTx(true)
+      console.log("changed tx")
+      
+    }
+    else {
+      setButtonText("Activate Channel")
+      setTx(false)
+
+      fetch('http://localhost:5000/stopTX', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+
+          }
+          setTx(false);
+        });
     }
 
-    obj.attributes.srcPath = textInputValue
-    obj.attributes.filePacket = slider1Value
-    obj.attributes.blockSize = slider2Value
-
-    const a = obj
-
-    const body = { a }
-    const response = await fetch('http://localhost:5000/Transmitter', {
-      method: 'POST',
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body)
-    });
-
-    const res = await response.json()
-    console.log(res);
   };
 
   return (
@@ -132,7 +152,7 @@ function Transmitter() {
 
             type='submit'
             color="success">
-            Submit
+            {buttonText}
           </Button>
         </form>
       </Box>
