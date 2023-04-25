@@ -22,13 +22,11 @@ public:
     MyDirectory(boost::filesystem::path, std::queue<std::vector<uint8_t>> &, std::mutex &bufferMutex, int chunkSize, int blockSize);
     ~MyDirectory();
     void scanDir(int chunkSize, int blockSize);
-    int findFile(std::string name);
     std::string getName();
     void kill();
     std::vector<std::string> splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path);
     void ScannedFile(const boost::filesystem::path &, int chunkSize, int blockSize);
     void newFile(const boost::filesystem::path, int chunkSize, int blockSize);
-    void existingFile(const boost::filesystem::path &, int, int chunkSize, int blockSize);
     void encode(std::string &id, std::vector<std::string> unEncoded, int blockSize);
     void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
     std::string generateHeaderId();
@@ -36,8 +34,6 @@ public:
     bool running = true;
 
 private:
-    boost::container::vector<ModifiedFile> _fileVec;
-    boost::container::vector<ModifiedFile> _prevVec;
     std::vector<std::string> _unEncoded;
     std::queue<std::vector<uint8_t>> &_buf;
     boost::filesystem::path _path;
@@ -51,16 +47,13 @@ private:
     std::vector<std::thread> _threads;
     FileParser _fParse;
     const int _MaxThreads = 400000;
-    // std::counting
-    // std::counting_semaphore<> sem();
-    // std::vector<std::string> _chunks;
-    // boost::counting
-    // boost::counting_semaphore<> sem(5); // create a counting semaphore with initial value of 5
     std::counting_semaphore<> _sem;
     int _pz, _kmsg;
     const int _headerId = 69;
     const int _dataId = 0;
     int _hCounter = 0;
+    std::time_t _loopTime;
+    bool _firstRun;
 };
 
 #endif

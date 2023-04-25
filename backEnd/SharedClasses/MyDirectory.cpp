@@ -1,7 +1,7 @@
 #include "MyDirectory.hpp"
 
 MyDirectory::MyDirectory(boost::filesystem::path path, std::queue<std::vector<uint8_t>> &buf, std::mutex &bufferMutex, int chunkSize, int blockSize) : _path(path), _run(true), _buf(buf), _dirName(path.filename().string()), _bufferMutex(bufferMutex),
-                                                                                                                                                       _sem(_MaxThreads)
+                                                                                                                                                       _sem(_MaxThreads), _loopTime(std::time(nullptr)), _firstRun(true)
 {
     t = std::thread(&MyDirectory::scanDir, this, chunkSize, blockSize);
     cleaner = std::thread(&MyDirectory::cleanThreads, this);
@@ -18,14 +18,9 @@ MyDirectory::~MyDirectory()
 }
 void MyDirectory::scanDir(int chunkSize, int blockSize)
 {
-   
-    while (_run) 
-    {
-        //  std::lock_guard<std::mutex> guard(_vecMutex);
-        
-        if (!(_fileVec.empty()))
-            _prevVec = std::move(_fileVec);
 
+    while (_run)
+    {
         if (!boost::filesystem::exists(_path))
         {
             std::cout << "Error: root path does not exist" << std::endl;
@@ -47,21 +42,10 @@ void MyDirectory::scanDir(int chunkSize, int blockSize)
             }
             ++it;
         }
-        std::cout << "finished Scanning" << std::endl;
-
-        running = false;
+        _loopTime = std::time(nullptr);
+        _firstRun = false;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     }
-}
-
-int MyDirectory::findFile(std::string path)
-{
-
-    for (int i = 0; i < _prevVec.size(); i++)
-    {
-        if (path.compare(_prevVec.at(i).getPath().string()) == 0)
-            return i;
-    }
-    return -1;
 }
 
 void MyDirectory::kill()
@@ -77,28 +61,19 @@ std::string MyDirectory::getName()
 void MyDirectory::ScannedFile(const boost::filesystem::path &k, int chunkSize, int blockSize)
 {
 
-    int i = findFile(k.string());
-    if (i != -1)
-    {
-        existingFile(k, i, chunkSize, blockSize);
-    }
-    else
+    if (_firstRun || _loopTime < boost::filesystem::last_write_time(k))
     {
         boost::filesystem::path a(k);
-        // newFile(k);
+
         _sem.acquire();
         std::unique_lock<std::mutex> lock(_threadMutex);
         _threads.push_back(std::thread(&MyDirectory::newFile, this, std::move(a), chunkSize, blockSize));
         lock.unlock();
-
-        // std::thread b(&MyDirectory::newFile, this, k);
-        // b.detach();
     }
 }
 std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, std::string &id, const boost::filesystem::path &path)
 {
     unsigned long index = 0;
-
     std::vector<FilePacket> packets;
     std::vector<std::string> unEncoded;
     std::ifstream File(path.string(), std::ios::binary);
@@ -110,9 +85,7 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, 
 
     while (File.good())
     {
-
         std::string chunk(chunkSize, '\0');
-
         File.read(&chunk[0], chunkSize);
         unsigned long size = f.getSize();
         std::string name = f.getFileName();
@@ -149,26 +122,11 @@ void MyDirectory::newFile(const boost::filesystem::path k, int chunkSize, int bl
     std::vector<std::string> unEncoded = splitFile(f, chunkSize, id, k);
     id = f.getId();
     encode(id, std::move(unEncoded), blockSize);
-    // std::lock_guard<std::mutex> guard(_vecMutex);
-    // _fileVec.push_back(f);
     _sem.release();
-}
-void MyDirectory::existingFile(const boost::filesystem::path &k, int i, int chunkSize, int blockSize)
-{
-    if (_prevVec.at(i).getfTime() == boost::filesystem::last_write_time(k))
-    {
-        // std::lock_guard<std::mutex> guard(_vecMutex);
-
-        // _fileVec.push_back(_prevVec.at(i));
-    }
-    else
-        newFile(k, chunkSize, blockSize);
 }
 
 void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded, int blockSize)
 {
-
-    // FecCoder coder;
     for (unsigned long i = 0; i < unEncoded.size(); i++)
     {
         std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>(generateHeaderId());
