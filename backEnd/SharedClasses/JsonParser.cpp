@@ -23,16 +23,22 @@ std::string JsonParser::parse(std::string path)
     return data.dump();
 }
 
-bool JsonParser::convertJson(bool transmitter, int &chunkSize, int &blockSize, std::string &srcPath)
+bool JsonParser::convertJson(std::string &srcPath)
 {
     std::string input;
     std::getline(std::cin, input);
     nlohmann::json data = nlohmann::json::parse(input);
     srcPath = data["srcPath"].get<std::string>();
-    if (transmitter)
-    {
-        chunkSize = data["filePacket"].get<int>();
-        blockSize = data["blockSize"].get<int>();
-    }
+    return true;
+}
+
+bool JsonParser::convertJson(int &chunkSize, int &blockSize, std::string &srcPath)
+{
+    std::string input;
+    std::getline(std::cin, input);
+    nlohmann::json data = nlohmann::json::parse(input);
+    srcPath = data["srcPath"].get<std::string>();
+    chunkSize = data["filePacket"].get<int>();
+    blockSize = data["blockSize"].get<int>();
     return true;
 }

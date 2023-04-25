@@ -20,7 +20,7 @@ void FileManager::scanConf()
         try
         {
             int chunkSize, blockSize;
-            bool flag = _jParse.convertJson(true, chunkSize, blockSize, _path);
+            bool flag = _jParse.convertJson(chunkSize, blockSize, _path);
 
             //  _path = _jParse.parse(_confPath);
             if (!flag)

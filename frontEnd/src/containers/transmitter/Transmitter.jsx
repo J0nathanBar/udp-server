@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Input, Slider, Button, Typography, Box, FormHelperText } from '@mui/joy/';
 import { NavBar } from '../../components';
@@ -10,75 +10,84 @@ function Transmitter() {
   const [slider1Value, setSlider1Value] = useState(25000);
   const [slider2Value, setSlider2Value] = useState(1300);
   const [textInputValue, setTextInputValue] = useState("");
-  const [isTx, setTx] = useState(false)
-
-  const [buttonText, setButtonText] = useState("Activate Channel")
-
-
-
+  const [isTx, setTx] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
 
   const handleSlider1Change = (event, newValue) => {
-    setSlider1Value(newValue);
+    setSlider1Value(newValue)
 
   };
 
   const handleSlider2Change = (event, newValue) => {
-    setSlider2Value(newValue);
+    setSlider2Value(newValue)
 
   };
 
   const handleTextInputChange = (event) => {
-    setTextInputValue(event.target.value);
+    setTextInputValue(event.target.value)
   };
+  async function loadData() {
+    try {
+      const response = await fetch('http://localhost:5000/isTxRunning')
+      const data = await response.json()
+      console.log(data.isTx)
+      setTx(data.isTx)
+      setIsLoading(false)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    }
+  }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!isTx) {
-      console.log("Slider 1 value:", slider1Value);
-      console.log("Slider 2 value:", slider2Value);
-      console.log("Text input value:", textInputValue);
-      var obj = {
-        attributes: {
-          srcPath: "textInputValue",
-          filePacket: 0,
-          blockSize: 0
+  const stopTx = async (event) => {
+    setIsLoading(true)
+    fetch('http://localhost:5000/stopTX', { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
 
         }
-      }
-
-      obj.attributes.srcPath = textInputValue
-      obj.attributes.filePacket = slider1Value
-      obj.attributes.blockSize = slider2Value
-
-      const a = obj
-
-      const body = { a }
-      const response = await fetch('http://localhost:5000/Transmitter', {
-        method: 'POST',
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(body)
       });
+    loadData()
 
-      const res = await response.json()
-      console.log(res);
-      setButtonText("Stop Channel")
-      setTx(true)
-      console.log("changed tx")
-      
+  }
+
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault()
+    setIsLoading(true)
+
+    console.log("Slider 1 value:", slider1Value)
+    console.log("Slider 2 value:", slider2Value)
+    console.log("Text input value:", textInputValue)
+    var obj = {
+      attributes: {
+        srcPath: "textInputValue",
+        filePacket: 0,
+        blockSize: 0
+
+      }
     }
-    else {
-      setButtonText("Activate Channel")
-      setTx(false)
 
-      fetch('http://localhost:5000/stopTX', { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
+    obj.attributes.srcPath = textInputValue
+    obj.attributes.filePacket = slider1Value
+    obj.attributes.blockSize = slider2Value
 
-          }
-          setTx(false);
-        });
-    }
+    const a = obj
+
+    const body = { a }
+    const response = await fetch('http://localhost:5000/Transmitter', {
+      method: 'POST',
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(body)
+    });
+
+    const res = await response.json()
+    console.log(res);
+    loadData()
 
   };
 
@@ -149,16 +158,23 @@ function Transmitter() {
 
           <Button
             sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
-
+            loading={isLoading}
             type='submit'
             color="success">
-            {buttonText}
+            Start Transmission!
+          </Button>
+          <Button
+            disabled={!isTx}
+            loading={isLoading}
+            sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
+            onClick={stopTx}
+            color="danger">
+            Stop Transmission!
           </Button>
         </form>
       </Box>
     </div>
   );
 }
-
 
 export default Transmitter;

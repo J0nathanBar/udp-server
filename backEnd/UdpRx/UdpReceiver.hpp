@@ -41,7 +41,6 @@ public:
     void handlePacket(FilePacket fp);
     void handleHeader(int, std::vector<uint8_t> buffer);
     int handleRawData(std::vector<uint8_t> buffer, std::string headerId);
-    void processData(std::vector<std::vector<uint8_t>> v, int id);
 
 private:
     static constexpr int SIZE = 10000;
@@ -57,7 +56,6 @@ private:
     JsonParser _jParse;
     FileParser _fParse;
     std::string _path;
-    std::string _confPath;
     std::string _currentPath;
     std::thread _t, cleaner;
     std::vector<std::thread> _threads;
@@ -67,15 +65,11 @@ private:
     boost::unordered_map<std::string, ModifiedFile> _files;
     FecCoder _hcoder;
     int eff = 0;
-    // DataHeader _header;
-    // std::queue<DataHeader> _qhead;
-    // std::vector<DataHeader> _headers;
-    // std::vector<FecCoder> _coders;
     boost::unordered_map<std::string, DataHeader> _headers;
     boost::unordered_map<std::string, FecCoder> _coders;
     boost::unordered_map<std::string, int> counters;
     double max = 0;
-    double avg =0;
+    double avg = 0;
 
     int hSize;
     int hcounter;

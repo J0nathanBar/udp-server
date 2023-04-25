@@ -6,7 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
-#include<iostream>
+#include <iostream>
 #include <string.h>
 class JsonParser
 {
@@ -14,7 +14,8 @@ public:
     JsonParser();
     ~JsonParser();
     std::string parse(std::string path);
-    bool convertJson(bool transmitter, int &chunkSize, int &blockSize, std::string &srcPath);
+    bool convertJson(int &chunkSize, int &blockSize, std::string &srcPath);
+    bool convertJson(std::string &srcPath);
 
 private:
 };

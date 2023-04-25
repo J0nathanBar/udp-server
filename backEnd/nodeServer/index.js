@@ -8,6 +8,7 @@ const { spawn } = require('child_process')
 app.use(cors())
 app.use(bodyParser.json())
 let udpTx = null
+let udpRx = null
 const port = process.env.PORT || "5000";
 
 
@@ -16,29 +17,50 @@ const port = process.env.PORT || "5000";
 function isTX() {
   return udpTx !== null
 }
+function isRX() {
+  return udpRx !== null
+}
+
 app.post("/stopTX", ({ body }, res) => {
-  if(udpTx){
+  if (udpTx) {
     udpTx.kill()
     udpTx = null
     console.log("TX killed ")
   }
- })
+})
+app.post("/stopRX", ({ body }, res) => {
+  if (udpRx) {
+    udpRx.kill()
+    udpRx = null
+    console.log("RX killed ")
+  }
+})
 
+app.get('/isTxRunning', (req, res) => {
+  const response = {
+    isTx: isTX()
+  };
+  res.json(response);
+});
+
+app.get('/isRxRunning', (req, res) => {
+  const response = {
+    isRx: isRX()
+  };
+  res.json(response);
+});
 
 app.post("/Transmitter", ({ body }, res) => {
-  console.log(body.a)
   res.json(body)
-  console.log("file written")
   if (udpTx == null) {
     udpTx = udpTx = spawn('../UdpTx/build/UdpTx', [], {
       stdio: ['pipe', 'inherit', 'inherit'],
     });
     console.log("udpTx process started");
   }
-  else console.log("already exists")
   if (udpTx !== null) {
     udpTx.on('close', (code) => {
-      console.log(`C++ process exited with code ${code}`)
+      console.log(`Tx process exited with code ${code}`)
       udpTx = null
     });
   }
@@ -47,7 +69,7 @@ app.post("/Transmitter", ({ body }, res) => {
   }
   if (udpTx.stdout) {
     udpTx.stdout.on('data', (data) => {
-      console.log(`C++ process output: ${data}`)
+      console.log(`Tx process output: ${data}`)
     });
   }
 
@@ -57,36 +79,48 @@ app.post("/Receiver", ({ body }, res) => {
 
   console.log(body.a)
   res.json(body)
-  fs.writeFile(`/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/RecvConf.json`, JSON.stringify(body.a.attributes), err => {
-    if (err) {
-      console.error(err);
-    }
-    console.log("file written")
-  })
+
+  if (udpRx == null) {
+    udpRx = udpRx = spawn('../UdpRx/build/UdpRx', [], {
+      stdio: ['pipe', 'pipe', 'pipe'],
+    });
+    console.log("udpRx process started");
+  }
+  if (udpRx !== null) {
+    udpRx.on('close', (code) => {
+      console.log(`Rx process exited with code ${code}`)
+      udpRx = null
+    });
+  }
+  if (udpRx !== null) {
+    udpRx.stdin.write(JSON.stringify(body.a.attributes) + '\n')
+  }
+  if (udpRx.stdout) {
+    udpRx.stdout.on('data', (data) => {
+      const output = data.toString()
+      console.log(`Rx process output: ${data}`)
+      // if (output.includes('egg'))
+      //   console.log("eggy weggy leggy man!")
+
+    });
+  }
 
 
 });
 app.listen(port, () => { console.log("Listening on port " + port) })
 
 
-if (udpTx != null) {
-
-  udpTx.stdout.on('data', (data) => {
-    console.log(`C++ process output: ${data}`);
-  });
-}
-
 
 process.on('SIGINT', () => {
   console.log('Received SIGINT signal, terminating C++ process...');
-
-  // Send a SIGINT signal to the child process to terminate it
   if (udpTx != null) {
     udpTx.kill('SIGINT');
     console.log("killed UdpTx")
   }
-
-  // Exit the Node.js process
+  if (udpRx != null) {
+    udpRx.kill('SIGINT');
+    console.log("killed UdpRx")
+  }
   process.exit();
 });
 

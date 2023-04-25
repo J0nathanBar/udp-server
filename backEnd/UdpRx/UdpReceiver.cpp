@@ -2,14 +2,13 @@
 
 UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(port),
                                                                        _socket(context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
-                                                                       _run(true), _confPath("/home/jonny/Desktop/project/udp-server/backEnd/nodeServer/RecvConf.json"), hcounter(0), hSize(0)
+                                                                       _run(true), hcounter(0), hSize(0)
 
 {
   std::cout << "starting server" << std::endl;
   _t = std::thread(&UdpReceiver::scanConf, this);
   _buffer.resize(SIZE);
   packetCounter = 0;
-  // _coders.push_back(FecCoder());
   startReceive();
 }
 UdpReceiver::~UdpReceiver()
@@ -40,7 +39,7 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
   std::vector<uint8_t> v(bytesTransferred);
   std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, v.begin());
 
-    startReceive();
+  startReceive();
   std::string hID;
   try
   {
@@ -88,10 +87,9 @@ void UdpReceiver::scanConf()
   {
     try
     {
-      // _path = _jParse.parse(_confPath);
-      int z = k = 0;
-      _jParse.convertJson(false, _confPath, z, k, _path);
+      _jParse.convertJson(_path);
       boost::erase_all(_path, "\"");
+
       if (_path.compare(_currentPath) != 0)
       {
         _currentPath = _path;
@@ -115,6 +113,8 @@ void UdpReceiver::handlePacket(FilePacket fp)
     if (i == _files.end())
     {
       std::string p = _currentPath;
+      if (p == "")
+        return;
       if (fp.getRootFolder() != ".")
         p += "/" + fp.getRootFolder();
       fp.setPath(p);
@@ -146,7 +146,6 @@ void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer
     {
       FileParser fparse;
       DataHeader header;
-
       if (fparse.deSerialize(hdata, header))
       {
         _headers.emplace(header.gethID(), std::move(header));
@@ -169,16 +168,13 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
 {
   try
   {
-    //  std::cout << "handle raw" << std::endl;
     std::unique_lock hlock(_headerMutex);
-
     while (_headers.find(id) == _headers.end())
     {
       hlock.unlock();
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
       hlock.lock();
     }
-
     int dataSize = _headers.at(id).getDataSize();
     int blockSize = _headers.at(id).getBlockSize();
     hlock.unlock();
@@ -188,7 +184,6 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
       _coders.emplace(id, FecCoder());
     data = _coders.at(id).decode(buffer, dataSize, blockSize);
     lock.unlock();
-
     if (data == ".")
     {
       std::cout << "error at: " << id << std::endl;
@@ -198,12 +193,6 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
       lockk.unlock();
       return 1;
     }
-    // else if (data == "" && counter == numOfBlocks - 1)
-    // {
-    //   std::cout << "data wasnt sufficient" << std::endl;
-    //   std::cout << " data size: " << dataSize << " blockSize: " << blockSize << std::endl;
-    //   return 1;
-    // }
     else if (data != "")
     {
       FilePacket fp;
@@ -215,7 +204,6 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
       }
       else
       {
-        //   std::cout << "id: " << id << " index: " << counter << std::endl;
         return 1;
       }
     }
@@ -225,55 +213,4 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
     std::cout << "handle raw Excpetion: " << e.what() << std::endl;
   }
   return 2;
-}
-
-void UdpReceiver::processData(std::vector<std::vector<uint8_t>> v, int id)
-{
-  // std::unique_lock lockk(_headerMutex);
-  // bool locked = true;
-  // while (id > _headers.size() - 1)
-  // {
-  //   if (locked)
-  //   {
-  //     locked = false;
-  //     lockk.unlock();
-  //   }
-  // }
-  // if (!locked)
-  //   lockk.lock();
-  // int dataSize = _headers.at(id).getDataSize();
-  // int blockSize = _headers.at(id).getBlockSize();
-  // lockk.unlock();
-  // std::unique_lock lock(_coderMutex);
-  // while (id > _coders.size())
-  // {
-  //   lock.unlock();
-  //   std::this_thread::sleep_for(std::chrono::milliseconds(1));
-  //   lock.lock();
-  // }
-  // if (id == _coders.size())
-  // {
-
-  //   _coders.push_back(FecCoder());
-  // }
-  // lock.unlock();
-  // for (int i = 0; i < v.size(); i++)
-  // {
-  //   std::vector<uint8_t> hBytes(v.at(i).end() - 8, v.at(i).end());
-  //   std::string hID(hBytes.begin(), hBytes.end());
-  //   v.at(i).erase(v.at(i).end() - 8, v.at(i).end());
-  //   if (hID != _headers.at(id).gethID())
-  //   {
-  //     std::cout << "sneaky packet " << std::endl;
-  //     continue;
-  //   }
-
-  //   int res = handleRawData(v.at(i), id, i, dataSize, blockSize, v.size());
-  //   if (res == 0)
-  //     break;
-  //   if (res == 1)
-  //   {
-  //     std::cout << " vector's size: " << v.size() << std::endl;
-  //   }
-  // }
 }
