@@ -5,8 +5,8 @@ body {
   font-family: 'Roboto Condensed', sans-serif;
   color: #fff; */
 
- /* // background-size: cover; */
- margin: 0;
+  /* // background-size: cover; */
+  margin: 0;
 }
 
 input::placeholder {
@@ -27,7 +27,8 @@ input::placeholder {
   margin-bottom: 20px;
   text-align: center;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-  color: #fff; /* added */
+  color: #fff;
+  /* added */
 }
 
 /* .input {
@@ -63,13 +64,49 @@ input::placeholder {
 .button:focus {
   outline: none;
 }
-.bdy{
-  background-image: url('../public/logo.png');
+
+.homepage {
+
+  background: #000428;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #004e92, #000428);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #004e92, #000428);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  background-image: url('../public/logo3.png');
   background-repeat: no-repeat;
   background-position: center;
-  background-color: #000000;
-  min-height: 100vh;   /* Set a minimum height of 100% viewport height */
-  display: flex;       /* Use flexbox to stretch the container vertically */
-  flex-direction: column
+  /* background-color: #000000;*/
+  min-height: 100vh;
+  /* Set a minimum height of 100% viewport height */
+  display: flex;
+  /* Use flexbox to stretch the container vertically */
+  flex-direction: column;
+
+
 }
 
+.bdy {
+  /* background-color: #000000;
+  min-height: 100vh;   /* Set a minimum height of 100% viewport height */
+  /*/display: flex;       /* Use flexbox to stretch the container vertically */
+  /*flex-direction: column */
+
+  background: #000428;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #004e92, #000428);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #004e92, #000428);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+
+}
+
+.bar {
+  background: #000428;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #004e92, #000428);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #004e92, #000428);
+}

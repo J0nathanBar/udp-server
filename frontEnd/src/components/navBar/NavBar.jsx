@@ -17,9 +17,9 @@ const NavBar = () => {
   };
 
   return (
-    <Box component="nav" aria-label="My site" sx={{ flexGrow: 1 }}>
-      <Tabs value={value} onChange={handleChange}>
-        <TabList>
+    <Box component="nav" aria-label="My site" sx={{ flexGrow: 1, width: '30%' }}>
+      <Tabs value={value} onChange={handleChange} variant='solid' className='bar'>
+        <TabList variant='solid' color='primary'>
           <Tab label="Home" value="" to="/" >Home Page</Tab>
           <Tab label="Transmitter" value="Transmitter" to="/Transmitter" >Transmitter</Tab>
           <Tab label="Receiver" value="Reciever" to="/Receiver" >Reciever</Tab>

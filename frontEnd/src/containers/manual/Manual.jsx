@@ -31,8 +31,8 @@ const Manual = () => {
                                         <TabList>
                                                 <Tab>Transmitter</Tab>
                                                 <Tab>Reciever</Tab>
-                                        </TabList>
-                                        <TabPanel value={0}>
+                                        </TabList >
+                                        <TabPanel value={0} className='bar'>
 
                                                 <Typography gutterBottom level='h3' color='primary' textAlign={'center'}>
                                                         This is the Transmitter, here you can send files to your destination!
@@ -107,7 +107,7 @@ const Manual = () => {
                                                         However it is recommended to put all of your files and directory into a single parent directory
                                                 </Typography>
                                         </TabPanel>
-                                        <TabPanel value={1}>
+                                        <TabPanel className='bar' value={1}>
                                                 <Typography gutterBottom level='h3' color='primary' textAlign={'center'}>
                                                         This is the Reciever, here you configure the destination for your!
                                                 </Typography>

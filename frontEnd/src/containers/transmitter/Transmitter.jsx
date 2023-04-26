@@ -94,84 +94,84 @@ function Transmitter() {
   return (
     <div>
       <NavBar />
-      <Typography gutterBottom level='h1' color='primary' textAlign={'center'}>
-        Welcome to Transmitter Configuration Settings
-      </Typography>
-      <Typography level='h2' color='info' textAlign={'center'}>
-        Please Enter your source directory, the size of each chunk of file and the size of the data block for the encoding
-      </Typography>
+      <Box sx={{ color: 'primary', marginTop: '100px' }}>
+        <Typography gutterBottom level='h1' color='primary' textAlign={'center'}>
+          Welcome to Transmitter Configuration Settings
+        </Typography>
+        <Typography level='h2' color='info' textAlign={'center'}>
+          Please Enter your source directory, the size of each chunk of file and the size of the data block for the encoding
+        </Typography>
 
-      <Box className="container" sx={{ display: 'flex', justifyContent: 'flex-start', width: '75%', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto' }}
-      >
+        <Box className="container" sx={{ display: 'flex', justifyContent: 'flex-start', width: '75%', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto' }}
+        >
+          <form onSubmit={(event) => {
+            event.preventDefault();
+            handleSubmit(event);
+          }}>
+            <Typography id="slider1" gutterBottom level='h3' color='warning'>
+              File Chunk Size:
+            </Typography>
+            <Slider
+              color='info'
+              defaultValue={25000}
+              style={{ width: 1000 }}
+              value={slider1Value}
+              onChange={handleSlider1Change}
+              valueLabelDisplay={"on"}
+              min={500}
+              max={100000}
+              step={500}
+              aria-labelledby="slider1"
+              size='lg'
+            />
+            <Typography id="slider2" gutterBottom level='h3' color='warning'>
+              Data Block Size:
+            </Typography>
+            <Slider
+              color='info'
+              defaultValue={1300}
+              value={slider2Value}
+              onChange={handleSlider2Change}
+              valueLabelDisplay={"on"}
+              min={100}
+              max={Math.min(slider1Value - 100, 9500)}
+              step={100}
+              size='lg'
+              aria-labelledby="slider2"
+            />
+            <Input
+              sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
+              required
+              color='warning'
+              variant='soft'
+              placeholder='Insert Source directory here'
+              id="text-input"
+              label="Text input"
+              value={textInputValue}
+              onChange={handleTextInputChange}
+              margin="normal" />
+            <FormHelperText
 
+              sx={{ width: "50%", alignSelf: "center", marginLeft: "20%", marginTop: "150px" }}
+            >an example for a path could be: /home/jonny/Desktop/project/</FormHelperText>
 
-        <form onSubmit={(event) => {
-          event.preventDefault();
-          handleSubmit(event);
-        }}>
-          <Typography id="slider1" gutterBottom level='h3' color='warning'>
-            File Chunk Size:
-          </Typography>
-          <Slider
-            color='info'
-            defaultValue={25000}
-            style={{ width: 1000 }}
-            value={slider1Value}
-            onChange={handleSlider1Change}
-            valueLabelDisplay={"on"}
-            min={500}
-            max={100000}
-            step={500}
-            aria-labelledby="slider1"
-            size='lg'
-          />
-          <Typography id="slider2" gutterBottom level='h3' color='warning'>
-            Data Block Size:
-          </Typography>
-          <Slider
-            color='info'
-            defaultValue={1300}
-            value={slider2Value}
-            onChange={handleSlider2Change}
-            valueLabelDisplay={"on"}
-            min={100}
-            max={Math.min(slider1Value - 100, 9500)}
-            step={100}
-            size='lg'
-            aria-labelledby="slider2"
-          />
-          <Input
-            sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
-            required
-            color='warning'
-            variant='soft'
-            placeholder='Insert Source directory here'
-            id="text-input"
-            label="Text input"
-            value={textInputValue}
-            onChange={handleTextInputChange}
-            margin="normal" />
-          <FormHelperText
-
-            sx={{ width: "50%", alignSelf: "center", marginLeft: "20%", marginTop: "150px" }}
-          >an example for a path could be: /home/jonny/Desktop/project/</FormHelperText>
-
-          <Button
-            sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
-            loading={isLoading}
-            type='submit'
-            color="success">
-            Start Transmission!
-          </Button>
-          <Button
-            disabled={!isTx}
-            loading={isLoading}
-            sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
-            onClick={stopTx}
-            color="danger">
-            Stop Transmission!
-          </Button>
-        </form>
+            <Button
+              sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
+              loading={isLoading}
+              type='submit'
+              color="success">
+              Start Transmission!
+            </Button>
+            <Button
+              disabled={!isTx}
+              loading={isLoading}
+              sx={{ width: "50%", alignSelf: "center", marginLeft: "20%" }}
+              onClick={stopTx}
+              color="danger">
+              Stop Transmission!
+            </Button>
+          </form>
+        </Box>
       </Box>
     </div>
   );

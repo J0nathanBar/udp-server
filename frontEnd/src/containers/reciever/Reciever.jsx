@@ -67,14 +67,13 @@ const Reciever = () => {
   return (
     <div>
       <NavBar />
-      <Box className="container" sx={{ display: 'flex', justifyContent: 'center', width: '50%', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto' }}>
-        <Typography gutterBottom level='h1' textColor={"common.white"}>
-          Welcome to the Reciever configuration Settings
+      <Box className="container" sx={{ display: 'flex', justifyContent: 'flex-start', width: '75%', flexDirection: 'column', marginLeft: 'auto', marginRight: 'auto' ,marginTop: '100px'}}  >
+      <Typography gutterBottom level='h1' color='primary' textAlign={'center'}>
+      Welcome to the Reciever configuration Settings
         </Typography>
-        <Typography gutterBottom level='h1' textColor={"common.white"}>
-          Please Enter your destination directory
+        <Typography level='h2' color='info' textAlign={'center'}>
+        Please Enter your destination directory
         </Typography>
-
         <form onSubmit={(event) => {
           event.preventDefault();
           handleSubmit(event);
