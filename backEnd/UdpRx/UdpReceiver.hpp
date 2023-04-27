@@ -33,7 +33,7 @@ class UdpReceiver
 {
 
 public:
-    UdpReceiver(int port, boost::asio::io_service &context);
+    UdpReceiver(int port, boost::asio::io_context &context);
     ~UdpReceiver();
     void startReceive();
     void handleReceive(boost::system::error_code ec, std::size_t bytesTransferred);
@@ -47,7 +47,7 @@ private:
 
     boost::asio::ip::udp::socket _socket;
     boost::asio::ip::udp::endpoint _endpoint;
-    boost::asio::io_service _context;
+    boost::asio::io_context & _context;
     boost::asio::ip::udp::endpoint _local;
     int _port;
     int k;
@@ -67,10 +67,10 @@ private:
     int eff = 0;
     boost::unordered_map<std::string, DataHeader> _headers;
     boost::unordered_map<std::string, FecCoder> _coders;
-    boost::unordered_map<std::string, int> counters;
+
     double max = 0;
     double avg = 0;
-
+    //boost::asio::io_context _context;
     int hSize;
     int hcounter;
     int packetCounter;

@@ -25,13 +25,20 @@ public:
     void fill();
     void print();
     std::string gethID();
+    bool isDecoded();
+    void setDecoded(bool decoded);
+    unsigned long getArrived();
+unsigned long getAlreadyDecoded();
+void arrival();
 
 private:
     unsigned int _blockSize, _dataSize;
     unsigned long _index;
+    unsigned long _arrived,_afterDecode;
     uint8_t _dex;
     std::string _id, _hID;
     bool _empty;
+    bool _decoded;
 
     friend class boost::serialization::access;
     template <class Archive>

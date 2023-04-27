@@ -114,11 +114,12 @@ void ModifiedFile::saveFile()
 {
     auto it = _packets.rbegin();
     int maxKey = it->first;
- //   std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
+    std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
     while (!_beenHandled && !_packets.empty() && _packets.begin()->first == _currentIndex)
     {
         bool flag = saveFile(_packets.at(_currentIndex));
         _packets.erase(_currentIndex - 1);
+     //   std::cout << _packets.size() << std::endl;
     }
 }
 bool ModifiedFile::saveFile(FilePacket &packet)
@@ -142,6 +143,7 @@ bool ModifiedFile::saveFile(FilePacket &packet)
         {
             _beenHandled = true;
             std::cout << "file saved" << std::endl;
+            //TODO delelte headers for the greater good!!!
         }
     }
     catch (const std::exception &e)

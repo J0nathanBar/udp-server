@@ -7,13 +7,12 @@ void init();
 
 int main()
 {
-   init();
-
-
+    init();
 }
 void init()
 {
-    boost::asio::io_service context;
+    // boost::asio::io_service context;
+    boost::asio::io_context context;
     UdpReceiver r(42069, context);
     context.run();
 }

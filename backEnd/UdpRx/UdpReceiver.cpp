@@ -1,11 +1,12 @@
 #include "UdpReceiver.hpp"
 
-UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(port),
+UdpReceiver::UdpReceiver(int port, boost::asio::io_context &context) : _port(port),
                                                                        _socket(context, boost::asio::ip::udp::endpoint(boost::asio::ip::udp::v4(), port)),
-                                                                       _run(true), hcounter(0), hSize(0)
+                                                                       _run(true), hcounter(0), hSize(0), _context(context)
 
 {
   std::cout << "starting server" << std::endl;
+
   _t = std::thread(&UdpReceiver::scanConf, this);
   _buffer.resize(SIZE);
   packetCounter = 0;
@@ -13,7 +14,7 @@ UdpReceiver::UdpReceiver(int port, boost::asio::io_service &context) : _port(por
 }
 UdpReceiver::~UdpReceiver()
 {
-  _t.detach();
+  _t.join();
   for (int i = 0; i < _threads.size(); i++)
   {
     _threads.at(i).join();
@@ -21,9 +22,13 @@ UdpReceiver::~UdpReceiver()
 }
 void UdpReceiver::startReceive()
 {
-  std::cout << "recv" << std::endl;
+  // std::cout << "recv" << std::endl;
   try
   {
+    if (_context.stopped())
+    {
+      std::cout << "the context has stopped " << std::endl;
+    }
     _socket.async_receive_from(boost::asio::buffer(_buffer),
                                _endpoint, [this](boost::system::error_code ec, std::size_t bytesTransferred)
                                { handleReceive(ec, bytesTransferred); });
@@ -35,7 +40,7 @@ void UdpReceiver::startReceive()
 }
 void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesTransferred)
 {
-  std::cout << "counter: " << packetCounter++ << std::endl;
+  // std::cout << "counter: " << packetCounter++ << std::endl;
   std::vector<uint8_t> v(bytesTransferred);
   std::copy(_buffer.begin(), _buffer.begin() + bytesTransferred, v.begin());
 
@@ -57,17 +62,8 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
         hID = std::string(hBytes.begin(), hBytes.end());
         v.erase(v.end() - 8, v.end());
         std::unique_lock lock(cMutex);
-        if (counters.find(hID) == counters.end())
-        {
-          counters.emplace(hID, 1);
-        }
-        else
-          counters.at(hID)++;
-        // std::cout << "coming at: " << hID << " number " << counters.at(hID) << std::endl;
-        lock.unlock();
+
         int k = handleRawData(std::move(v), hID);
-        if (k == 2 && counters.at(hID) == 20)
-          std::cout << "bruh" << std::endl;
       }
     }
 
@@ -76,7 +72,6 @@ void UdpReceiver::handleReceive(boost::system::error_code ec, std::size_t bytesT
   catch (std::exception &ex)
   {
     std::cout << "handle recieve error: " << ex.what() << std::endl;
-    //   std::cout << "at: " << hID << /*" number " << counters.at(hID) <<*/ std::endl;
     return;
   }
 }
@@ -164,7 +159,7 @@ void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer
     std::cout << "handle Header Excpetion: " << e.what() << std::endl;
   }
 }
-int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0 = success, 1 = fail, 2 = awaiting for more data
+int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0 = success, 1 = fail, 2 = awaiting for more data, already decoded = 3
 {
   try
   {
@@ -175,6 +170,12 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
       hlock.lock();
     }
+    if (_headers.at(id).isDecoded())
+    {
+      hlock.unlock();
+      return 3;
+    }
+
     int dataSize = _headers.at(id).getDataSize();
     int blockSize = _headers.at(id).getBlockSize();
     hlock.unlock();
@@ -195,10 +196,18 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
     }
     else if (data != "")
     {
+      hlock.lock();
+      _headers.at(id).setDecoded(true);
+      hlock.unlock();
+      lock.lock();
+      _coders.erase(id);
+      lock.unlock();
       FilePacket fp;
       FileParser fparse;
       if (fparse.deSerialize(data, fp))
       {
+        std::unique_lock lock(_coderMutex);
+        lock.unlock();
         handlePacket(std::move(fp));
         return 0;
       }
