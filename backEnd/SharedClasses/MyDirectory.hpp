@@ -24,11 +24,11 @@ public:
     void scanDir(int chunkSize, int blockSize);
     std::string getName();
     void kill();
-    std::vector<std::string> splitFile(ModifiedFile &f, int packetSize, std::string &id, const boost::filesystem::path &path);
+    std::vector<std::string> splitFile(std::shared_ptr<ModifiedFile> f, int packetSize, std::string &id, const boost::filesystem::path &path);
     void ScannedFile(const boost::filesystem::path &, int chunkSize, int blockSize);
     void newFile(const boost::filesystem::path, int chunkSize, int blockSize);
-    void encode(std::string &id, std::vector<std::string> unEncoded, int blockSize);
-    void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v);
+    void encode(std::string &id, std::vector<std::string> unEncoded, int blockSize, std::shared_ptr<ModifiedFile> f);
+    void mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v, std::shared_ptr<ModifiedFile> f);
     std::string generateHeaderId();
     void cleanThreads();
     bool running = true;

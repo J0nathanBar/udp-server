@@ -71,7 +71,7 @@ void MyDirectory::ScannedFile(const boost::filesystem::path &k, int chunkSize, i
         lock.unlock();
     }
 }
-std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, std::string &id, const boost::filesystem::path &path)
+std::vector<std::string> MyDirectory::splitFile(std::shared_ptr<ModifiedFile> f, int chunkSize, std::string &id, const boost::filesystem::path &path)
 {
     unsigned long index = 0;
     std::vector<FilePacket> packets;
@@ -87,9 +87,9 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, 
     {
         std::string chunk(chunkSize, '\0');
         File.read(&chunk[0], chunkSize);
-        unsigned long size = f.getSize();
-        std::string name = f.getFileName();
-        std::string root = f.getRootFolder();
+        unsigned long size = f->getSize();
+        std::string name = f->getFileName();
+        std::string root = f->getRootFolder();
         packets.emplace_back(FilePacket(id, chunk, index, size, name, root));
         index++;
     }
@@ -106,59 +106,74 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, 
 void MyDirectory::newFile(const boost::filesystem::path k, int chunkSize, int blockSize)
 {
     boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
-    ModifiedFile f(k, relativePath.string(),chunkSize,blockSize);
+    auto f = std::make_shared<ModifiedFile>(k, relativePath.string(), chunkSize, blockSize);
 
-    std::string id = f.getId();
+    std::string id = f->getId();
 
-    int size = f.getSize();
+    int size = f->getSize();
     if (size == 0)
     {
         return;
     }
     if (size < chunkSize)
         chunkSize = size + 1;
-    std::string root = f.getRootFolder();
+    std::string root = f->getRootFolder();
     std::vector<std::string> unEncoded = splitFile(f, chunkSize, id, k);
-    id = f.getId();
-    encode(id, std::move(unEncoded), blockSize);
+    id = f->getId();
+    encode(id, std::move(unEncoded), blockSize, f);
     _sem.release();
 }
 
-void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded, int blockSize)
+void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded, int blockSize, std::shared_ptr<ModifiedFile> f)
 {
+    auto t = std::chrono::system_clock::now();
+    f->setStartEncode();
     for (unsigned long i = 0; i < unEncoded.size(); i++)
     {
-        std::shared_ptr<FecCoder> coder = std::make_shared<FecCoder>(generateHeaderId());
+        std::unique_ptr<FecCoder> coder = std::make_unique<FecCoder>(generateHeaderId());
         if (blockSize > unEncoded.at(i).length())
         {
             blockSize = unEncoded.at(i).length() / 10;
         }
         auto v = coder->encode(unEncoded.at(i), blockSize, id, i);
-        mountOnBuffer(v);
+        mountOnBuffer(v, f);
     }
+    f->setEndEncode();
+    f->printData();
+    f->insertToTxTable();
 }
-void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v)
+void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>> v, std::shared_ptr<ModifiedFile> f)
 {
-    FecCoder c;
+    int counter = 0;
     std::unique_lock<std::mutex> lock(_bufferMutex);
     uint8_t id = _headerId;
     std::vector<uint8_t> a(1, 0);
+    if (!f->isMounted())
+    {
+        f->setMountTime();
+    }
 
     if (_buf.size() + v->size() < _MaxThreads)
     {
         while (!v->empty())
         {
+            if (v->front().at(v->front().size() - 1) == _dataId)
+            {
+                counter++;
+            }
             _buf.push(std::move(v->front()));
+
             v->pop();
         }
         _buf.push(a);
         lock.unlock();
+        f->addPacketsSent(counter);
     }
     else
     {
         lock.unlock();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        mountOnBuffer(v);
+        mountOnBuffer(v, f);
     }
 }
 std::string MyDirectory::generateHeaderId()

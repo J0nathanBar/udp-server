@@ -16,6 +16,8 @@
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
+#include <chrono>
+#include <mysql/mysql.h>
 class ModifiedFile
 {
 public:
@@ -37,10 +39,14 @@ public:
   void saveFile();
   bool saveFile(FilePacket &packet);
   void appendPacket(FilePacket);
-  void setStartEncode(auto t);
-  void setEndEncode(auto t);
-  void setMountTime(auto t);
-  void setPacketsSent(int p);
+
+  void setStartEncode();
+  void setEndEncode();
+  void setMountTime();
+  void addPacketsSent(int p);
+  bool isMounted();
+  void printData();
+  void insertToTxTable();
 
 private:
   void generateId();
@@ -53,7 +59,8 @@ private:
   unsigned long _currentIndex, _lastPacket;
   unsigned int _chunkSize, _blockSize;
   boost::container::map<unsigned long, FilePacket> _packets;
-  unsigned long _firstDetected, _startEncode, _endEnocde, _mountTime;
+  bool _mounted;
+  std::chrono::high_resolution_clock::time_point _firstDetected, _startEncode, _endEnocde, _mountTime;
   unsigned int _packetsSent;
 };
 

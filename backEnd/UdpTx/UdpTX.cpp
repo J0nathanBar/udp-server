@@ -38,7 +38,7 @@ void UdpTX::asyncSend()
 void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTransferred)
 {
 
-  std::cout << "bytes transferred: " << bytesTransferred << " packet number: " << packetCounter << std::endl;
+  // std::cout << "bytes transferred: " << bytesTransferred << " packet number: " << packetCounter << std::endl;
   _buf.pop();
   bool e(false);
   if (_buf.front().size() == 1)
