@@ -1,49 +1,23 @@
 #include "ModifiedFile.hpp"
 
-ModifiedFile::ModifiedFile(const boost::filesystem::path &path) : _path((path)), _beenHandled(false)
+ModifiedFile::ModifiedFile(const boost::filesystem::path &path, const std::string root, int chunkSize, int blockSize) : _path(path), _rootFolder(root), _blockSize(blockSize), _chunkSize(chunkSize)
 {
-    _rootFolder = "";
-    constructorDef();
-}
-ModifiedFile::ModifiedFile(const boost::filesystem::path &path, const std::string root, std::time_t time) : _path(path), _rootFolder(root), _fTime(time)
-{
-    constructorDef();
+    auto now = std::chrono::system_clock::now();
+    _firstDetected = static_cast<unsigned long>(now.time_since_epoch().count());
+    _fileName = _path.filename().string();
+    _size = boost::filesystem::file_size(_path);
+    generateId();
 }
 
-ModifiedFile::ModifiedFile(std::string path) : _path((path)), _beenHandled(false)
-{
-}
-ModifiedFile::ModifiedFile(const boost::filesystem::path &path, boost::filesystem::path &root) : _path(path), _rootFolder(root.string())
-{
-    constructorDef();
-}
 ModifiedFile::ModifiedFile(FilePacket fp) : _currentIndex(0), _beenHandled(false), _path(fp.getPath()), _size(fp.getSize()), _id(fp.getId()), _lastPacket(fp.getLastPacket())
 {
     appendPacket(std::move(fp));
 }
-ModifiedFile::ModifiedFile()
-{
-}
+
 ModifiedFile::~ModifiedFile()
 {
 }
 
-void ModifiedFile::constructorDef()
-{
-    generateId();
-    boost::filesystem::ifstream f(_path);
-    std::stringstream stream;
-    stream << f.rdbuf();
-    // _data = stream.str();
-    _fileName = _path.filename().string();
-    _size = boost::filesystem::file_size(_path);
-}
-
-void ModifiedFile::setFile(boost::filesystem::path path)
-{
-    _path = boost::filesystem::path(path);
-    constructorDef();
-}
 void ModifiedFile::setHandled(bool flag)
 {
     _beenHandled = flag;
@@ -57,10 +31,6 @@ boost::filesystem::path ModifiedFile::getPath()
 {
     return _path;
 }
-std::string ModifiedFile::getData()
-{
-    // return _data;
-}
 
 std::string ModifiedFile::getFileName()
 {
@@ -70,15 +40,7 @@ int ModifiedFile::getSize()
 {
     return _size;
 }
-void ModifiedFile::setPath(std::string folderPath)
-{
-    _path = folderPath;
-    _path.append(_fileName);
-}
-void ModifiedFile::setPath(boost::filesystem::path path)
-{
-    _path = path;
-}
+
 std::string ModifiedFile::getRootFolder()
 {
     return _rootFolder;
@@ -90,21 +52,9 @@ void ModifiedFile::setRoot(std::string root)
 
 void ModifiedFile::generateId()
 {
-    static const char alphabet[] = "0123456789"
-                                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                   "abcdefghijklmnopqrstuvwxyz";
-
-    static std::mt19937 generator(std::random_device{}());
-    static std::uniform_int_distribution<int> distribution(0, sizeof(alphabet) - 2);
-
-    std::string result;
-    result.reserve(8);
-
-    for (int i = 0; i < 8; ++i)
-    {
-        result += alphabet[distribution(generator)];
-    }
-    _id = result;
+    boost::uuids::random_generator generator;
+    boost::uuids::uuid uuid = generator();
+    _id = boost::uuids::to_string(uuid);
 }
 std::string ModifiedFile::getId()
 {
@@ -119,7 +69,7 @@ void ModifiedFile::saveFile()
     {
         bool flag = saveFile(_packets.at(_currentIndex));
         _packets.erase(_currentIndex - 1);
-     //   std::cout << _packets.size() << std::endl;
+        //   std::cout << _packets.size() << std::endl;
     }
 }
 bool ModifiedFile::saveFile(FilePacket &packet)
@@ -143,7 +93,7 @@ bool ModifiedFile::saveFile(FilePacket &packet)
         {
             _beenHandled = true;
             std::cout << "file saved" << std::endl;
-            //TODO delelte headers for the greater good!!!
+            // TODO delelte headers for the greater good!!!
         }
     }
     catch (const std::exception &e)
@@ -158,11 +108,23 @@ void ModifiedFile::appendPacket(FilePacket packet)
     _packets.emplace(packet.getIndex(), std::move(packet));
     saveFile();
 }
-std::time_t ModifiedFile::getfTime()
+
+void ModifiedFile::setStartEncode(auto t)
 {
-    return _fTime;
+    _startEncode = static_cast<unsigned long>(t.time_since_epoch().count());
 }
-void ModifiedFile::setfTime(std::time_t time)
+
+void ModifiedFile::setEndEncode(auto t)
 {
-    _fTime = time;
+    _endEnocde = static_cast<unsigned long>(t.time_since_epoch().count());
+}
+
+void ModifiedFile::setMountTime(auto t)
+{
+    _mountTime = static_cast<unsigned long>(t.time_since_epoch().count());
+}
+
+void ModifiedFile::setPacketsSent(int p)
+{
+    _packetsSent = p;
 }

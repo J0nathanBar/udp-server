@@ -58,8 +58,8 @@ bool FileManager::handleFile(std::string &path)
     try
     {
 
-        ModifiedFile f(path);
-        std::string id = f.getId();
+        // ModifiedFile f(path);
+        // std::string id = f.getId();
     }
     catch (boost::filesystem::filesystem_error &e)
     {

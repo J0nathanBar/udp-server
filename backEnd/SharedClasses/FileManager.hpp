@@ -18,7 +18,8 @@ public:
     void scanConf();
     bool handleFile(std::string &);
     bool handleDir(int chunkSize, int blockSize);
-    bool getRun(){
+    bool getRun()
+    {
         return _run;
     }
     void kill();
@@ -37,7 +38,7 @@ private:
     std::queue<std::vector<uint8_t>> &_buf;
     std::vector<std::string> _unEncoded;
     std::thread t;
-     std::mutex &_bufferMutex;
+    std::mutex &_bufferMutex;
 };
 
 #endif

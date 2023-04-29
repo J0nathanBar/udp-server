@@ -106,8 +106,7 @@ std::vector<std::string> MyDirectory::splitFile(ModifiedFile &f, int chunkSize, 
 void MyDirectory::newFile(const boost::filesystem::path k, int chunkSize, int blockSize)
 {
     boost::filesystem::path relativePath = boost::filesystem::relative(k.parent_path(), _path);
-    std::time_t time = boost::filesystem::last_write_time(k);
-    ModifiedFile f(k, relativePath.string(), time);
+    ModifiedFile f(k, relativePath.string(),chunkSize,blockSize);
 
     std::string id = f.getId();
 

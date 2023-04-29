@@ -13,22 +13,18 @@
 #include <time.h>
 #include <boost/container/map.hpp>
 #include "FilePacket.hpp"
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/uuid/uuid_io.hpp>
 class ModifiedFile
 {
 public:
-  ModifiedFile(const boost::filesystem::path &path);
-  ModifiedFile(std::string path);
-  ModifiedFile(const boost::filesystem::path &, boost::filesystem::path &);
-  ModifiedFile(const boost::filesystem::path &path, const std::string, std::time_t);
+  ModifiedFile(const boost::filesystem::path &path, const std::string, int chunkSize, int blockSize);
 
   ModifiedFile(FilePacket);
-  ModifiedFile();
+
   ~ModifiedFile();
-  void setFile(boost::filesystem::path);
-  void setPath(std::string folderPath);
-  void setPath(boost::filesystem::path);
-  void setfTime(std::time_t);
-  std::time_t getfTime();
+
   boost::filesystem::path getPath();
   std::string getFileName();
   std::string getData();
@@ -41,9 +37,12 @@ public:
   void saveFile();
   bool saveFile(FilePacket &packet);
   void appendPacket(FilePacket);
+  void setStartEncode(auto t);
+  void setEndEncode(auto t);
+  void setMountTime(auto t);
+  void setPacketsSent(int p);
 
 private:
-  void constructorDef();
   void generateId();
   boost::filesystem::path _path;
   std::string _fileName;
@@ -51,9 +50,11 @@ private:
   std::string _id;
   unsigned long _size;
   bool _beenHandled;
-  std::time_t _fTime;
   unsigned long _currentIndex, _lastPacket;
+  unsigned int _chunkSize, _blockSize;
   boost::container::map<unsigned long, FilePacket> _packets;
+  unsigned long _firstDetected, _startEncode, _endEnocde, _mountTime;
+  unsigned int _packetsSent;
 };
 
 #endif
