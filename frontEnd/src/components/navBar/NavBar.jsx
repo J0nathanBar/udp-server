@@ -17,7 +17,7 @@ const NavBar = () => {
   };
 
   return (
-    <Box component="nav" aria-label="My site" sx={{ flexGrow: 1, width: '30%' }}>
+    <Box component="nav" aria-label="My site" sx={{ flexGrow: 1, width: '40%' }}>
       <Tabs value={value} onChange={handleChange} variant='solid' className='bar'>
         <TabList variant='solid' color='primary'>
           <Tab label="Home" value="" to="/" >Home Page</Tab>
@@ -25,6 +25,7 @@ const NavBar = () => {
           <Tab label="Receiver" value="Reciever" to="/Receiver" >Reciever</Tab>
           <Tab label="User Manual" value="Manual" to="/Manual" >User Manual</Tab>
           <Tab label="Contact Us" value="Contact" to="/Contact" >Contact Us</Tab>
+          <Tab label="Statistics" value="Statistics" to="/Statistics" >Statistics</Tab>
         </TabList>
       </Tabs>
     </Box>

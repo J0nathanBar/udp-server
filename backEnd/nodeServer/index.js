@@ -2,8 +2,8 @@ const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require("cors");
 const app = express();
-const fs = require('fs')
 const { spawn } = require('child_process')
+const mysql = require('mysql2');
 app.use(cors())
 app.use(bodyParser.json())
 let udpTx = null
@@ -106,7 +106,34 @@ app.post("/Receiver", ({ body }, res) => {
 
 
 });
+
+
+app.get('/Statistics', (req, res) => {
+  const connection = mysql.createConnection({
+    host: 'localhost',
+    user: 'broman',
+    password: 'yeet',
+    database: 'my_database'
+  });
+  connection.connect(function(err) {
+    if (err) {
+      console.error('Error connecting to database: ' + err.stack);
+      return;
+    }
+    console.log('Connected to database.');
+  });
+  connection.query('SELECT first_detected_time,saved_time,block_size FROM TX_TABLE JOIN RX_TABLE ON TX_TABLE.file_id = RX_TABLE.file_id', function(err, results, fields) {
+    if (err) connection.end();
+    console.log(results);
+    res.json(results)
+    
+  });
+  connection.end();
+ 
+});
 app.listen(port, () => { console.log("Listening on port " + port) })
+
+
 
 
 
