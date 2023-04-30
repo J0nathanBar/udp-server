@@ -47,7 +47,7 @@ private:
 
     boost::asio::ip::udp::socket _socket;
     boost::asio::ip::udp::endpoint _endpoint;
-    boost::asio::io_context & _context;
+    boost::asio::io_context &_context;
     boost::asio::ip::udp::endpoint _local;
     int _port;
     int k;
@@ -70,7 +70,7 @@ private:
 
     double max = 0;
     double avg = 0;
-    //boost::asio::io_context _context;
+    // boost::asio::io_context _context;
     int hSize;
     int hcounter;
     int packetCounter;

@@ -123,6 +123,8 @@ void UdpReceiver::handlePacket(FilePacket fp)
     {
       i->second.appendPacket(std::move(fp));
     }
+    if (_files.at(id).getHandled())
+      _files.erase(id);
     lock.unlock();
   }
   catch (const std::exception &e)
@@ -159,30 +161,37 @@ void UdpReceiver::handleHeader(int bytesTransferred, std::vector<uint8_t> buffer
     std::cout << "handle Header Excpetion: " << e.what() << std::endl;
   }
 }
-int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0 = success, 1 = fail, 2 = awaiting for more data, already decoded = 3
+int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0 = success, 1 = fail, 2 = awaiting for more data, 3 = header not found
 {
   try
   {
     std::unique_lock hlock(_headerMutex);
+    int counter = 0;
     while (_headers.find(id) == _headers.end())
     {
+
       hlock.unlock();
+      counter++;
       std::this_thread::sleep_for(std::chrono::milliseconds(1));
+      if (counter > 5)
+        return 3;
       hlock.lock();
     }
-    if (_headers.at(id).isDecoded())
-    {
-      hlock.unlock();
-      return 3;
-    }
 
+    _headers.at(id).arrival();
     int dataSize = _headers.at(id).getDataSize();
     int blockSize = _headers.at(id).getBlockSize();
     hlock.unlock();
     std::string data;
     std::unique_lock lock(_coderMutex);
+
     if (_coders.find(id) == _coders.end())
+    {
       _coders.emplace(id, FecCoder());
+      hlock.lock();
+      _headers.at(id).startDecode();
+      hlock.unlock();
+    }
     data = _coders.at(id).decode(buffer, dataSize, blockSize);
     lock.unlock();
     if (data == ".")
@@ -196,13 +205,19 @@ int UdpReceiver::handleRawData(std::vector<uint8_t> buffer, std::string id) // 0
     }
     else if (data != "")
     {
+
       hlock.lock();
       _headers.at(id).setDecoded(true);
+      unsigned int packetsRecv = _headers.at(id).getArrived();
+      unsigned long hCreated = _headers.at(id).getFirstCreated();
+      unsigned long lastDetected = _headers.at(id).getLastDetected();
+      unsigned long startDecode = _headers.at(id).getStartDecode();
+      _headers.erase(id);
       hlock.unlock();
       lock.lock();
       _coders.erase(id);
       lock.unlock();
-      FilePacket fp;
+      FilePacket fp(packetsRecv, hCreated, lastDetected, startDecode);
       FileParser fparse;
       if (fparse.deSerialize(data, fp))
       {

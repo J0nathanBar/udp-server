@@ -12,7 +12,7 @@
 class FilePacket
 {
 public:
-    FilePacket();
+    FilePacket(unsigned int packetsDecoded, unsigned long headerCreated, unsigned long lastDetected, unsigned long startDecode);
     FilePacket(std::string id, std::string data, unsigned long index, unsigned long size, std::string fileName, std::string rootFolder);
     ~FilePacket();
     std::string getData();
@@ -27,6 +27,11 @@ public:
     void setLastPacket(unsigned long);
     void setPath(std::string);
     boost::filesystem::path getPath();
+    unsigned long getRecovered();
+    unsigned int getPacketsDecoded();
+    unsigned long getHeaderCreated();
+    unsigned long getLastDetected();
+    unsigned long getStartDecode();
 
 private:
     std::string _fileId, _fileName, _rootFolder;
@@ -35,7 +40,9 @@ private:
     unsigned long _index;
     unsigned long _lastPacket;
     unsigned long _size;
-
+    std::chrono::high_resolution_clock::time_point _recovered;
+    unsigned long _headerCreated, _lastDetected, _startDecode;
+    unsigned int _packetsDecoded;
     friend class boost::serialization::access;
     template <class Archive>
     void serialize(Archive &ar, const unsigned int version)

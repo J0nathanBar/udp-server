@@ -8,13 +8,13 @@
 #include <sstream>
 #include <iostream>
 #include <boost/format.hpp>
+#include <chrono>
 
 class DataHeader
 {
 public:
     DataHeader();
-    DataHeader(unsigned int blockSize, unsigned int dataSize, std::string id, unsigned long index, std::string & hID);
-    void toLong();
+    DataHeader(unsigned int blockSize, unsigned int dataSize, std::string id, unsigned long index, std::string &hID);
     ~DataHeader();
     unsigned int getBlockSize();
     unsigned int getDataSize();
@@ -27,18 +27,22 @@ public:
     std::string gethID();
     bool isDecoded();
     void setDecoded(bool decoded);
-    unsigned long getArrived();
-unsigned long getAlreadyDecoded();
-void arrival();
+    unsigned int getArrived();
+    void arrival();
+    unsigned long getFirstCreated();
+    unsigned long getLastDetected();
+    void startDecode();
+    unsigned long getStartDecode();
 
 private:
     unsigned int _blockSize, _dataSize;
     unsigned long _index;
-    unsigned long _arrived,_afterDecode;
+    unsigned int _arrived, _decoded;
     uint8_t _dex;
     std::string _id, _hID;
     bool _empty;
-    bool _decoded;
+   // bool _decoded;
+    std::chrono::high_resolution_clock::time_point _firstCreated, _lastDetected, _startDecode;
 
     friend class boost::serialization::access;
     template <class Archive>

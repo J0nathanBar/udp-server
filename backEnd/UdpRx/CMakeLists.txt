@@ -10,7 +10,7 @@ file(GLOB_RECURSE CPP_FILES ../SharedClasses/*.cpp )
 
 add_executable(${PROJECT_NAME} Main.cpp UdpReceiver.cpp ${CPP_FILES})
 find_package(Boost COMPONENTS filesystem serialization Wirehair)
-target_link_libraries(${PROJECT_NAME} -lwirehair ${Boost_FILESYSTEM_LIBRARY} ${Boost_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} -lwirehair ${Boost_FILESYSTEM_LIBRARY} ${Boost_LIBRARIES} mysqlclient)
 
 
 

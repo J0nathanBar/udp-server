@@ -47,6 +47,7 @@ public:
   bool isMounted();
   void printData();
   void insertToTxTable();
+  void insertToRxTable();
 
 private:
   void generateId();
@@ -60,8 +61,9 @@ private:
   unsigned int _chunkSize, _blockSize;
   boost::container::map<unsigned long, FilePacket> _packets;
   bool _mounted;
-  std::chrono::high_resolution_clock::time_point _firstDetected, _startEncode, _endEnocde, _mountTime;
-  unsigned int _packetsSent;
+  std::chrono::high_resolution_clock::time_point _firstDetected, _startEncode, _endEnocde, _mountTime, _saveTIme;
+  unsigned int _packetsSent, _packetsDecoded;
+  unsigned long _firstheaderCreated, _lastDetected, _startDecode, _recovered;
 };
 
 #endif

@@ -2,12 +2,16 @@
 #include "UdpReceiver.hpp"
 #include <boost/asio.hpp>
 #include <boost/filesystem.hpp>
+#include <mysql/mysql.h>
 
 void init();
 
 int main()
 {
+
     init();
+
+
 }
 void init()
 {
