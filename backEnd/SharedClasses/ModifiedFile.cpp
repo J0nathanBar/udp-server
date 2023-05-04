@@ -64,7 +64,7 @@ void ModifiedFile::saveFile()
 {
     auto it = _packets.rbegin();
     int maxKey = it->first;
-    // std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
+    std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
     while (!_beenHandled && !_packets.empty() && _packets.begin()->first == _currentIndex)
     {
         bool flag = saveFile(_packets.at(_currentIndex));

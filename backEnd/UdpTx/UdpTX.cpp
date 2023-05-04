@@ -47,7 +47,7 @@ void UdpTX::handleSend(const boost::system::error_code ec, std::size_t bytesTran
     _buf.pop();
   }
   _lock.unlock();
-  std::this_thread::sleep_for(std::chrono::microseconds(12));
+  std::this_thread::sleep_for(std::chrono::microseconds(100));
 
   packetCounter++;
   if (e)
