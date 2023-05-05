@@ -6,10 +6,12 @@ ModifiedFile::ModifiedFile(const boost::filesystem::path &path, const std::strin
     //  _firstDetected = static_cast<unsigned long>(now.time_since_epoch().count());
     _fileName = _path.filename().string();
     _size = boost::filesystem::file_size(_path);
+    if (_chunkSize > _size)
+        _chunkSize = _size;
     generateId();
 }
 
-ModifiedFile::ModifiedFile(FilePacket fp) : _currentIndex(0), _beenHandled(false), _path(fp.getPath()), _size(fp.getSize()), _id(fp.getId()), _lastPacket(fp.getLastPacket()), _packetsDecoded(0), _firstheaderCreated(0), _startDecode(0), _recovered(0)
+ModifiedFile::ModifiedFile(FilePacket fp) : _currentIndex(0), _beenHandled(false), _path(fp.getPath()), _size(fp.getSize()), _id(fp.getId()), _lastPacket(fp.getLastPacket()), _packetsDecoded(0), _firstheaderCreated(0), _startDecode(0), _recovered(0), _lastDetected(0)
 {
     appendPacket(std::move(fp));
 }
@@ -64,7 +66,7 @@ void ModifiedFile::saveFile()
 {
     auto it = _packets.rbegin();
     int maxKey = it->first;
-    std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
+    //  std::cout << "awaiting: " << _currentIndex << " currently in the system: " << maxKey << std::endl;
     while (!_beenHandled && !_packets.empty() && _packets.begin()->first == _currentIndex)
     {
         bool flag = saveFile(_packets.at(_currentIndex));
@@ -107,6 +109,7 @@ bool ModifiedFile::saveFile(FilePacket &packet)
 }
 void ModifiedFile::appendPacket(FilePacket packet)
 {
+
     _packetsDecoded += packet.getPacketsDecoded();
     unsigned long hCreated = packet.getHeaderCreated();
     if (_firstheaderCreated == 0 || hCreated < _firstheaderCreated)
@@ -120,9 +123,13 @@ void ModifiedFile::appendPacket(FilePacket packet)
     unsigned long recTime = packet.getRecovered();
     if (_recovered == 0 || recTime > _recovered)
         _recovered = recTime;
-
     _packets.emplace(packet.getIndex(), std::move(packet));
     saveFile();
+}
+
+void ModifiedFile::setBlockSize(int blockSize)
+{
+    _blockSize = blockSize;
 }
 
 void ModifiedFile::setStartEncode()

@@ -45,8 +45,8 @@ app.get('/isTxRunning', (req, res) => {
 app.get('/isRxRunning', (req, res) => {
   const response = {
     isRx: isRX()
-  };
-  res.json(response);
+  }
+  res.json(response)
 });
 
 app.post("/Transmitter", ({ body }, res) => {
@@ -98,42 +98,66 @@ app.post("/Receiver", ({ body }, res) => {
     udpRx.stdout.on('data', (data) => {
       const output = data.toString()
       console.log(`Rx process output: ${data}`)
-      // if (output.includes('egg'))
-      //   console.log("eggy weggy leggy man!")
-
     });
   }
 
 
 });
 
-
-app.get('/Statistics', (req, res) => {
+function connectSQL() {
   const connection = mysql.createConnection({
     host: 'localhost',
     user: 'broman',
     password: 'yeet',
     database: 'my_database'
   });
-  connection.connect(function(err) {
+  return connection
+
+}
+app.get('/Statistics', (req, res) => {
+  const connection = connectSQL()
+  connection.connect(function (err) {
     if (err) {
       console.error('Error connecting to database: ' + err.stack);
       return;
     }
     console.log('Connected to database.');
   });
-  connection.query('SELECT first_detected_time,saved_time,block_size FROM TX_TABLE JOIN RX_TABLE ON TX_TABLE.file_id = RX_TABLE.file_id', function(err, results, fields) {
-    if (err) connection.end();
-    console.log(results);
+  connection.query('SELECT first_detected_time,saved_time,block_size,file_size FROM TX_TABLE JOIN RX_TABLE ON TX_TABLE.file_id = RX_TABLE.file_id ORDER BY file_size', function (err, results, fields) {
+    if (err) {
+      connection.end()
+      return
+    }
+
     res.json(results)
-    
+
   });
-  connection.end();
- 
+  connection.end()
+
 });
+
+app.get('/getLatestRun', (req, res) => {
+  const connection = connectSQL()
+  connection.connect(function (err) {
+    if (err) {
+      console.error('Error connecting to database: ' + err.stack);
+      return;
+    }
+    console.log('Connected to database.');
+  });
+  connection.query('SELECT file_size,block_size,chunk_size,first_detected_time, start_encode_time, end_encode_time, mount_time, first_time_detected, last_time_detected, recovered_time, saved_time, AVG(saved_time) - AVG(first_detected_time) AS avg_time FROM TX_TABLE  JOIN RX_TABLE ON TX_TABLE.file_id = RX_TABLE.file_id  WHERE RX_TABLE.id = (SELECT MAX(id) FROM RX_TABLE) GROUP BY TX_TABLE.file_id ', function (err, results, fields) {
+    if (err) {
+      connection.end()
+      console.error('Error executing query: ' + err.stack);
+      return
+    }
+    res.json(results)
+  });
+  connection.end()
+
+})
+
 app.listen(port, () => { console.log("Listening on port " + port) })
-
-
 
 
 

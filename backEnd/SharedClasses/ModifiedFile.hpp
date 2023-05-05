@@ -39,7 +39,7 @@ public:
   void saveFile();
   bool saveFile(FilePacket &packet);
   void appendPacket(FilePacket);
-
+  void setBlockSize(int blockSize);
   void setStartEncode();
   void setEndEncode();
   void setMountTime();

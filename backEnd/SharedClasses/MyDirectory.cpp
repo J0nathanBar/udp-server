@@ -134,6 +134,7 @@ void MyDirectory::encode(std::string &id, std::vector<std::string> unEncoded, in
         if (blockSize > unEncoded.at(i).length())
         {
             blockSize = unEncoded.at(i).length() / 10;
+            f->setBlockSize(blockSize);
         }
         auto v = coder->encode(unEncoded.at(i), blockSize, id, i);
         mountOnBuffer(v, f);
@@ -148,6 +149,7 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
     std::unique_lock<std::mutex> lock(_bufferMutex);
     uint8_t id = _headerId;
     std::vector<uint8_t> a(1, 0);
+    std::vector<uint8_t> b(1, -1);
     if (!f->isMounted())
     {
         f->setMountTime();
@@ -155,8 +157,13 @@ void MyDirectory::mountOnBuffer(std::shared_ptr<std::queue<std::vector<uint8_t>>
 
     if (_buf.size() + v->size() < _MaxThreads)
     {
+
         while (!v->empty())
         {
+            if (v->front().at(v->front().size() - 1) == _headerId && v->front().at(v->front().size() - 1) == _dataId)
+            {
+                _buf.push(b);
+            }
             if (v->front().at(v->front().size() - 1) == _dataId)
             {
                 counter++;
