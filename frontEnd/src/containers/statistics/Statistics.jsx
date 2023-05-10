@@ -33,7 +33,8 @@ const Statistics = () => {
                     fileSize: d.file_size,
                     blockSize: d.block_size,
                     chunkSize: d.chunk_size,
-                    avg: d.avg_time
+                    avg: d.avg_time,
+
 
                 }))
                 setLastRunStats(mappedData);
@@ -76,14 +77,13 @@ const Statistics = () => {
                     <Bar dataKey="chunkSize" fill="#ffc658" />
                     <Bar dataKey="blockSize" fill="#82ca9d" />
 
-                    {/* <Bar dataKey="entireTime" fill="#d84d29" /> */}
+
                 </BarChart>
                 <Box display={'flex'} flexDirection={'row'}>
                     <BarChart width={500} height={500} margin={{ left: 50, right: 50 }} data={lastRunStats} barGap={'20'}>
-                        <XAxis /*dataKey="name"*/ />
-                        <YAxis scale="log" type="number" domain={[1, 'dataMax+50']} >
+                        <XAxis />
+                        <YAxis scale="log" type="number" domain={[0.9, 'auto']} >
                             <Label value="Time (millisecond)" offset={-20} position="insideLeft" angle={-90} />
-
                         </YAxis>
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip />
@@ -92,17 +92,17 @@ const Statistics = () => {
                         <Bar dataKey="decodeTime" fill="#ffc658" />
                         <Bar dataKey="sendTime" fill="#82ca9d" />
                     </BarChart>
-                    <BarChart width={500} height={500} margin={{ left: 50, right: 50 }} data={lastRunStats} barGap={'50'}>
-                        <XAxis /*dataKey="name"*/ />
-                        <YAxis scale="log" type="number" domain={['dataMin-100', 'dataMax+50']} >
+                    <BarChart width={500} height={500} margin={{ left: 50, right: 50 }} data={lastRunStats} barGap={'20'}>
+                        <XAxis />
+                        <YAxis scale="log" type="number" domain={[0.9, 'dataMax+50']} >
                             <Label value="Time (millisecond)" offset={-20} position="insideLeft" angle={-90} />
 
                         </YAxis>
                         <CartesianGrid strokeDasharray="3 3" />
                         <Tooltip />
                         <Legend />
-                        <Bar dataKey="avg" fill="#000000" />
-                        <Bar dataKey="entireTime" fill="#ffffff" barSize={100} />
+                        <Bar dataKey="entireTime" fill="#000000" />
+                        <Bar dataKey="avg" fill="#8884d8" />
                     </BarChart>
                 </Box>
 
