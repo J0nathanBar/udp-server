@@ -66,7 +66,7 @@ const Statistics = () => {
 
                 <BarChart width={1000} height={500} margin={{ left: 50, right: 50, bottom: 100 }} data={lastRunStats} barGap={'20'}>
                     <XAxis />
-                    <YAxis scale="log" domain={[1, "auto"]} >
+                    <YAxis  domain={[1, "auto"]} >
                         <Label value="Size (Bytes)" offset={-20} position="insideLeft" angle={-90} />
 
                     </YAxis>
@@ -82,7 +82,7 @@ const Statistics = () => {
                 <Box display={'flex'} flexDirection={'row'}>
                     <BarChart width={500} height={500} margin={{ left: 50, right: 50 }} data={lastRunStats} barGap={'20'}>
                         <XAxis />
-                        <YAxis scale="log" type="number" domain={[0.9, 'auto']} >
+                        <YAxis  type="number" domain={[0.9, 'auto']} >
                             <Label value="Time (millisecond)" offset={-20} position="insideLeft" angle={-90} />
                         </YAxis>
                         <CartesianGrid strokeDasharray="3 3" />
@@ -94,7 +94,7 @@ const Statistics = () => {
                     </BarChart>
                     <BarChart width={500} height={500} margin={{ left: 50, right: 50 }} data={lastRunStats} barGap={'20'}>
                         <XAxis />
-                        <YAxis scale="log" type="number" domain={[0.9, 'dataMax+50']} >
+                        <YAxis type="number" domain={[0.9, 'dataMax+50']} >
                             <Label value="Time (millisecond)" offset={-20} position="insideLeft" angle={-90} />
 
                         </YAxis>

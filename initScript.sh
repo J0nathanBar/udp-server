@@ -1,3 +1,5 @@
+sudo iptables -A INPUT -p tcp --dport 42069 -j DROP
+sudo iptables -A INPUT -p udp --dport 42069 -j DROP
 echo hello-world
 cd frontEnd/src/
 npm start &
